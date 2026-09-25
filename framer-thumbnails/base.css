@@ -1,0 +1,10 @@
+@font-face{font-family:G;src:url(geist.woff2) format("woff2");font-weight:100 900}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1600px;height:1200px;overflow:hidden;font-family:G,sans-serif;-webkit-font-smoothing:antialiased;color:#0f0f10;letter-spacing:-.01em}
+.stage{position:relative;width:100%;height:100%;overflow:hidden}
+.dots{position:absolute;inset:0;background-image:radial-gradient(rgba(15,15,16,.09) 1.2px,transparent 1.2px);background-size:26px 26px;mask-image:radial-gradient(ellipse 75% 70% at 50% 45%,#000 20%,transparent 80%)}
+.win{position:absolute;background:#fff;border-radius:22px;box-shadow:0 0 0 1px rgba(15,15,16,.06),0 2px 4px rgba(15,15,16,.04),0 40px 80px -20px rgba(20,30,80,.28);overflow:hidden}
+.tb{height:52px;display:flex;align-items:center;gap:9px;padding:0 22px;border-bottom:1px solid #eef0f3}
+.tb i{width:12px;height:12px;border-radius:50%;background:#e4e6ea}
+.tb span{margin-left:14px;font-size:15px;color:#8a8f98;font-weight:500}
+.chip{display:inline-flex;align-items:center;gap:8px;border-radius:99px;font-weight:500}
