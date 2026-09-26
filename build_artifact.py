@@ -48,9 +48,9 @@ for a, b in [('../index.html#', '#'), ('index.html#', '#'), ('"../index.html"', 
     body = body.replace(a, b)
 # images -> embedded once. <img> sources and data.js paths resolve through one
 # lookup table so a photo used in several places is only stored a single time.
-paths = sorted(set(re.findall(r'(?:\.\./)?(assets/[\w\-]+\.(?:jpg|jpeg|png))', body + rd('data.js'))))
+paths = sorted(set(re.findall(r'(?:\.\./)?(assets/[\w\-/]+\.(?:jpg|jpeg|png))', body + rd('data.js'))))
 assets = {p: data_uri(p) for p in paths}
-body = re.sub(r'src="(?:\.\./)?(assets/[\w\-]+\.(?:jpg|jpeg|png))"', lambda m: f'data-asset="{m.group(1)}"', body)
+body = re.sub(r'src="(?:\.\./)?(assets/[\w\-/]+\.(?:jpg|jpeg|png))"', lambda m: f'data-asset="{m.group(1)}"', body)
 for p in paths:  # CSS url() backgrounds are inlined directly
     body = re.sub(r'url\((?:\.\./)?' + re.escape(p) + r'\)', 'url(' + assets[p] + ')', body)
 asset_js = 'window.__A=' + json.dumps(assets) + ';document.querySelectorAll("img[data-asset]").forEach(function(i){i.src=window.__A[i.dataset.asset]||"";});'
