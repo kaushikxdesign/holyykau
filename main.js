@@ -72,6 +72,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
 (() => {
   const root = document.querySelector('.tst'); if (!root) return;
   const items = [...root.querySelectorAll('.tst-item')], dots = root.querySelector('.tst-dots');
+  if (items.length < 2 || !dots) return; // a single quote just sits still
   let i = 0, timer;
   items.forEach((_, n) => { const b = document.createElement('button'); b.setAttribute('aria-label', `Show testimonial ${n + 1}`); b.onclick = () => go(n, true); dots.appendChild(b); });
   const go = (n, user) => {

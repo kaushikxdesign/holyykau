@@ -397,3 +397,27 @@ a:hover{text-decoration:none}
 /* footer photo: silhouettes sit right, keep the text readable */
 .fbg{background-position:70% 55%;background-color:#0b0d1c}
 .fphoto::before{background:linear-gradient(180deg,rgba(12,12,13,.05) 0%,rgba(12,12,13,.3) 45%,rgba(12,12,13,.88) 100%)}
+
+/* floating social dock */
+.dock{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:70;
+  display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:999px;
+  background:rgba(12,12,13,.6);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 12px 40px -12px rgba(0,0,0,.7)}
+.dock a,.dock .status{position:relative;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none;
+  transition:transform .25s cubic-bezier(.22,1,.36,1),background .2s,color .2s}
+.dock a{background:#2a2a2c;color:#f2f0ed}
+.dock a svg{width:21px;height:21px}
+.dock a:hover,.dock a:focus-visible{transform:translateY(-4px) scale(1.14);background:#343437;color:#fff}
+.dock a:focus-visible,.dock .status:focus-visible{outline:2px solid #7588ff;outline-offset:3px}
+.dock .status{width:28px}
+.dock .status i{width:12px;height:12px;border-radius:50%;background:#3ddc6a;box-shadow:0 0 12px rgba(61,220,106,.8);position:relative}
+.dock .status i::after{content:"";position:absolute;inset:0;border-radius:50%;background:#3ddc6a;animation:dockping 2.2s cubic-bezier(0,0,.2,1) infinite}
+@keyframes dockping{70%,100%{transform:scale(2.4);opacity:0}}
+.dock [data-tip]::before{content:attr(data-tip);position:absolute;bottom:calc(100% + 12px);left:50%;transform:translate(-50%,4px);white-space:nowrap;
+  font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:#f2f0ed;background:#1c1c1e;border:1px solid rgba(255,255,255,.12);
+  padding:5px 9px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.dock [data-tip]:hover::before,.dock [data-tip]:focus-visible::before{opacity:1;transform:translate(-50%,0)}
+.copy{padding-bottom:110px}
+@media (max-width:600px){.dock{gap:10px;padding:8px 12px}.dock a{width:40px;height:40px}.dock a svg{width:19px;height:19px}}
+@media (prefers-reduced-motion:reduce){.dock .status i::after{animation:none}.dock a{transition:none}}
+.tst{padding-bottom:88px}

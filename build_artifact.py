@@ -25,6 +25,7 @@ cases = {'quick-automations': rd('work/quick-automations.html'), 'quality-coach'
 nav = between(index, r'<header class="nav">', r'</header>')
 home = between(index, r'<main>', r'</main>')
 footer = between(index, r'<footer class="fphoto', r'</footer>') + '\n<p class="copy">© 2026 Kaushik Subramaniam</p>'
+dock = between(index, r'<nav class="dock"', r'</nav>')
 gal = between(gallery, r'<main>', r'</main>')
 case_views = {k: between(v, r'<main class="cs">', r'</main>') for k, v in cases.items()}
 fonts = re.search(r'<link href="https://fonts.googleapis.com[^>]+>', index).group(0)
@@ -35,6 +36,7 @@ body = f'''<div class="shell" id="top">
 <div data-view="gallery" hidden>{gal}</div>
 </div>
 ''' + ''.join(f'<div data-view="{k}" hidden>{v}</div>\n' for k, v in case_views.items()) + f'''<div class="shell">{footer}</div>
+{dock}
 <div class="lightbox"></div>'''
 
 # links -> in-page routes
