@@ -1121,3 +1121,6 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .loader:not(.skip) ~ .shell .art h1 em svg.loop .lp{animation-delay:3.1s}
 @media (prefers-reduced-motion:reduce){.art h1 em svg.loop .lp{animation:none;stroke-dashoffset:0}}
 .art h1 em svg.loop{left:-8%;top:-.16em;width:116%;height:1.36em}
+.jr-body li.li-live::before{content:none}
+.jr-body li.li-live .livedot{position:absolute;left:0;top:.6em;width:7px;height:7px}
+.jr-body li.li-live .livedot i{width:7px;height:7px}
