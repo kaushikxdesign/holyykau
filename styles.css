@@ -635,9 +635,9 @@ body{background:#08080a}
 :root{--accent:#1F4FFF}
 .lab h2 .n,.ptxt .idx{display:none}
 
-/* cursor: faded grey dot with accent ring */
-html,body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Ccircle cx='11.0' cy='11.0' r='9.5' fill='rgba(160,160,168,.28)' stroke='%231F4FFF' stroke-width='1.6'/%3E%3C/svg%3E") 11 11,auto}
-a,button,summary,[role=button],label,.totop,.pc,.jf{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16.0' cy='16.0' r='13' fill='rgba(160,160,168,.28)' stroke='%231F4FFF' stroke-width='1.6'/%3E%3C/svg%3E") 16 16,pointer}
+/* cursor: solid accent dot */
+html,body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Ccircle cx='11.0' cy='11.0' r='7' fill='%231F4FFF'/%3E%3C/svg%3E") 11 11,auto}
+a,button,summary,[role=button],label,.totop,.pc,.jf{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16.0' cy='16.0' r='10' fill='%231F4FFF'/%3E%3C/svg%3E") 16 16,pointer}
 input,textarea{cursor:text}
 
 /* project cards */
@@ -716,3 +716,4 @@ input,textarea{cursor:text}
 @media (max-width:600px){.screens .scr-grid{grid-template-columns:1fr}}
 .art h1 span:first-child{font-size:1em;letter-spacing:inherit;margin-bottom:0}
 @media (max-width:600px){.art h1 span:first-child{font-size:1em}}
+.btn.primary,.figma,.btn.primary:hover,.figma:hover{border-color:rgba(150,170,255,.3)}
