@@ -375,3 +375,11 @@ footer{padding:140px 0 48px}
 a:hover{text-decoration:none}
 .btn svg{flex:none}
 .art{min-height:0;padding-bottom:120px}.art .blurb{margin:36px 0 0;max-width:46ch}
+/* wordmark */
+.logo{gap:6px;font-size:15px;letter-spacing:-.01em;align-items:baseline}
+.logo .at{color:var(--fg-3);font-weight:400}
+.logo .hdl{color:var(--fg);font-weight:600;letter-spacing:.04em}
+.logo:hover .hdl{color:#1245FF}
+@media (max-width:600px){.logo{font-size:13px}.logo .at{display:inline}}
+.logo,.links a{white-space:nowrap}.nav .in{gap:16px}@media (max-width:600px){.links{gap:14px}.links a{font-size:14px}.logo{font-size:12.5px;gap:4px}}
+@media (max-width:400px){.links{gap:10px}.links a{font-size:13px}.logo{font-size:11.5px;gap:3px}.logo .hdl{letter-spacing:.02em}}
