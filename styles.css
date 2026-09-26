@@ -480,3 +480,8 @@ a:hover{text-decoration:none}
   object-fit:cover;object-position:center;overflow:hidden;vertical-align:middle;margin-left:10px;transform:none;
   box-shadow:0 .723px .723px -1.083px rgba(0,0,0,.28),0 2.746px 2.746px -2.167px rgba(0,0,0,.26),0 12px 12px -3.25px rgba(0,0,0,.16)}
 .art h1 .me:hover{transform:scale(1.5) rotate(-3deg)}
+
+/* no partial italics: accents stay upright (colour only) */
+.it,.art h1 em,.hero h1 em,.gal-hero h1 em,.fin h2 em,.bigcta .it,.marq i,.gh h2 i,.lab h2 .it,.acc{font-style:normal}
+.art h1 em{padding-right:0}
+.loader:not(.skip) ~ .shell .art h1 em svg path{animation-delay:3.1s}
