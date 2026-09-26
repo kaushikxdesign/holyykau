@@ -1096,3 +1096,4 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @keyframes hnfade{to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.hn-draw{animation:none;stroke-dashoffset:0}.hn-text{animation:none;opacity:1}}
 @media (max-width:600px){.hn-arrow{width:56px;height:34px}.hn-text{font-size:11px}}
+.art h1 span:first-child{letter-spacing:-.055em}
