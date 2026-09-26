@@ -107,7 +107,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
 // Glass cursor: a lens that follows the pointer and refracts what's behind it.
 (() => {
   if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-  const S = 64, R = S / 2;
+  const S = 32, R = S / 2;
   const map = document.createElement('canvas'); map.width = map.height = S;
   const cx = map.getContext('2d'), img = cx.createImageData(S, S);
   for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
@@ -118,7 +118,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   cx.putImageData(img, 0, 0);
   const ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg');
   svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.style.position = 'absolute';
-  svg.innerHTML = `<filter id="glass-lens" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage href="${map.toDataURL()}" x="0" y="0" width="${S}" height="${S}" preserveAspectRatio="none" result="m"/><feDisplacementMap in="SourceGraphic" in2="m" scale="26" xChannelSelector="R" yChannelSelector="G"/></filter>`;
+  svg.innerHTML = `<filter id="glass-lens" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage href="${map.toDataURL()}" x="0" y="0" width="${S}" height="${S}" preserveAspectRatio="none" result="m"/><feDisplacementMap in="SourceGraphic" in2="m" scale="13" xChannelSelector="R" yChannelSelector="G"/></filter>`;
   document.body.appendChild(svg);
   const c = document.createElement('div'); c.className = 'gcur'; c.setAttribute('aria-hidden', 'true'); c.innerHTML = '<i></i>';
   document.body.appendChild(c); document.documentElement.classList.add('has-gcur');
