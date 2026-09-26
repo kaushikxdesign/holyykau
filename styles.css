@@ -540,3 +540,5 @@ a:hover{text-decoration:none}
 .finale ~ .endcap{display:none}
 @media (max-width:600px){.fphoto.finale{min-height:620px;margin-top:96px}.finale .fbot{width:calc(100% - 32px);flex-wrap:wrap;gap:8px}}
 .finale .giant{mix-blend-mode:soft-light}.finale .giant text{fill:rgba(255,255,255,.55)}
+.tl li:first-child .co-logo{border-color:#2a2a2f}.co-logo:has(img){border-color:rgba(255,255,255,.08)}
+.tl li{align-items:start}.tl .yr,.tl .role{line-height:40px}@media (max-width:900px){.tl .yr,.tl .role{line-height:1.6}}
