@@ -1,70 +1,85 @@
 <!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <title>Kaushik Subramaniam</title>
-<meta name="description" content="Senior Product Designer at Multiplier. Designing AI and automation products that feel human. Photographer on the side.">
+<meta name="description" content="Senior Product Designer at Multiplier. I design AI and automation products that feel human.">
 <link rel="stylesheet" href="styles.css"></head><body>
-<header class="nav"><div class="wrap"><a class="logo" href="./">Kaushik Subramaniam</a><nav class="links"><a href="./#work">Work</a><a href="./#about">About</a><a href="./#photos">Photos</a><button class="theme" aria-label="Toggle theme"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button></nav></div></header>
-<main class="wrap">
-<section class="intro">
-  <div class="avatar rv">KS</div>
-  <div class="rv"><h1>Kaushik Subramaniam</h1><div class="role">Senior Product Designer</div></div>
-  <p class="rv">Hey! People call me 🐮. I design digital products that solve problems and hopefully make people go, <em class="s">“okay, that was actually nice to use.”</em></p>
-  <p class="rv"><span class="dot"></span>Currently designing at <strong>Multiplier</strong>. Before that, I spent four years at <strong>Freshworks</strong> making AI-powered support tools feel less intimidating and more human.</p>
-  <p class="rv">When I'm not designing, I'm behind a camera, rage-queuing Valorant, watching anime, or obsessing over finance, watches and sneakers.</p>
+<div class="shell">
+<header class="nav"><div class="in"><a class="logo" href="./">@design by <span>KAUSHIK</span></a><nav class="links"><a href="./#projects">Projects</a><a class="x" href="./#experience">Experience</a><a href="./#photos">Gallery</a></nav></div></header>
+<main>
+<section class="hero">
+  <h1 class="rv">Hi I'm Kaushik <span class="wave" aria-hidden="true">✦</span></h1>
+  <p class="l2 rv">I design for <i>humans.</i></p>
+  <p class="sub rv">I design products that make people go “okay, that was actually nice to use.” Senior Product Designer, currently at Multiplier.</p>
+  <div class="row rv"><a class="btn" href="mailto:hello@example.com">Say hello</a><span class="note"><b></b><span>now designing<br>@ multiplier</span></span></div>
 </section>
 
-<section class="block" id="work">
-  <div class="label rv"><span>Selected work</span></div>
-  <a class="proj rv" href="work/quick-automations.html">
-    <div class="img"><img src="assets/qa.png" alt="Quick Automations admin screen with automation templates and a WhatsApp chat" loading="lazy"></div>
-    <div class="pmeta"><div><h3>Quick Automations <span class="arrow">↗</span></h3><p>Real-time workflows for conversational support. 91% fewer dropped chats.</p></div><span class="yr">Freshworks · 2025</span></div>
-  </a>
-  <a class="proj rv" href="work/quality-coach.html">
-    <div class="img"><img src="assets/qc.png" alt="Quality Coach reply composer with inline tone and spelling suggestions" loading="lazy"></div>
-    <div class="pmeta"><div><h3>Quality Coach <span class="arrow">↗</span></h3><p>AI coaching inside the reply composer. +18 pts CSAT.</p></div><span class="yr">Freshworks · 2024</span></div>
-  </a>
-</section>
+<section id="projects"><div class="sh rv"><h2>Projects</h2><hr></div>
+<div class="pad projects">
+  <div class="pcard rv">
+    <div class="pimg"><div class="bg" style="background:radial-gradient(600px 300px at 20% 0%,#1e3a8a,transparent 70%),radial-gradient(500px 300px at 100% 100%,#4c1d95,transparent 70%)"></div><img src="assets/qa.png" alt="Quick Automations admin screen with templates and a WhatsApp chat" loading="lazy"></div>
+    <div class="pbody"><div class="ptop"><h3>Quick Automations</h3><span class="live"><i></i>shipped</span></div>
+      <p>A real-time automation framework for conversational support in Freshdesk Omni. Runs workflows in as little as 30 seconds across WhatsApp, Web Chat and social DMs.</p>
+      <div class="stats"><span>91% fewer dropped chats</span><span>$120K MRR</span><span>2025</span></div>
+      <a class="btn sm" href="work/quick-automations.html">Read case study</a></div>
+  </div>
+  <div class="pcard rv">
+    <div class="pimg"><div class="bg" style="background:radial-gradient(600px 300px at 80% 0%,#7c2d12,transparent 70%),radial-gradient(500px 300px at 0% 100%,#1e3a8a,transparent 70%)"></div><img src="assets/qc.png" alt="Quality Coach reply composer with inline tone and spelling suggestions" loading="lazy"></div>
+    <div class="pbody"><div class="ptop"><h3>Quality Coach</h3><span class="live"><i></i>shipped</span></div>
+      <p>An AI coaching layer inside the reply composer that helps support agents fix grammar, tone and clarity while they're still typing.</p>
+      <div class="stats"><span>+18 pts CSAT</span><span>62% fewer repeat issues</span><span>2024</span></div>
+      <a class="btn sm" href="work/quality-coach.html">Read case study</a></div>
+  </div>
+</div></section>
 
-<section class="block" id="about">
-  <div class="label rv"><span>Experience</span></div>
-  <ul class="rows rv">
-    <li><span class="l">Multiplier</span><span class="fill"></span><span class="r">Senior Product Designer</span><span class="y">2026–now</span></li>
-    <li><span class="l">Freshworks</span><span class="fill"></span><span class="r">Senior Product Designer</span><span class="y">2022–26</span></li>
-    <li><span class="l">Pickyourtrail</span><span class="fill"></span><span class="r">Product Designer</span><span class="y">2021–22</span></li>
-  </ul>
-</section>
+<section id="experience"><div class="sh rv"><h2>Experience</h2><hr></div>
+<div class="pad"><div class="rv">
+  <details class="exp"><summary><div class="who"><div class="logoBox">M</div><div><h3>Multiplier <span class="tag">Senior Product Designer</span></h3><div class="when">Jun 2026 – Present</div></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body"><p>Designing products at Multiplier.</p></div></details>
+  <details class="exp" open><summary><div class="who"><div class="logoBox">F</div><div><h3>Freshworks <span class="tag">Senior Product Designer</span></h3><div class="when">2022 – May 2026</div></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body"><p>Led end-to-end design of <a href="work/quick-automations.html">Quick Automations</a>, a real-time automation framework for conversational support in Freshdesk Omni.</p><p>Designed <a href="work/quality-coach.html">Quality Coach</a>, an AI coaching layer inside the agent reply composer.</p><p>Worked across Product, AI, Engineering, CX and GTM to make complex AI and automation feel human.</p>
+    <div class="chips"><span>Research</span><span>Product thinking</span><span>AI UX</span><span>UX strategy</span><span>UI design</span></div></div></details>
+  <details class="exp"><summary><div class="who"><div class="logoBox">P</div><div><h3>Pickyourtrail <span class="tag">Product Designer</span></h3><div class="when">2021 – 2022</div></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body"><p>Designed B2C travel booking experiences.</p></div></details>
+</div></div></section>
 
-<section class="block">
-  <div class="label rv"><span>Kind words</span></div>
-  <blockquote class="quote rv">Working with Kaushik was a game-changer. He brings clarity to complex problems and turns scattered ideas into thoughtful, easy-to-use product experiences that teams and users genuinely appreciate.<cite>Swaminathan Chandrashekhar, Staff Product Manager at Freshworks</cite></blockquote>
-</section>
+<section><div class="sh rv"><h2>Skills</h2><hr></div>
+<div class="pad"><div class="skills rv">
+  <span class="skill" style="--c:#a259ff"><i></i>Figma</span><span class="skill" style="--c:#d97757"><i></i>Claude</span><span class="skill" style="--c:#e5e5e5"><i></i>Notion</span><span class="skill" style="--c:#6366f1"><i></i>Looppanel</span><span class="skill" style="--c:#8b5cf6"><i></i>Make</span><span class="skill" style="--c:#f97316"><i></i>Userpilot</span>
+  <span class="skill"><i></i>Product design</span><span class="skill"><i></i>UX research</span><span class="skill"><i></i>AI UX</span><span class="skill"><i></i>Prototyping</span><span class="skill"><i></i>Design systems</span><span class="skill"><i></i>UX writing</span><span class="skill"><i></i>Photography</span>
+</div></div></section>
 
-<section class="block">
-  <div class="label rv"><span>Stack</span></div>
-  <ul class="rows rv">
-    <li><span class="l">Figma</span><span class="fill"></span><span class="r">Product design</span></li>
-    <li><span class="l">Claude</span><span class="fill"></span><span class="r">Research &amp; UX writing</span></li>
-    <li><span class="l">Notion</span><span class="fill"></span><span class="r">Documentation</span></li>
-    <li><span class="l">Looppanel</span><span class="fill"></span><span class="r">Synthesis</span></li>
-    <li><span class="l">Make</span><span class="fill"></span><span class="r">Vibe coding</span></li>
-    <li><span class="l">Userpilot</span><span class="fill"></span><span class="r">Insights</span></li>
-  </ul>
-</section>
+<section><div class="sh rv"><h2>Kind words</h2><hr></div>
+<div class="pad"><blockquote class="quote rv"><p>“Working with Kaushik was a game-changer. He brings clarity to complex problems and turns scattered ideas into thoughtful, easy-to-use product experiences that teams and users genuinely appreciate.”</p><cite>Swaminathan Chandrashekhar · Staff Product Manager, Freshworks</cite></blockquote></div></section>
 
-<section class="block" id="shots">
-  <div class="label rv"><span>Explorations</span><a class="u" href="https://dribbble.com/KaushikSubramaniam" target="_blank" rel="noopener">Dribbble ↗</a></div>
-  <div class="grid2" id="shots-grid"></div>
-</section>
+<section id="shots"><div class="sh rv"><h2>Explorations</h2><hr></div>
+<div class="pad"><div class="grid3" id="shots-grid"></div><div style="margin-top:28px" class="rv"><a class="btn" href="https://dribbble.com/KaushikSubramaniam" target="_blank" rel="noopener">More on Dribbble ↗</a></div></div></section>
 
-<section class="block" id="photos">
-  <div class="label rv"><span>Through the lens</span></div>
-  <div class="photos" id="photos-grid"></div>
-</section>
+<section id="photos"><div class="sh rv"><h2>Gallery</h2><hr></div>
+<div class="pad"><div class="photos" id="photos-grid"></div></div></section>
+
+<section id="about"><div class="sh rv"><h2>About Me</h2><hr></div>
+<div class="pad about">
+  <p class="rv">Hey! I'm a <b>Senior Product Designer</b>. People call me 🐮.</p>
+  <p class="rv">I started out designing posters in college because I liked making things look cool. Somewhere along the way I realised I cared more about <b>why things worked</b>, or didn't, and that pulled me into product design.</p>
+  <p class="rv">Right now I'm designing at <span class="pill">Multiplier</span>. Before that I spent four years at Freshworks making AI-powered support tools feel less intimidating and more human.</p>
+  <p class="rv">Off the clock: behind a camera, rage-queuing Valorant, watching anime, or obsessing over finance, watches and sneakers.</p>
+  <div class="socl rv"><a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://dribbble.com/KaushikSubramaniam" target="_blank" rel="noopener">Dribbble ↗</a></div>
+</div></section>
 </main>
-<footer><div class="wrap"><span>© 2026 Kaushik Subramaniam</span><div class="socials"><a href="https://dribbble.com/KaushikSubramaniam" target="_blank" rel="noopener">Dribbble</a><a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a><a href="mailto:hello@example.com">Email</a></div></div></footer>
+
+<footer>
+  <div class="fcols">
+    <div><h4>Crafted by</h4><ul><li><a href="#">Kaushik Subramaniam</a></li><li><a href="mailto:hello@example.com">hello@example.com</a></li></ul></div>
+    <div><h4>Elsewhere</h4><ul><li><a href="https://dribbble.com/KaushikSubramaniam" target="_blank" rel="noopener">Dribbble</a></li><li><a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></li></ul></div>
+    <div><h4>Inspired by</h4><ul><li><a href="https://swamii.me/" target="_blank" rel="noopener">swamii.me</a></li><li><a href="https://linear.app/" target="_blank" rel="noopener">linear.app</a></li><li><a href="https://vercel.com/" target="_blank" rel="noopener">vercel.com</a></li></ul></div>
+    <div><h4>Colophon</h4><ul><li>Space Grotesk</li><li>Geist Mono</li><li>Hand-written HTML</li></ul></div>
+  </div>
+  <div class="mono" style="margin-top:48px;padding-top:24px;border-top:1px solid var(--line);text-transform:none;letter-spacing:0">© 2026 Kaushik Subramaniam</div>
+  <p class="giant" aria-hidden="true">KAUSHIK</p>
+</footer>
+</div>
 <div class="lightbox"></div>
 <script src="data.js"></script><script src="main.js"></script>
 </body></html>
