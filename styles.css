@@ -1039,3 +1039,14 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @media (max-width:900px){.x-sc-in{grid-template-columns:1fr;gap:24px;padding:28px}.x-scard{top:calc(80px + var(--i) * 10px)}}
 @media (prefers-reduced-motion:reduce){.x-scard{position:static}}
 .csx .x-checks+p{margin-top:32px}
+/* case study v8: centered reading column like the original layout */
+.csx .x-hero,.csx section.x-sec,.csx section.x-wide,.csx .x-end{max-width:880px;margin-left:auto;margin-right:auto}
+.csx .x-body>p,.csx .x-wide>p{max-width:none}
+.csx .x-hero h1{font-size:clamp(56px,9vw,120px)}
+.csx .x-meta{grid-template-columns:repeat(2,1fr)}
+.csx .x-meta>div:nth-child(3){border-left:0}
+.csx .x-meta>div:nth-child(-n+2){border-bottom:1px solid var(--line-2)}
+.x-wlhead{max-width:880px}
+/* the shipped-features section breaks out wider so the stacked cards have room */
+.csx section.x-sec:has(.x-scards){max-width:1152px}
+.csx section.x-sec:has(.x-scards) .x-lab,.csx section.x-sec:has(.x-scards) .x-body>h2{max-width:880px;margin-left:auto;margin-right:auto}
