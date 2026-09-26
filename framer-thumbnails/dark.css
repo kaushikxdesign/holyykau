@@ -25,3 +25,6 @@ body{color:#f2f0ed}
 .hd h1,.t b,.chat .h b,.pop h3,.score strong,.ring b{color:#f2f0ed}
 .box{background:#161618}.m.c{color:#e8e6e3}
 .diff{color:#e8e6e3}
+.btn{background:linear-gradient(90deg,#1F4FFF 0%,#1245FF 17%,#fff 100%);background-size:190% 100%;text-shadow:0 1px 2px rgba(0,20,120,.35)}
+.acts span:first-child{background:linear-gradient(90deg,#1F4FFF 0%,#1245FF 17%,#fff 100%)!important;background-size:190% 100%!important;text-shadow:0 1px 2px rgba(0,20,120,.35)}
+.pop .k i{background:#1245FF}
