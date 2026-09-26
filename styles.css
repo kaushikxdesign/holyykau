@@ -769,3 +769,6 @@ input,textarea{cursor:text}
 .dims li{border-radius:12px;padding:14px 16px;background:var(--card);color:var(--fg);font-size:15px;display:flex;flex-direction:column;gap:6px}
 .dims li span{font-family:var(--mono);font-size:11px;color:var(--accent)}
 @media (max-width:600px){.twocol{grid-template-columns:1fr}}
+/* hero photo tile: smaller, tucked against the name */
+.art h1 .me{width:.5em;height:.5em;min-width:36px;min-height:36px;border-radius:.14em;border-width:2px;margin-left:.16em;vertical-align:baseline;transform:rotate(4deg)}
+.art h1 .me:hover{transform:scale(1.6) rotate(-3deg)}
