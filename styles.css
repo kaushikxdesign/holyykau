@@ -573,3 +573,25 @@ a:hover{text-decoration:none}
 /* chip: site-blue pin; Tamil sized by script to fit the Madras width */
 .hi .pin{color:#1245FF}
 .hi-b{font-size:12px;overflow:hidden}
+
+/* gallery of trying: jumbled preview (6 prints scattered on a table) */
+.jumble{position:relative;height:620px;margin-top:8px}
+.jf{position:absolute;display:block;background:#f2f0ed;padding:9px 9px 34px;border-radius:3px;box-shadow:0 26px 50px -18px rgba(0,0,0,.85);
+  transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s;z-index:1}
+.jf-img{display:block;overflow:hidden;background:#d9d6d0}
+.jf-img img{width:100%;height:100%;object-fit:cover;display:block}
+.jf .ph{display:grid;place-items:center;height:100%;font-family:var(--mono);font-size:11px;color:#8a8680}
+.jf-cap{position:absolute;left:12px;right:12px;bottom:9px;font-family:var(--mono);font-size:11px;color:#3a3833;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jf:hover,.jf:focus-visible{transform:rotate(0) scale(1.06)!important;z-index:5;box-shadow:0 34px 70px -18px rgba(0,0,0,.9)}
+.j1{width:23%;left:0;top:30px;transform:rotate(-6deg)}
+.j2{width:30%;left:18%;top:250px;transform:rotate(4deg);z-index:2}
+.j3{width:19%;left:36%;top:10px;transform:rotate(-2deg)}
+.j4{width:21%;left:52%;top:210px;transform:rotate(7deg);z-index:3}
+.j5{width:27%;left:66%;top:20px;transform:rotate(-4deg)}
+.j6{width:18%;left:80%;top:300px;transform:rotate(5deg);z-index:2}
+@media (max-width:900px){
+  .jumble{height:auto;display:grid;grid-template-columns:1fr 1fr;gap:22px 16px;padding:10px 4px}
+  .jf{position:relative;left:auto!important;top:auto!important;width:auto!important}
+  .jf:nth-child(odd){transform:rotate(-3deg)}.jf:nth-child(even){transform:rotate(3deg);margin-top:18px}
+}
+@media (max-width:900px){.jumble{align-items:start}}

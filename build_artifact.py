@@ -5,7 +5,7 @@ The viewer only allows inline CSS/JS and data: images, wraps the file in its own
 inlines everything and turns the gallery and case studies into hash-routed views.
 Run: python3 build_artifact.py  ->  dist/kaushik.html
 """
-import base64, os, re
+import base64, json, os, re
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 rd = lambda p: open(os.path.join(ROOT, p), encoding='utf-8').read()
@@ -46,9 +46,14 @@ for a, b in [('../index.html#', '#'), ('index.html#', '#'), ('"../index.html"', 
              ('"../gallery.html"', '"#gallery"'), ('"gallery.html"', '"#gallery"'),
              ('"work/quick-automations.html"', '"#quick-automations"'), ('"work/quality-coach.html"', '"#quality-coach"')]:
     body = body.replace(a, b)
-# images -> data URIs
-for path in sorted(set(re.findall(r'(?:\.\./)?(assets/[\w\-]+\.(?:jpg|jpeg|png))', body))):
-    body = re.sub(r'(?:\.\./)?' + re.escape(path), data_uri(path), body)
+# images -> embedded once. <img> sources and data.js paths resolve through one
+# lookup table so a photo used in several places is only stored a single time.
+paths = sorted(set(re.findall(r'(?:\.\./)?(assets/[\w\-]+\.(?:jpg|jpeg|png))', body + rd('data.js'))))
+assets = {p: data_uri(p) for p in paths}
+body = re.sub(r'src="(?:\.\./)?(assets/[\w\-]+\.(?:jpg|jpeg|png))"', lambda m: f'data-asset="{m.group(1)}"', body)
+for p in paths:  # CSS url() backgrounds are inlined directly
+    body = re.sub(r'url\((?:\.\./)?' + re.escape(p) + r'\)', 'url(' + assets[p] + ')', body)
+asset_js = 'window.__A=' + json.dumps(assets) + ';document.querySelectorAll("img[data-asset]").forEach(function(i){i.src=window.__A[i.dataset.asset]||"";});'
 
 router = r'''
 (() => {
@@ -77,6 +82,7 @@ js = rd('data.js') + '\n' + rd('main.js').replace("document.addEventListener('DO
 # main.js's first block was a DOMContentLoaded handler; the script now runs at the end, so call it directly
 js = js.replace("\n});\n\n// Live LED", "\n})();\n\n// Live LED", 1)
 
+js = asset_js + '\n' + js.replace('src="${p.src}"', 'src="${(window.__A&&__A[p.src])||p.src}"').replace('src="${s.img}"', 'src="${(window.__A&&__A[s.img])||s.img}"')
 out = f'''<title>Kaushik Subramaniam</title>
 <meta name="description" content="Kaushik Subramaniam, Senior Product Designer at Multiplier. I design for the better.">
 {fonts}
