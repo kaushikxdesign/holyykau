@@ -387,3 +387,10 @@ a:hover{text-decoration:none}
 .btn.primary,.figma,.btn.primary:hover,.figma:hover{
   box-shadow:0 .602px 1.084px -1.25px rgba(199,242,255,.36),0 2.289px 4.119px -2.5px rgba(199,242,255,.3),0 10px 18px -3.75px rgba(199,242,255,.1),
     inset 0 -.723px 1.012px -.833px rgba(255,255,255,.22),inset 0 -2.746px 3.845px -1.667px rgba(255,255,255,.16),inset 0 -12px 16.8px -2.5px rgba(255,255,255,.12)}
+
+/* frosted top bar: blurs whatever scrolls behind it, full window width */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;background:none;isolation:isolate}
+.nav::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;
+  background:rgba(12,12,13,.55);-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);
+  border-bottom:1px solid rgba(255,255,255,.07)}
+.nav .in{height:72px}
