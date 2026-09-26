@@ -736,3 +736,4 @@ input,textarea{cursor:text}
 .brand .bd{width:8px;height:8px}
 .brand .bk{font-size:42px}
 .brand .bd{width:10px;height:10px}
+.brand .bd,.brand:hover .bd{box-shadow:none}
