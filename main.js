@@ -1,4 +1,8 @@
+document.documentElement.classList.add('js');
 document.addEventListener('DOMContentLoaded', () => {
+  // Failsafe: reveal everything if the observer never fires (e.g. sandboxed viewers).
+  setTimeout(() => document.querySelectorAll('.rv:not(.in)').forEach((el) => { const r = el.getBoundingClientRect(); if (r.top < innerHeight) el.classList.add('in'); }), 1200);
+  const tt = document.querySelector('.totop'); if (tt) tt.addEventListener('click', (e) => { e.preventDefault(); scrollTo({ top: 0, behavior: 'smooth' }); });
   const io = new IntersectionObserver((es) => es.forEach((x) => {
     if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); }
   }), { threshold: 0.08 });
@@ -24,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Live LED matrix: 4px cells, 2px gap; lit cells get denser toward the bottom and twinkle.
-document.querySelectorAll('canvas.led').forEach((c) => {
+document.querySelectorAll('canvas.led').forEach((c) => { try {
   const ctx = c.getContext('2d'), CELL = 4, GAP = 2, STEP = CELL + GAP;
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cols, rows, life, dpr;
@@ -61,6 +65,7 @@ document.querySelectorAll('canvas.led').forEach((c) => {
   new IntersectionObserver(([e]) => { on = e.isIntersecting; }).observe(c);
   const loop = (t) => { if (on && t - last > 1000 / 30) { last = t; tick(); } requestAnimationFrame(loop); };
   requestAnimationFrame(loop);
+  } catch (e) { c.remove(); }
 });
 
 // Rolling testimonials

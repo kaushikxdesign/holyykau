@@ -319,3 +319,10 @@ footer{padding:140px 0 48px}
 .kit-grid{display:grid;grid-template-columns:repeat(3,1fr);column-gap:40px}
 @media (max-width:900px){.kit-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:600px){.kit-grid{grid-template-columns:1fr}.tst{padding:56px 12px 72px}}
+/* reveal only when JS is running, so content never stays hidden */
+.rv{opacity:1;transform:none;filter:none}
+.js .rv{opacity:0;transform:translateY(16px)}
+.js .rv.in{opacity:1;transform:none}
+.about .ah{font-weight:500;letter-spacing:-.04em;font-size:clamp(34px,3.6vw,50px);line-height:1.05;margin-bottom:28px;color:var(--fg)}
+.about .ah span{color:var(--fg-3)}
+.about p{font-size:17px}
