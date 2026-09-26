@@ -714,3 +714,5 @@ input,textarea{cursor:text}
 .pc:hover .pc-go{transform:translate(2px,-2px)}
 .screens .scr-grid{grid-template-columns:1fr 1fr;gap:16px}
 @media (max-width:600px){.screens .scr-grid{grid-template-columns:1fr}}
+.art h1 span:first-child{font-size:1em;letter-spacing:inherit;margin-bottom:0}
+@media (max-width:600px){.art h1 span:first-child{font-size:1em}}
