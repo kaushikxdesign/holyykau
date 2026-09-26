@@ -947,3 +947,4 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @media (max-width:900px){.x-nums.x-nums3{grid-template-columns:repeat(2,minmax(0,1fr))}.x-dims{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.x-nums.x-nums3{grid-template-columns:1fr}}
 .x-nums.x-nums3 b{font-size:clamp(40px,4vw,58px)}
+.gcur i{display:none}
