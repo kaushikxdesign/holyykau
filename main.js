@@ -22,3 +22,44 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => e.key === 'Escape' && lb.classList.remove('on'));
   }
 });
+
+// Live LED matrix: 4px cells, 2px gap; lit cells get denser toward the bottom and twinkle.
+(() => {
+  const c = document.querySelector('canvas.led'); if (!c) return;
+  const ctx = c.getContext('2d'), CELL = 4, GAP = 2, STEP = CELL + GAP;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let cols, rows, life, dpr;
+  const size = () => {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    const r = c.getBoundingClientRect();
+    c.width = r.width * dpr; c.height = r.height * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cols = Math.ceil(r.width / STEP); rows = Math.ceil(r.height / STEP);
+    life = new Float32Array(cols * rows);
+    for (let i = 0; i < life.length; i++) if (Math.random() < odds(Math.floor(i / cols)) * 6) life[i] = Math.random();
+  };
+  const odds = (y) => 0.0009 + Math.pow(y / rows, 2.2) * 0.012; // bottom-weighted
+  const draw = () => {
+    ctx.clearRect(0, 0, c.width, c.height);
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      const i = y * cols + x, v = life[i];
+      if (v > 0) {
+        ctx.fillStyle = `rgba(${Math.round(18 + (1 - v) * 100)},${Math.round(69 + (1 - v) * 90)},255,${0.25 + v * 0.75})`;
+      } else ctx.fillStyle = 'rgba(255,255,255,0.045)';
+      ctx.fillRect(x * STEP, y * STEP, CELL, CELL);
+    }
+  };
+  const tick = () => {
+    for (let i = 0; i < life.length; i++) {
+      if (life[i] > 0) { life[i] -= 0.012 + Math.random() * 0.01; if (life[i] < 0) life[i] = 0; }
+      else if (Math.random() < odds(Math.floor(i / cols)) * 0.12) life[i] = 1;
+    }
+    draw();
+  };
+  size(); draw();
+  addEventListener('resize', () => { size(); draw(); });
+  if (still) return;
+  let last = 0, on = true;
+  new IntersectionObserver(([e]) => { on = e.isIntersecting; }).observe(c);
+  const loop = (t) => { if (on && t - last > 1000 / 30) { last = t; tick(); } requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+})();
