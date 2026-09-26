@@ -88,7 +88,7 @@ dict(n='11',label="What's next",h='A product is never finished.',blocks=[('p',"Q
 QC=dict(slug='qc',name='Quality Coach',title=('Quality','Coach.'),endk='Freddy AI · 2024',
 desc="Real-time AI coaching inside the Freshdesk Omni reply composer.",kicker='Freshdesk Omni · AI-first CX · 2024',
 lede="An AI-powered real-time coaching system built inside Freshdesk Omni, helping support agents improve <b>grammar, tone and clarity</b> while they're actively replying to customers.",
-meta=[("Role","Senior Product Designer"),("Scope","Research · Product · UX/UI"),("Team","Product, AI, Engineering, CX"),("Year","2024")],coveralt="the reply composer with an inline grammar suggestion",
+meta=[("Project type","AI-first CX experience"),("Role","Research · Product · Strategy"),("Duration","2024"),("Surface","Freshdesk Omni")],coveralt="the reply composer with an inline grammar suggestion",
 caps=["Live coaching","Profanity correction","Grammar correction","All errors","Usage analytics"],
 sections=[
 dict(n='01',label='Creating a foundation',h='My role',blocks=[('p',"I worked on designing the end-to-end experience for <b>Quality Coach</b>, an AI-powered assistance layer integrated directly within the agent reply composer.","The project focused on helping support agents maintain high-quality customer interactions in real time without disrupting their workflow. I collaborated closely with Product, AI, Engineering and CX stakeholders to simplify how AI-generated feedback could be surfaced contextually while keeping suggestions actionable rather than overwhelming.","A major part of the challenge involved balancing proactive AI assistance with conversational flow so agents still felt in control of responses.")]),
