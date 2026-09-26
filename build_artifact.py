@@ -28,9 +28,11 @@ footer = between(index, r'<footer class="fphoto', r'</footer>') + '\n<p class="c
 dock = between(index, r'<nav class="dock"', r'</nav>')
 gal = between(gallery, r'<main>', r'</main>')
 case_views = {k: between(v, r'<main class="cs">', r'</main>') for k, v in cases.items()}
-fonts = re.search(r'<link href="https://fonts.googleapis.com[^>]+>', index).group(0)
+fonts = '\n'.join(re.findall(r'<link href="https://fonts.googleapis.com[^>]+>', index))
+loader = between(index, r'<!--loader-->', r'<!--/loader-->')
 
-body = f'''<div class="shell" id="top">
+body = f'''{loader}
+<div class="shell" id="top">
 {nav}
 <div data-view="home">{home}</div>
 <div data-view="gallery" hidden>{gal}</div>

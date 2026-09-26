@@ -1,4 +1,6 @@
 document.documentElement.classList.add('js');
+// Play the greeting loader once per visit.
+try { const l = document.querySelector('.loader'); if (l) { if (sessionStorage.getItem('seenLoader')) l.classList.add('skip'); else sessionStorage.setItem('seenLoader', '1'); } } catch (e) {}
 document.addEventListener('DOMContentLoaded', () => {
   // Failsafe: reveal everything if the observer never fires (e.g. sandboxed viewers).
   setTimeout(() => document.querySelectorAll('.rv:not(.in)').forEach((el) => { const r = el.getBoundingClientRect(); if (r.top < innerHeight) el.classList.add('in'); }), 1200);
