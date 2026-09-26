@@ -485,3 +485,7 @@ a:hover{text-decoration:none}
 .it,.art h1 em,.hero h1 em,.gal-hero h1 em,.fin h2 em,.bigcta .it,.marq i,.gh h2 i,.lab h2 .it,.acc{font-style:normal}
 .art h1 em{padding-right:0}
 .loader:not(.skip) ~ .shell .art h1 em svg path{animation-delay:3.1s}
+/* chip location tag */
+.hi .loc{display:inline-flex;align-items:center;gap:4px;margin-left:12px;padding-left:12px;border-left:1px solid #34343a;color:var(--fg-2);font-weight:400}
+.hi .loc .pin{flex:none;color:#7588ff}
+@media (max-width:600px){.hi .loc{display:none}}
