@@ -1,5 +1,5 @@
 import html
-head=open('/tmp/head').read(); nav=open('/tmp/nav').read().replace('ROOT','../'); foot=open('/tmp/foot').read()
+head=open('/tmp/head').read(); nav=open('/tmp/nav').read().replace('ROOT','../'); foot=open('/tmp/foot').read().replace('ROOT','../index.html')
 def page(slug,title,desc,kicker,lede,meta,body,figma):
     m=''.join(f'<div><span class="mono">{k}</span><b>{v}</b></div>' for k,v in meta)
     return f'''<!doctype html><html lang="en"><head>
@@ -12,10 +12,18 @@ def page(slug,title,desc,kicker,lede,meta,body,figma):
 <h1 class="rv" style="max-width:18ch">{title}</h1><p class="lede rv">{lede}</p>
 <div class="meta rv">{m}</div><div class="cs-cover rv"><img src="../assets/{slug}.jpg" alt="{title} product screen"></div></div>
 <div class="read">{body}
+{screens(slug)}
 </div></div></main>
 {foot}
 <script src="../main.js"></script></body></html>'''
-def sec(n,label,h,inner): return f'<section class="rv"><span class="mono">{n} — {label}</span><h2>{h}</h2>{inner}</section>'
+import os
+def screens(slug,count=5):
+    items=''
+    for i in range(1,count+1):
+        f=next((f'assets/screens/{slug}-{i}.{e}' for e in ('png','jpg','webp') if os.path.exists(f'assets/screens/{slug}-{i}.{e}')),None)
+        items+=f'<figure class="scr"><img src="../{f}" alt="{slug.replace("-"," ").title()} screen {i}" loading="lazy"></figure>' if f else '<figure class="scr ph"><span>screen coming soon</span></figure>'
+    return f'<section class="rv screens"><span class="mono">Product screens</span><h2>A closer look</h2><div class="scr-grid">{items}</div></section>'
+def sec(n,label,h,inner): return f'<section class="rv"><span class="mono">{label}</span><h2>{h}</h2>{inner}</section>'
 P=lambda *ps:''.join(f'<p>{p}</p>' for p in ps)
 cards=lambda cs:'<div class="cards">'+''.join(f'<div class="card"><h4>{a}</h4><p>{b}</p></div>' for a,b in cs)+'</div>'
 hmw=lambda qs:'<ol class="hmw">'+''.join(f'<li>{q}</li>' for q in qs)+'</ol>'
