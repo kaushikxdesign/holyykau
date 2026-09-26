@@ -1097,3 +1097,12 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @media (prefers-reduced-motion:reduce){.hn-draw{animation:none;stroke-dashoffset:0}.hn-text{animation:none;opacity:1}}
 @media (max-width:600px){.hn-arrow{width:56px;height:34px}.hn-text{font-size:11px}}
 .art h1 span:first-child{letter-spacing:-.055em}
+
+/* Say hello: text snakes around the button border on hover */
+.hnote{display:none}
+.snake-wrap{position:relative;display:inline-flex}
+.snake{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;opacity:0;transition:opacity .35s}
+.snake text{font-family:var(--mono);font-size:11.5px;letter-spacing:-.4px;fill:rgba(255,255,255,.62)}
+.snake text .sk{fill:#1F4FFF}
+.snake-wrap:hover .snake,.snake-wrap:focus-within .snake{opacity:1}
+.snake .trail{fill:none;stroke:rgba(31,79,255,.18);stroke-width:1;stroke-dasharray:2 5}

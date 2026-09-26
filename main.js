@@ -157,3 +157,37 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   addEventListener('resize', update); addEventListener('hashchange', () => setTimeout(update, 50)); update();
 })();
+
+// "Say hello": on hover, a line of text slithers around the button's border.
+(() => {
+  const ns = 'http://www.w3.org/2000/svg';
+  document.querySelectorAll('[data-snake]').forEach((btn, n) => {
+    const wrap = btn.parentElement, msg = btn.dataset.snake;
+    const svg = document.createElementNS(ns, 'svg'); svg.classList.add('snake'); svg.setAttribute('aria-hidden', 'true');
+    const id = 'snk' + n;
+    svg.innerHTML = `<path id="${id}" fill="none"/><path class="trail"/><text><textPath href="#${id}" startOffset="0"></textPath></text>`;
+    wrap.appendChild(svg);
+    const path = svg.querySelector('path'), trail = svg.querySelector('.trail'), tp = svg.querySelector('textPath');
+    const star = msg.indexOf('✦');
+    tp.innerHTML = msg.slice(0, star) + '<tspan class="sk">✦</tspan>' + msg.slice(star + 1);
+    let loop = 0;
+    const build = () => {
+      const w = btn.offsetWidth, h = btn.offsetHeight, g = 13, r = Math.min(h / 2, 16) + g;
+      const x0 = -g, y0 = -g, x1 = w + g, y1 = h + g;
+      svg.setAttribute('width', w); svg.setAttribute('height', h); svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      // one clockwise lap of a rounded rect around the button, starting bottom-centre
+      const lap = `L${x0 + r} ${y1} A${r} ${r} 0 0 1 ${x0} ${y1 - r} L${x0} ${y0 + r} A${r} ${r} 0 0 1 ${x0 + r} ${y0} L${x1 - r} ${y0} A${r} ${r} 0 0 1 ${x1} ${y0 + r} L${x1} ${y1 - r} A${r} ${r} 0 0 1 ${x1 - r} ${y1} L${w / 2} ${y1}`;
+      const d1 = `M${w / 2} ${y1} ${lap}`;
+      trail.setAttribute('d', d1);
+      path.setAttribute('d', `${d1} ${lap}`); // two laps so the text can wrap seamlessly
+      loop = path.getTotalLength() / 2;
+    };
+    let raf = 0, off = 0, last = 0;
+    const step = (t) => { const dt = last ? t - last : 16; last = t; off = (off + dt * 0.055) % loop; tp.setAttribute('startOffset', off); raf = requestAnimationFrame(step); };
+    const start = () => { build(); if (!raf && !matchMedia('(prefers-reduced-motion: reduce)').matches) { last = 0; raf = requestAnimationFrame(step); } };
+    const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+    wrap.addEventListener('pointerenter', start); wrap.addEventListener('pointerleave', stop);
+    btn.addEventListener('focus', start); btn.addEventListener('blur', stop);
+    build(); addEventListener('resize', build);
+  });
+})();
