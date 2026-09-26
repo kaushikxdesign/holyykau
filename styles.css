@@ -394,3 +394,6 @@ a:hover{text-decoration:none}
   background:rgba(12,12,13,.55);-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);
   border-bottom:1px solid rgba(255,255,255,.07)}
 .nav .in{height:72px}
+/* footer photo: silhouettes sit right, keep the text readable */
+.fbg{background-position:70% 55%;background-color:#0b0d1c}
+.fphoto::before{background:linear-gradient(180deg,rgba(12,12,13,.05) 0%,rgba(12,12,13,.3) 45%,rgba(12,12,13,.88) 100%)}
