@@ -720,3 +720,4 @@ input,textarea{cursor:text}
 .brand{font-size:22px;letter-spacing:-.02em}
 .marq div{animation-duration:78s}
 .nowat{color:#b4b1ac;opacity:1}
+.art h1 span:first-child{font-size:.8em}@media (max-width:600px){.art h1 span:first-child{font-size:.85em}}
