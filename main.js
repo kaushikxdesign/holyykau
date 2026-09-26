@@ -24,8 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Live LED matrix: 4px cells, 2px gap; lit cells get denser toward the bottom and twinkle.
-(() => {
-  const c = document.querySelector('canvas.led'); if (!c) return;
+document.querySelectorAll('canvas.led').forEach((c) => {
   const ctx = c.getContext('2d'), CELL = 4, GAP = 2, STEP = CELL + GAP;
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cols, rows, life, dpr;
@@ -62,4 +61,24 @@ document.addEventListener('DOMContentLoaded', () => {
   new IntersectionObserver(([e]) => { on = e.isIntersecting; }).observe(c);
   const loop = (t) => { if (on && t - last > 1000 / 30) { last = t; tick(); } requestAnimationFrame(loop); };
   requestAnimationFrame(loop);
+});
+
+// Rolling testimonials
+(() => {
+  const root = document.querySelector('.tst'); if (!root) return;
+  const items = [...root.querySelectorAll('.tst-item')], dots = root.querySelector('.tst-dots');
+  let i = 0, timer;
+  items.forEach((_, n) => { const b = document.createElement('button'); b.setAttribute('aria-label', `Show testimonial ${n + 1}`); b.onclick = () => go(n, true); dots.appendChild(b); });
+  const go = (n, user) => {
+    i = (n + items.length) % items.length;
+    items.forEach((el, k) => el.classList.toggle('on', k === i));
+    [...dots.children].forEach((d, k) => d.classList.toggle('on', k === i));
+    if (user) start();
+  };
+  const start = () => { clearInterval(timer); if (items.length > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) timer = setInterval(() => go(i + 1), 6000); };
+  root.querySelector('.tst-prev').onclick = () => go(i - 1, true);
+  root.querySelector('.tst-next').onclick = () => go(i + 1, true);
+  root.addEventListener('mouseenter', () => clearInterval(timer));
+  root.addEventListener('mouseleave', start);
+  go(0); start();
 })();

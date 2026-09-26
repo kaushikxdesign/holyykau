@@ -12,7 +12,7 @@
   <canvas class="led" aria-hidden="true"></canvas>
   <div class="badge" aria-hidden="true"><svg viewBox="0 0 150 150"><defs><path id="c" d="M75,75 m-58,0 a58,58 0 1,1 116,0 a58,58 0 1,1 -116,0"/></defs><text><textPath href="#c">designer · photographer · tinkerer · </textPath></text></svg><span class="star">✦</span></div>
   <div class="mono rv" style="margin-bottom:28px;display:flex;align-items:center;gap:10px"><span class="hero" style="all:unset"><span class="rec" style="display:inline-flex"><i style="width:7px;height:7px;border-radius:50%;background:#1F4FFF;box-shadow:0 0 10px #1245FF;display:inline-block"></i></span></span>Now designing at Multiplier</div>
-  <h1 class="rv"><span>Hello, I'm Kaushik. <img class="me" src="assets/me-sq.jpg" alt="Kaushik photographing a sunset at the beach" width="120" height="120"></span><span class="l2">I design for the <em>better.<svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><defs></defs><path d="M4 18 C 60 6, 110 28, 160 14 S 250 6, 296 16" fill="none" stroke="#1245FF" stroke-width="5" stroke-linecap="round"/></svg></em></span></h1>
+  <h1 class="rv"><span>Hello, I'm Kaushik. <img class="me" src="assets/me-sq.jpg" alt="Kaushik photographing a sunset at the beach" width="120" height="120"></span><span class="l2">I design. For the <em>better.<svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><defs></defs><path d="M4 18 C 60 6, 110 28, 160 14 S 250 6, 296 16" fill="none" stroke="#1245FF" stroke-width="5" stroke-linecap="round"/></svg></em></span></h1>
   <p class="pun rv">(read it in Ryan Gosling's voice)</p>
   <figure class="pola p1"><img src="assets/qa.png" alt="" loading="lazy"><figcaption>quick automations</figcaption></figure>
   <figure class="pola p2"><img src="assets/qc.png" alt="" loading="lazy"><figcaption>quality coach</figcaption></figure>
@@ -50,13 +50,23 @@
   </ul>
 </section>
 
-<section>
-  <div class="split">
-    <div class="rv"><div class="lab"><h2><span class="n">03</span>Kind words</h2></div>
-      <blockquote class="quote"><p>Working with Kaushik was a game-changer. He brings clarity to complex problems and turns scattered ideas into thoughtful, easy-to-use product experiences that teams and users genuinely appreciate.</p><cite>Swaminathan Chandrashekhar, Staff Product Manager at Freshworks</cite></blockquote></div>
-    <div class="rv"><div class="lab"><h2><span class="n">04</span>Toolkit</h2></div>
-      <ul class="kit"><li>Figma<span>Product design</span></li><li>Claude<span>Research &amp; UX writing</span></li><li>Notion<span>Documentation</span></li><li>Looppanel<span>Synthesis</span></li><li>Make<span>Vibe coding</span></li><li>Userpilot<span>Insights</span></li></ul></div>
+<section id="words">
+  <div class="lab rv"><h2><span class="n">03</span>Kind words</h2><span class="mono">From people I've built with</span></div>
+  <div class="tst rv" aria-roledescription="carousel">
+    <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+    <canvas class="led soft" aria-hidden="true"></canvas>
+    <div class="tst-track" aria-live="polite">
+      <figure class="tst-item on"><blockquote>Working with Kaushik was a game-changer. He brings clarity to complex problems and turns scattered ideas into thoughtful, easy-to-use product experiences that teams and users genuinely appreciate.</blockquote><figcaption><b>Swaminathan Chandrashekhar</b><span>Staff Product Manager at Freshworks</span></figcaption></figure>
+      <figure class="tst-item"><blockquote>[Add a testimonial here — a colleague, manager or engineer you've worked with.]</blockquote><figcaption><b>Name Surname</b><span>Role at Company</span></figcaption></figure>
+      <figure class="tst-item"><blockquote>[Add another testimonial here. Two or three lines reads best.]</blockquote><figcaption><b>Name Surname</b><span>Role at Company</span></figcaption></figure>
+    </div>
+    <div class="tst-nav"><button class="tst-prev" aria-label="Previous testimonial">←</button><div class="tst-dots"></div><button class="tst-next" aria-label="Next testimonial">→</button></div>
   </div>
+</section>
+
+<section>
+  <div class="lab rv"><h2><span class="n">04</span>Toolkit</h2></div>
+  <ul class="kit kit-grid rv"><li>Figma<span>Product design</span></li><li>Claude<span>Research &amp; UX writing</span></li><li>Notion<span>Documentation</span></li><li>Looppanel<span>Synthesis</span></li><li>Make<span>Vibe coding</span></li><li>Userpilot<span>Insights</span></li></ul>
 </section>
 
 <section id="about">
