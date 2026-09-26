@@ -720,3 +720,11 @@ input,textarea{cursor:text}
 .marq div{animation-duration:78s}
 .nowat{color:#b4b1ac;opacity:1}
 .art h1 span:first-child{font-size:.8em}@media (max-width:600px){.art h1 span:first-child{font-size:.85em}}
+/* brand mark: serif k + accent dot */
+.brand{gap:3px;align-items:baseline;height:auto;line-height:1;padding:6px 0}
+.brand .bk{font-family:"Instrument Serif",Georgia,"Times New Roman",serif;font-weight:400;font-size:40px;line-height:1;letter-spacing:0;color:#fff;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.brand .bd{width:9px;height:9px;border-radius:50%;background:#1F4FFF;box-shadow:0 0 12px rgba(31,79,255,.7);transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s}
+.brand:hover{opacity:1}
+.brand:hover .bk{transform:rotate(-6deg)}
+.brand:hover .bd{transform:scale(1.25);box-shadow:0 0 18px rgba(31,79,255,.95)}
+.nav .in{align-items:center}
