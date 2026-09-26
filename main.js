@@ -25,14 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const sEl = document.getElementById('shots-grid');
   if (sEl) sEl.innerHTML = shots.map((s) => s.img
     ? `<a class="shot rv" href="${s.url}" target="_blank" rel="noopener"><img src="${s.img}" alt="${s.title}" loading="lazy"><span class="cap">${s.title}</span></a>`
-    : `<a class="shot ph rv" href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join('');
+    : `<a class="shot rv" href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join('');
 
   // Photography
   const photos = window.PHOTOS || [];
   const pEl = document.getElementById('photos-grid');
   if (pEl) pEl.innerHTML = photos.map((p) => p.src
     ? `<figure class="photo rv"><img src="${p.src}" alt="${p.alt || ''}" loading="lazy"></figure>`
-    : `<figure class="photo ph rv" style="aspect-ratio:${p.ratio || '4/5'}">${p.alt || 'Add photo'}</figure>`).join('');
+    : `<figure class="photo rv" style="aspect-ratio:${p.ratio || '4/5'}">${p.alt || 'Add photo'}</figure>`).join('');
   const lb = document.querySelector('.lightbox');
   if (pEl && lb) {
     pEl.addEventListener('click', (e) => {
