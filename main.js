@@ -132,3 +132,28 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   document.addEventListener('pointerleave', () => c.classList.remove('on'));
   addEventListener('pointerdown', () => c.classList.add('down')); addEventListener('pointerup', () => c.classList.remove('down'));
 })();
+
+// "What we built": as the next card slides over, the previous one shrinks and dims.
+(() => {
+  const stacks = document.querySelectorAll('.x-scards');
+  if (!stacks.length || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    stacks.forEach((st) => {
+      const cards = [...st.querySelectorAll('.x-scard')];
+      cards.forEach((c, i) => {
+        const inner = c.firstElementChild, next = cards[i + 1];
+        let p = 0;
+        if (next) {
+          const r = c.getBoundingClientRect(), nr = next.getBoundingClientRect();
+          p = Math.min(1, Math.max(0, (r.bottom - nr.top) / r.height));
+        }
+        inner.style.transform = `scale(${1 - p * 0.06})`;
+        inner.style.filter = `brightness(${1 - p * 0.45})`;
+      });
+    });
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  addEventListener('resize', update); addEventListener('hashchange', () => setTimeout(update, 50)); update();
+})();

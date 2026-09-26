@@ -41,35 +41,30 @@ def sec(i,s):
 def blk(b):
     k=b[0]
     if k=='p': return ''.join(f'<p>{x}</p>' for x in b[1:])
-    if k=='grid6': return '<div class="x-grid2 x-list">'+''.join(f'<div><span class="x-n">{i:02d}</span>{x}</div>' for i,x in enumerate(b[1],1))+'</div>'
-    if k=='hmw': return '<div class="x-stack x-hmw">'+''.join(f'<div><span class="x-n">HMW.{i:02d}</span><p>{x}</p></div>' for i,x in enumerate(b[1],1))+'</div>'
-    if k=='rows': return '<div class="x-stack x-rows">'+''.join(f'<div><div class="x-rl"><span class="x-k">{i:02d}</span><span class="x-n">{cat}</span></div><div><h3>{t}</h3><p>{d}</p></div></div>' for i,(cat,t,d) in enumerate(b[1],1))+'</div>'
-    if k=='ast': return f'<div class="x-sub"><span class="x-k">{b[1]}</span><ul class="x-astl{" x-ruled" if len(b)>3 and b[3] else ""}">'+''.join(f'<li>{AST}<span>{x}</span></li>' for x in b[2])+'</ul></div>'
-    if k=='quote': return f'<blockquote class="x-quote">{b[1]}</blockquote>'
+    if k=='grid6': return '<ul class="checks x-checks">'+''.join(f'<li>{x}</li>' for x in b[1])+'</ul>'
+    if k=='hmw': return '<ol class="hmw">'+''.join(f'<li>{x}</li>' for x in b[1])+'</ol>'
+    if k=='rows': return '<div class="cards">'+''.join(f'<div class="card"><span class="x-n">{cat}</span><h4>{t}</h4><p>{d}</p></div>' for cat,t,d in b[1])+'</div>'
+    if k=='ast': return f'<div class="take"><h4>{b[1]}</h4><ul class="checks">'+''.join(f'<li>{x}</li>' for x in b[2])+'</ul></div>'
+    if k=='quote': return f'<blockquote class="x-bq">{b[1]}</blockquote>'
     if k=='twocol':
-        a=''.join(f'<li><span class="x-n">{i:02d}</span><span>{x}</span></li>' for i,x in enumerate(b[2],1))
-        f=''.join(f'<li>{AST}<span>{x}</span></li>' for x in b[4])
-        return f'<div class="x-two"><div><span class="x-k">{b[1]}</span><ul class="x-numl">{a}</ul></div><div><span class="x-k">{b[3]}</span><ul class="x-astl">{f}</ul></div></div>'
-    if k=='templates': return '<div class="x-grid2 x-tpl">'+''.join(f'<div><div class="x-tplh"><span class="x-n">{i:02d}</span><i></i><span class="x-k">{b[2]}</span></div><h3>{t}</h3><p>{d}</p></div>' for i,(t,d) in enumerate(b[1],1))+'</div>'
-    if k=='insights': return f'<div class="x-sub"><span class="x-k">{b[1]}</span><div class="x-grid2 x-ins">'+''.join(f'<div>{AST}<h3>{t}</h3><p>{d}</p></div>' for t,d in b[2])+'</div></div>'
-    if k=='edge': return '<div class="x-sub"><span class="x-k">Our edge</span><ul class="x-edge">'+''.join(f'<li>{ARR}<span>{x}</span></li>' for x in b[1])+'</ul></div>'
-    if k=='dims':
-        cells=''.join(f'<div><span class="x-k">{i:02d}</span><b>{x}</b></div>' for i,x in enumerate(b[1],1))
-        return f'<div class="x-dims">{cells}<div class="x-on"><b>+ always-on</b></div></div>'
+        a=''.join(f'<li>{x}</li>' for x in b[2]); f=''.join(f'<li>{x}</li>' for x in b[4])
+        return f'<div class="twocol"><div><h4>{b[1]}</h4><ol>{a}</ol></div><div><h4>{b[3]}</h4><ol>{f}</ol></div></div>'
+    if k=='templates': return '<div class="cards">'+''.join(f'<div class="card"><span class="x-n">{b[2]} {i:02d}</span><h4>{t}</h4><p>{d}</p></div>' for i,(t,d) in enumerate(b[1],1))+'</div>'
+    if k=='insights': return f'<div class="take"><h4>{b[1]}</h4></div><div class="cards x-ins2">'+''.join(f'<div class="card"><h4>{t}</h4><p>{d}</p></div>' for t,d in b[2])+'</div>'
+    if k=='edge': return '<div class="edge"><h4>Our edge</h4><ul>'+''.join(f'<li>{x}</li>' for x in b[1])+'</ul></div>'
+    if k=='dims': return '<ol class="dims">'+''.join(f'<li><span>{i:02d}</span>{x}</li>' for i,x in enumerate(b[1],1))+'<li class="x-always"><span>+</span>Always on</li></ol>'
     if k=='matrix':
         def cell(q):
             name,sub,items,hot=q
-            its=''.join(f'<li><b>{t}</b>{f"<span>{d}</span>" if d else ""}</li>' for t,d in items)
-            tag='<span class="x-tag">★ Prioritized</span>' if hot else ''
-            return f'<div class="{"x-hot" if hot else ""}">{tag}<h3>{name}</h3><span class="x-k">{sub}</span><ul>{its}</ul></div>'
-        return f'<div class="x-mx"><span class="x-ax x-ay">Impact →</span><div class="x-mxg">{"".join(cell(q) for q in b[1])}</div><span class="x-ax x-axx">Effort →</span></div>'
+            its=''.join(f'<li><b>{t}</b>{f" <span>{d}</span>" if d else ""}</li>' for t,d in items)
+            return f'<div class="{"hot" if hot else ""}"><span class="mono">{name} · {sub}</span><ul>{its}</ul></div>'
+        return '<div class="matrix x-matrix">'+''.join(cell(q) for q in b[1])+'</div>'
     if k=='shots': return '<div class="x-shots">'+''.join(f'<figure><span class="x-shot"><img src="../assets/screens/{src}.jpg" alt="{cap}" loading="lazy"></span><figcaption class="x-k">{cap}</figcaption></figure>' for src,cap in b[1])+'</div>'
     if k=='features':
         n=len(b[1])
-        return '<div class="x-feats">'+''.join(f'<div class="x-feat"><div class="x-fl"><span class="x-n">Feature {i:02d}</span><span class="x-k">/ {i:02d} of {n:02d}</span></div><div class="x-fb"><h3>{t}</h3><p>{d}</p><span class="x-shot"><img src="../assets/screens/{img}.jpg" alt="{t} screen" loading="lazy"></span></div></div>' for i,(t,d,img) in enumerate(b[1],1))+'</div>'
+        return '<div class="x-scards">'+''.join(f'<div class="x-scard" style="--i:{i-1}"><div class="x-sc-in"><div class="x-sc-t"><span class="x-n">Feature {i:02d} <em>/ {i:02d} of {n:02d}</em></span><h3>{t}</h3><p>{d}</p></div><span class="x-shot"><img src="../assets/screens/{img}.jpg" alt="{t} screen" loading="lazy"></span></div></div>' for i,(t,d,img) in enumerate(b[1],1))+'</div>'
     if k=='numbers':
-        cls=b[2] if len(b)>2 else ''
-        return f'<div class="x-nums {cls}">'+''.join(f'<div class="{extra}"><b>{a}</b><p>{d}</p></div>' for a,d,extra in [(x[0],x[1],x[2] if len(x)>2 else '') for x in b[1]])+'</div>'
+        return '<div class="x-ngrid">'+''.join(f'<div class="x-ncard{" x-wide2" if len(x)>2 else ""}"><b>{x[0]}</b><p>{x[1]}</p></div>' for x in b[1])+'</div>'
     raise ValueError(k)
 
 QA=dict(slug='qa',name='Quick Automations',title=('Quick','Automations.'),endk='Freshdesk Omni · 2025',

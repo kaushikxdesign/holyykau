@@ -976,3 +976,66 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .csx .x-body>h2+.x-stack,.csx .x-body>h2+.x-feats,.csx .x-body>h2+.x-nums{margin-top:0}
 .csx .x-body>*:last-child{margin-bottom:0}
 @media (max-width:640px){.csx section.x-sec,.csx section.x-wide{padding:72px 0}.csx .x-body h2,.csx .x-wide h2{margin-bottom:28px}.csx .x-hero{padding-bottom:64px}.csx .wl{padding-bottom:72px}}
+
+/* case study v7: old card components on the new structure; 2x2 emphasis for features + numbers */
+.csx .cards{gap:12px;margin-top:40px}
+.csx .card{padding:26px 28px;border-radius:16px}
+.csx .card .x-n{display:block;margin-bottom:14px;font-size:11px}
+.csx .card h4{font-family:"Host Grotesk",sans-serif;font-size:19px;font-weight:500;letter-spacing:-.01em;color:var(--fg);margin:0 0 8px}
+.csx .card p{font-size:15px;line-height:1.6;margin:0;max-width:none}
+.csx .x-checks{display:grid;grid-template-columns:1fr 1fr;column-gap:32px;margin:32px 0 8px;padding:0}
+.csx .checks li{font-family:"Geist",sans-serif;font-size:16px;line-height:1.6}
+.csx .hmw{margin:8px 0 0;padding:0}
+.csx .hmw li{font-size:clamp(22px,2.2vw,28px);line-height:1.3;padding:26px 0;color:var(--fg)}
+.csx .take{margin-top:40px}
+.csx .take h4,.csx .twocol h4,.csx .edge h4{letter-spacing:-.4px}
+.csx .take .checks{margin:0}
+.csx .take+.cards{margin-top:16px}
+.csx .x-bq{margin:40px 0;padding-left:24px;border-left:2px solid var(--accent);border-image:none;font-family:"Host Grotesk",sans-serif;font-size:clamp(24px,2.6vw,32px);line-height:1.3;font-weight:500;letter-spacing:-.03em;color:var(--fg)}
+.csx .x-bq em{font-style:normal;color:var(--accent)}
+.csx .twocol{margin-top:40px}
+.csx .twocol>div{padding:26px 28px;border-radius:16px}
+.csx .twocol li{font-size:15.5px}
+.csx .edge{margin-top:24px;padding:24px 26px;border-radius:16px}
+.csx .edge li{font-family:"Geist",sans-serif}
+.csx .dims{margin-top:32px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.csx .dims li{padding:18px 20px;min-height:96px;justify-content:space-between;font-family:"Host Grotesk",sans-serif;font-size:18px;font-weight:500}
+.csx .dims li.x-always{background:linear-gradient(135deg,#1F4FFF,#1245FF 55%,#6f8cff);color:#fff}
+.csx .dims li.x-always span{color:#fff}
+.csx .x-matrix{margin-top:40px}
+.csx .x-matrix>div{padding:24px 26px;border-radius:16px}
+.csx .x-matrix .mono{font-size:11px;text-transform:uppercase;color:var(--fg-3)}
+.csx .x-matrix .hot .mono{color:#8ea6ff}
+.csx .x-matrix ul{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.csx .x-matrix li{font-family:"Geist",sans-serif;font-size:15px;line-height:1.55;color:var(--fg-2)}
+.csx .x-matrix li b{color:var(--fg);font-weight:500}
+.csx .x-matrix div.hot{background:rgba(31,79,255,.08);box-shadow:inset 0 0 0 1px rgba(31,79,255,.45)}
+/* 2x2 emphasis: features */
+.x-fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:8px}
+.x-fcard{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:32px 32px 28px;display:flex;flex-direction:column}
+.x-fcard .x-n em{font-style:normal;color:var(--fg-3);margin-left:8px}
+.csx .x-fcard h3{font-size:clamp(24px,2.4vw,32px);line-height:1.15;margin:18px 0 12px}
+.csx .x-fcard p{font-size:15.5px;margin:0 0 24px;max-width:none}
+.x-fcard .x-shot{margin-top:auto}
+/* 2x2 emphasis: numbers */
+.x-ngrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:8px}
+.x-ncard{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:40px 40px 44px}
+.x-ncard b{display:block;font-family:"Host Grotesk",sans-serif;font-weight:500;font-size:clamp(56px,7vw,96px);line-height:1;letter-spacing:-.045em;color:var(--accent);margin-bottom:22px}
+.csx .x-ncard p{font-size:16.5px;margin:0;max-width:34ch}
+.x-ncard.x-wide2{grid-column:1/-1}
+.x-ncard.x-wide2 b{font-size:clamp(36px,4vw,56px)}
+.x-ncard.x-wide2 p{max-width:60ch}
+.csx .x-ngrid+p{margin-top:40px}
+@media (max-width:900px){.csx .dims{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.x-fgrid,.x-ngrid,.csx .x-checks,.csx .cards,.csx .twocol,.csx .x-matrix{grid-template-columns:1fr}.x-fcard,.x-ncard{padding:26px 22px}}
+/* What we built: sticky stacked cards that collapse as the next one arrives */
+.x-scards{display:grid;gap:28px;margin-top:8px;padding-bottom:8px}
+.x-scard{position:sticky;top:calc(96px + var(--i) * 14px)}
+.x-sc-in{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:40px;align-items:center;background:#111114;border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:40px;box-shadow:0 -20px 50px -20px rgba(0,0,0,.8);transform-origin:50% 0;will-change:transform,filter;transition:filter .2s}
+.x-sc-t .x-n em{font-style:normal;color:var(--fg-3);margin-left:8px}
+.csx .x-sc-t h3{font-size:clamp(26px,2.8vw,38px);line-height:1.12;margin:18px 0 14px}
+.csx .x-sc-t p{font-size:16px;margin:0;max-width:40ch}
+.x-sc-in .x-shot{border-radius:14px}
+@media (max-width:900px){.x-sc-in{grid-template-columns:1fr;gap:24px;padding:28px}.x-scard{top:calc(80px + var(--i) * 10px)}}
+@media (prefers-reduced-motion:reduce){.x-scard{position:static}}
+.csx .x-checks+p{margin-top:32px}
