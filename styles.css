@@ -1107,3 +1107,11 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .snake-wrap:hover .snake,.snake-wrap:focus-within .snake{opacity:1}
 .snake .trail{fill:none;stroke:rgba(31,79,255,.18);stroke-width:1;stroke-dasharray:2 5}
 .art .blurb .cta{margin-top:52px;margin-bottom:24px}
+/* hero "better." brush swash */
+.art h1 em svg.swash{left:-2%;width:104%;bottom:-.16em;height:.36em}
+.art h1 em svg.swash path{animation:none;stroke-dasharray:none;stroke-dashoffset:0}
+.art h1 em svg.swash .sw-rev{stroke-dasharray:320;stroke-dashoffset:320;animation:draw 1.1s .6s cubic-bezier(.7,0,.25,1) forwards}
+.art h1 em svg.swash .sw-hair{opacity:.45;stroke-dasharray:200;stroke-dashoffset:200;animation:draw .9s 1.45s cubic-bezier(.6,0,.3,1) forwards}
+.loader:not(.skip) ~ .shell .art h1 em svg.swash .sw-rev{animation-delay:3.1s}
+.loader:not(.skip) ~ .shell .art h1 em svg.swash .sw-hair{animation-delay:3.95s}
+@media (prefers-reduced-motion:reduce){.art h1 em svg.swash .sw-rev,.art h1 em svg.swash .sw-hair{animation:none;stroke-dashoffset:0}}
