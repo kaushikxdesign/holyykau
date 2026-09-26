@@ -699,8 +699,6 @@ input,textarea{cursor:text}
 .finale .fband{padding-top:8px}
 
 /* dock status: plain dot with tooltip like the rest */
-.dock .status,.dock .status:hover,.dock .status:focus-visible{width:28px;min-width:28px;padding:0;gap:0;background:none;display:grid;place-items:center}
-.dock .status em{display:none}
 
 /* case study screens */
 .screens .scr-grid{display:grid;grid-template-columns:1fr;gap:20px;margin-top:24px}
@@ -728,3 +726,8 @@ input,textarea{cursor:text}
 .brand:hover .bk{transform:rotate(-6deg)}
 .brand:hover .bd{transform:scale(1.25);box-shadow:0 0 18px rgba(31,79,255,.95)}
 .nav .in{align-items:center}
+/* dock: status text expands inside the bar; all hover text in Host Grotesk */
+.dock [data-tip]::before{font-family:var(--sans);font-size:13px;letter-spacing:0}
+.dock .status em{font-family:var(--sans);font-size:14px;font-weight:500;letter-spacing:0;color:#f2f0ed}
+.dock .status:hover,.dock .status:focus-visible{background:none;padding:0 12px 0 8px}
+@media (max-width:600px){.dock .status:hover em,.dock .status:focus-visible em{font-size:12px}}
