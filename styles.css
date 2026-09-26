@@ -489,3 +489,7 @@ a:hover{text-decoration:none}
 .hi .loc{display:inline-flex;align-items:center;gap:4px;margin-left:12px;padding-left:12px;border-left:1px solid #34343a;color:var(--fg-2);font-weight:400}
 .hi .loc .pin{flex:none;color:#7588ff}
 @media (max-width:600px){.hi .loc{display:none}}
+/* ribbon: proof points (figure bright, context muted) */
+.marq div{animation-duration:46s}
+.marq span{color:var(--fg-3)}
+.marq i{color:var(--fg);font-style:normal}
