@@ -494,3 +494,10 @@ a:hover{text-decoration:none}
 .marq span{color:var(--fg-3)}
 .marq i{color:var(--fg);font-style:normal}
 .portrait img{object-position:50% 30%}
+
+/* chip v3: pin + Madras, rolls to வணக்கம் on hover */
+.hi{height:40px;padding:0 16px 0 12px;gap:8px;border-radius:12px}
+.hi .pin{color:#7588ff;flex:none}
+.hi-a{color:var(--fg)}
+.hi-b{font-family:"Noto Sans Tamil",var(--sans);font-weight:600;color:#fff}
+@media (max-width:600px){.hi{height:38px;padding:0 13px 0 10px;font-size:15px}}
