@@ -717,3 +717,4 @@ input,textarea{cursor:text}
 .art h1 span:first-child{font-size:1em;letter-spacing:inherit;margin-bottom:0}
 @media (max-width:600px){.art h1 span:first-child{font-size:1em}}
 .btn.primary,.figma,.btn.primary:hover,.figma:hover{border-color:rgba(150,170,255,.3)}
+.brand{font-size:22px;letter-spacing:-.02em}
