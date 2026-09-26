@@ -570,3 +570,6 @@ a:hover{text-decoration:none}
 .dock .status:hover,.dock .status:focus-visible{background:rgba(61,220,106,.12);padding:0 14px 0 12px;gap:10px}
 .dock .status:hover em,.dock .status:focus-visible em{max-width:280px;opacity:1}
 @media (max-width:600px){.dock .status:hover em,.dock .status:focus-visible em{max-width:170px;white-space:normal;line-height:1.2;font-size:11px}}
+/* chip: site-blue pin; Tamil sized by script to fit the Madras width */
+.hi .pin{color:#1245FF}
+.hi-b{font-size:12px;overflow:hidden}

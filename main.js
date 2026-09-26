@@ -90,3 +90,16 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   root.addEventListener('mouseleave', start);
   go(0); start();
 })();
+
+// Keep வணக்கம் inside the width set by "Madras", whatever font loads.
+(() => {
+  const fitTamil = () => document.querySelectorAll('.hi').forEach((hi) => {
+    const a = hi.querySelector('.hi-a'), b = hi.querySelector('.hi-b'); if (!a || !b) return;
+    b.style.fontSize = '14px';
+    const room = a.getBoundingClientRect().width, need = b.scrollWidth;
+    if (need > room && need > 0) b.style.fontSize = Math.max(9, Math.floor(14 * room / need * 10) / 10) + 'px';
+  });
+  fitTamil();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTamil);
+  addEventListener('load', fitTamil);
+})();
