@@ -493,3 +493,4 @@ a:hover{text-decoration:none}
 .marq div{animation-duration:46s}
 .marq span{color:var(--fg-3)}
 .marq i{color:var(--fg);font-style:normal}
+.portrait img{object-position:50% 30%}
