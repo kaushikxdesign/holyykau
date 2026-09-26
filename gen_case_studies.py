@@ -4,24 +4,22 @@ AST='<span class="x-ast" aria-hidden="true">✱</span>'
 ARR='<span class="x-arr" aria-hidden="true">→</span>'
 
 def page(c):
-    meta=''.join(f'<div><span class="x-k">{k}</span><b>{v}</b></div>' for k,v in c['meta'])
-    t1,t2=c['title']
+    meta=''.join(f'<div><span class="mono">{k}</span><b>{v}</b></div>' for k,v in c['meta'])
+    t1,t2=c['title']; title=f"{t1} {t2.rstrip('.')}"
     body=''.join(sec(i,s) for i,s in enumerate(c['sections'],1))
     return f'''<!doctype html><html lang="en"><head>
 {head}
-<title>{t1} {t2} — Kaushik Subramaniam</title><meta name="description" content="{html.escape(c['desc'])}">
+<title>{title} — Kaushik Subramaniam</title><meta name="description" content="{html.escape(c['desc'])}">
 <link rel="stylesheet" href="../styles.css"></head><body>
 <div class="shell">{nav}</div><main class="cs"><div class="csx">
-<header class="x-hero"><a class="back rv" href="../index.html#work">← All work</a>
-<p class="x-kick rv"><span class="x-rule"></span>{c['kicker']}</p>
-<h1 class="rv">{t1}<br><span>{t2}</span></h1>
-<p class="x-lede rv">{c['lede']}</p>
-<div class="x-meta rv">{meta}</div></header>
+<div class="wrap"><div class="cs-hero"><a class="back rv" href="../index.html#work">← All work</a>
+<div class="rv" style="margin-top:36px"><span class="mono">{c['kicker']}</span></div>
+<h1 class="rv">{title}</h1><p class="lede rv">{c['lede']}</p>
+<div class="meta rv">{meta}</div><div class="cs-cover rv"><img src="../assets/{c['slug']}-cover.jpg" alt="{title}: {c['coveralt']}"></div></div></div>
 {looks(c)}
-{body}
-<footer class="x-end"><div><b>{t1} {t2.rstrip('.')}</b><span class="x-k">{c['endk']}</span></div><span class="x-k">Designed end-to-end · Senior Product Designer</span></footer>
+<div class="wrap"><div class="read">{body}</div>
+<div class="cs-foot"><span>© 2026 Kaushik Subramaniam M</span><a href="../index.html#work">More work →</a></div></div>
 </div></main>
-{foot}
 <script src="../main.js"></script></body></html>'''
 
 def looks(c):
@@ -68,9 +66,9 @@ def blk(b):
     raise ValueError(k)
 
 QA=dict(slug='qa',name='Quick Automations',title=('Quick','Automations.'),endk='Freshdesk Omni · 2025',
-desc="Real-time automation for conversational support in Freshdesk Omni.",kicker='Freshdesk Omni · 0→1',
+desc="Real-time automation for conversational support in Freshdesk Omni.",kicker='Freshdesk Omni · 0→1 · 2025',
 lede="An instant automation framework built for conversational support inside Freshdesk, executing workflows in as little as <b>30 seconds</b> across WhatsApp, Web Chat, Facebook DM and Instagram DM.",
-meta=[("Project type","0→1 Product Experience"),("Role","Research · Product Thinking · UX Strategy · UI/UX"),("Year","2025"),("Surface","Freshdesk Omni")],
+meta=[("Role","Senior Product Designer"),("Scope","Research · Product Thinking · UX Strategy · UI/UX"),("Team","Product, Engineering, CX, GTM"),("Year","2025")],coveralt="the Quick Automations rule list with the delay rule configuration",
 caps=["Quick Automations home","Multi-channel setup","Template gallery","Rule configuration","Rule enablement"],
 sections=[
 dict(n='01',label='Creating a foundation',h='My role',blocks=[('p',"I led the end-to-end design for Quick Automations, a real-time automation framework built specifically for conversational support workflows inside Freshdesk Omni.","From defining the information architecture to simplifying highly technical automation logic into approachable templates, I worked closely with Product, Engineering, CX and GTM teams to shape a scalable experience that could support omni-channel workflows without overwhelming admins.","<b>The project eventually became a foundational step toward Freshdesk's long-term workflow modernization vision.</b>")]),
@@ -88,9 +86,9 @@ dict(n='11',label="What's next",h='A product is never finished.',blocks=[('p',"Q
 ])
 
 QC=dict(slug='qc',name='Quality Coach',title=('Quality','Coach.'),endk='Freddy AI · 2024',
-desc="Real-time AI coaching inside the Freshdesk Omni reply composer.",kicker='Freshdesk Omni · AI-first CX',
+desc="Real-time AI coaching inside the Freshdesk Omni reply composer.",kicker='Freshdesk Omni · AI-first CX · 2024',
 lede="An AI-powered real-time coaching system built inside Freshdesk Omni, helping support agents improve <b>grammar, tone and clarity</b> while they're actively replying to customers.",
-meta=[("Project type","AI-first CX experience"),("Role","Research · Product · UX/UI"),("Year","2024"),("Surface","Freshdesk Omni")],
+meta=[("Role","Senior Product Designer"),("Scope","Research · Product · UX/UI"),("Team","Product, AI, Engineering, CX"),("Year","2024")],coveralt="the reply composer with an inline grammar suggestion",
 caps=["Live coaching","Profanity correction","Grammar correction","All errors","Usage analytics"],
 sections=[
 dict(n='01',label='Creating a foundation',h='My role',blocks=[('p',"I worked on designing the end-to-end experience for <b>Quality Coach</b>, an AI-powered assistance layer integrated directly within the agent reply composer.","The project focused on helping support agents maintain high-quality customer interactions in real time without disrupting their workflow. I collaborated closely with Product, AI, Engineering and CX stakeholders to simplify how AI-generated feedback could be surfaced contextually while keeping suggestions actionable rather than overwhelming.","A major part of the challenge involved balancing proactive AI assistance with conversational flow so agents still felt in control of responses.")]),
