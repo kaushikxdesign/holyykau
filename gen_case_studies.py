@@ -68,7 +68,7 @@ def blk(b):
 QA=dict(slug='qa',name='Quick Automations',title=('Quick','Automations.'),endk='Freshdesk Omni · 2025',
 desc="Real-time automation for conversational support in Freshdesk Omni.",kicker='Freshdesk Omni · 0→1 · 2025',
 lede="An instant automation framework built for conversational support inside Freshdesk, executing workflows in as little as <b>30 seconds</b> across WhatsApp, Web Chat, Facebook DM and Instagram DM.",
-meta=[("Project type","0→1 Product Experience"),("Role","Research · Product Thinking · UX Strategy · UI/UX"),("Year","2025"),("Surface","Freshdesk Omni")],coveralt="the Quick Automations rule list with the delay rule configuration",
+meta=[("Project type","0→1 Product Experience"),("Role","Research · Product Thinking · UX Strategy"),("Year","2025"),("Surface","Freshdesk Omni")],coveralt="the Quick Automations rule list with the delay rule configuration",
 caps=["Quick Automations home","Multi-channel setup","Template gallery","Rule configuration","Rule enablement"],
 sections=[
 dict(n='01',label='Creating a foundation',h='My role',blocks=[('p',"I led the end-to-end design for Quick Automations, a real-time automation framework built specifically for conversational support workflows inside Freshdesk Omni.","From defining the information architecture to simplifying highly technical automation logic into approachable templates, I worked closely with Product, Engineering, CX and GTM teams to shape a scalable experience that could support omni-channel workflows without overwhelming admins.","<b>The project eventually became a foundational step toward Freshdesk's long-term workflow modernization vision.</b>")]),
