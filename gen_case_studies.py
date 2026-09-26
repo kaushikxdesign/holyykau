@@ -22,7 +22,7 @@ cards=lambda cs:'<div class="cards">'+''.join(f'<div class="card"><h4>{a}</h4><p
 hmw=lambda qs:'<ol class="hmw">'+''.join(f'<li>{q}</li>' for q in qs)+'</ol>'
 checks=lambda xs:'<ul class="checks">'+''.join(f'<li>{x}</li>' for x in xs)+'</ul>'
 metrics=lambda ms:'<div class="metrics">'+''.join(f'<div class="metric"><b>{a}</b><span>{b}</span></div>' for a,b in ms)+'</div>'
-def matrix(q): return '<div class="matrix">'+''.join(f'<div class="{"hi" if hi else ""}"><span class="mono">{a}</span><p>{b}</p></div>' for a,b,hi in q)+'</div>'
+def matrix(q): return '<div class="matrix">'+''.join(f'<div class="{"hot" if hi else ""}"><span class="mono">{a}</span><p>{b}</p></div>' for a,b,hi in q)+'</div>'
 
 qa_body=''.join([
 sec('01','Overview','Creating a foundation',P("I led the end-to-end design for Quick Automations, a real-time automation framework built for conversational support workflows inside Freshdesk Omni.","From defining the information architecture to turning highly technical automation logic into approachable templates, I worked closely with Product, Engineering, CX and GTM teams on an experience that could support omni-channel workflows without overwhelming admins.","The project became a foundational step toward Freshdesk's long-term workflow modernization vision.")),

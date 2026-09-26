@@ -141,7 +141,7 @@ footer{padding:140px 0 48px}
 .metric span{font-size:13px;color:var(--fg-3);line-height:1.45;display:block;margin-top:8px}
 .matrix{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
 .matrix div{background:var(--card);padding:18px;border-radius:14px}
-.matrix div.hi{box-shadow:inset 0 0 0 1px rgba(18,69,255,.45)}
+.matrix div.hot{box-shadow:inset 0 0 0 1px rgba(18,69,255,.45)}
 .matrix p{font-size:14px;margin:6px 0 0}
 .figma{margin-top:10px;background:var(--accent);border-color:var(--accent);color:#fff}
 .cs-foot{max-width:820px;margin:0 auto;padding:96px 24px 56px;display:flex;justify-content:space-between;font-size:13.5px;color:var(--fg-3)}
@@ -162,7 +162,7 @@ footer{padding:140px 0 48px}
 .tl .yr.now{color:#6f8cff}
 .cs blockquote{border-image:linear-gradient(180deg,#1F4FFF 0%,#1245FF 17%,#fff 100%) 1}
 .checks li::before{color:#6f8cff}
-.matrix div.hi{box-shadow:inset 0 0 0 1px rgba(18,69,255,.45)}
+.matrix div.hot{box-shadow:inset 0 0 0 1px rgba(18,69,255,.45)}
 .tl p a:hover{border-color:#1245FF}
 .pr .pimg{box-shadow:0 0 0 1px rgba(255,255,255,.04)}
 .pr:hover .pimg{box-shadow:0 0 0 1px rgba(18,69,255,.5),0 30px 80px -30px rgba(18,69,255,.45)}
