@@ -555,3 +555,18 @@ a:hover{text-decoration:none}
 .finale .giant text{fill:#161618}
 @media (max-width:600px){.finale .fimg{min-height:560px}.finale .fband{padding-top:24px}}
 .co-fw{background:#fff}.co-fw svg{width:76%;height:76%}
+
+/* chip: red pin; Tamil scales to fit the Madras width */
+.hi .pin{color:#ff4d4f}
+.hi-t{display:block;position:relative}
+.hi-a{position:relative}
+.hi-b{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;font-size:13.5px;white-space:nowrap;letter-spacing:-.01em}
+
+/* dock: expanding status pill */
+.dock .status{width:auto;min-width:28px;height:44px;border-radius:999px;padding:0 8px;display:flex;align-items:center;gap:0;cursor:default;
+  transition:background .35s,padding .35s,gap .35s}
+.dock .status em{font-style:normal;font-family:var(--mono);font-size:12px;color:#d9f7e3;white-space:nowrap;max-width:0;opacity:0;overflow:hidden;
+  transition:max-width .45s cubic-bezier(.22,1,.36,1),opacity .3s}
+.dock .status:hover,.dock .status:focus-visible{background:rgba(61,220,106,.12);padding:0 14px 0 12px;gap:10px}
+.dock .status:hover em,.dock .status:focus-visible em{max-width:280px;opacity:1}
+@media (max-width:600px){.dock .status:hover em,.dock .status:focus-visible em{max-width:170px;white-space:normal;line-height:1.2;font-size:11px}}
