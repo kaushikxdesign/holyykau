@@ -734,3 +734,5 @@ input,textarea{cursor:text}
 .brand .bk{font-family:var(--sans);font-weight:800;font-size:34px;letter-spacing:-.04em}
 .brand{gap:2px}
 .brand .bd{width:8px;height:8px}
+.brand .bk{font-size:42px}
+.brand .bd{width:10px;height:10px}
