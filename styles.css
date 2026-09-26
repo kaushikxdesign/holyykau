@@ -960,3 +960,19 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .gcur{width:32px;height:32px;margin:-16px 0 0 -16px;box-shadow:inset 0 1px 1px rgba(255,255,255,.55),inset 0 -3px 7px rgba(31,79,255,.28),inset 0 0 0 1px rgba(255,255,255,.14),0 5px 15px -3px rgba(0,0,0,.55),0 0 14px -3px rgba(31,79,255,.45)}
 .gcur.hot{width:42px;height:42px;margin:-21px 0 0 -21px}
 .gcur.down{width:26px;height:26px;margin:-13px 0 0 -13px}
+
+/* case study v6: single column (step label above title), fixed section spacing */
+.csx section.x-sec,.csx section.x-wide{display:block;padding:112px 0}
+.csx .x-lab{padding:0;margin:0 0 22px}
+.csx .x-body h2,.csx .x-wide h2{max-width:22ch;margin:0 0 40px}
+.csx .x-body>p,.csx .x-wide>p{max-width:72ch}
+.x-sec:has(.x-feats) .x-body h2{text-align:left}
+.csx .x-hero{padding-bottom:104px}
+.csx .wl{padding-bottom:112px}
+.csx .x-grid2,.csx .x-stack,.csx .x-mx,.csx .x-dims,.csx .x-feats,.csx .x-nums,.csx .x-two,.csx .x-shots{margin-top:48px;margin-bottom:0}
+.csx .x-body>p+.x-grid2,.csx .x-body>p+.x-stack,.csx .x-body>p+.x-mx,.csx .x-body>p+.x-dims{margin-top:40px}
+.csx .x-grid2+p,.csx .x-nums+p,.csx .x-mx+.x-sub,.csx .x-stack+.x-sub,.csx .x-two+.x-sub{margin-top:48px}
+.csx .x-sub{margin-top:64px}
+.csx .x-body>h2+.x-stack,.csx .x-body>h2+.x-feats,.csx .x-body>h2+.x-nums{margin-top:0}
+.csx .x-body>*:last-child{margin-bottom:0}
+@media (max-width:640px){.csx section.x-sec,.csx section.x-wide{padding:72px 0}.csx .x-body h2,.csx .x-wide h2{margin-bottom:28px}.csx .x-hero{padding-bottom:64px}.csx .wl{padding-bottom:72px}}
