@@ -716,7 +716,6 @@ input,textarea{cursor:text}
 @media (max-width:600px){.screens .scr-grid{grid-template-columns:1fr}}
 .art h1 span:first-child{font-size:1em;letter-spacing:inherit;margin-bottom:0}
 @media (max-width:600px){.art h1 span:first-child{font-size:1em}}
-.btn.primary,.figma,.btn.primary:hover,.figma:hover{border-color:rgba(150,170,255,.3)}
 .brand{font-size:22px;letter-spacing:-.02em}
 .marq div{animation-duration:78s}
 .nowat{color:#b4b1ac;opacity:1}
