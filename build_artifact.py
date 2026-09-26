@@ -24,7 +24,7 @@ cases = {'quick-automations': rd('work/quick-automations.html'), 'quality-coach'
 
 nav = between(index, r'<header class="nav">', r'</header>')
 home = between(index, r'<main>', r'</main>')
-footer = between(index, r'<footer class="fphoto', r'</footer>') + '\n<p class="copy">© 2026 Kaushik Subramaniam</p>'
+footer = between(index, r'<footer class="fphoto', r'</footer>') + '\n<div class="endcap"><p class="copy">© 2026 Kaushik Subramaniam</p><svg class="giant" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMin meet" aria-hidden="true"><text x="500" y="230" text-anchor="middle" textLength="1000" lengthAdjust="spacingAndGlyphs">KAUSHIK</text></svg></div>'
 dock = between(index, r'<nav class="dock"', r'</nav>')
 gal = between(gallery, r'<main>', r'</main>')
 case_views = {k: between(v, r'<main class="cs">', r'</main>') for k, v in cases.items()}
