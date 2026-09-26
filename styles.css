@@ -351,3 +351,7 @@ footer{padding:140px 0 48px}
 .btn:not(.primary):not(.figma):hover{filter:brightness(.94);transform:translateY(-1px)}
 .btn:not(.primary):not(.figma):active{transform:translateY(0);filter:brightness(.9)}
 .btn:not(.primary):not(.figma):focus-visible{outline:2px solid #7588ff;outline-offset:3px}
+/* secondary button: dark variant */
+.btn:not(.primary):not(.figma),.btn:not(.primary):not(.figma):hover{background:linear-gradient(180deg,#2f2f2f 0%,#252525 100%);border:1px solid #404040;color:#f2f0ed}
+.btn:not(.primary):not(.figma):hover{filter:brightness(1.12)}
+.btn:not(.primary):not(.figma):active{filter:brightness(.95)}
