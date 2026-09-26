@@ -7,12 +7,11 @@ def page(slug,title,desc,kicker,lede,meta,body,figma):
 <title>{title} — Kaushik Subramaniam</title><meta name="description" content="{html.escape(desc)}">
 <link rel="stylesheet" href="../styles.css"></head><body>
 <div class="shell">{nav}</div><main class="cs"><div class="wrap">
-<div class="cs-hero"><a class="back rv" href="../#work">← All work</a>
+<div class="cs-hero"><a class="back rv" href="../index.html#work">← All work</a>
 <div class="rv" style="margin-top:36px"><span class="mono">{kicker}</span></div>
 <h1 class="rv" style="max-width:18ch">{title}</h1><p class="lede rv">{lede}</p>
 <div class="meta rv">{m}</div><div class="cs-cover rv"><img src="../assets/{slug}.jpg" alt="{title} product screen"></div></div>
 <div class="read">{body}
-<section class="rv"><span class="mono">Full deck</span><h2>See the complete case study</h2><p>Every screen, flow and artifact lives in the Figma presentation.</p><a class="btn primary figma" href="{figma}" target="_blank" rel="noopener">Open the full deck in Figma ↗</a></section>
 </div></div></main>
 {foot}
 <script src="../main.js"></script></body></html>'''
