@@ -527,3 +527,16 @@ a:hover{text-decoration:none}
 .fbg{background-color:transparent;background-position:60% 50%}
 .fin h2{text-shadow:0 2px 18px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.4)}
 .fbot{border-top-color:rgba(255,255,255,.3);color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+
+/* finale: full-bleed photo footer with the giant wordmark on its bottom edge */
+.fphoto.finale{position:relative;width:100vw;margin:140px 0 0 calc(50% - 50vw);border-radius:0;min-height:760px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.finale .fbg{position:absolute;inset:0;background-size:cover;background-position:60% 45%}
+.finale::before{content:"";display:block;position:absolute;inset:auto 0 0 0;height:45%;z-index:1;background:linear-gradient(180deg,transparent,rgba(8,8,10,.55))}
+.finale .fin{transform:none;margin:auto 0 0;padding:0 24px 48px}
+.finale .fbot{width:min(1240px,calc(100% - 80px));padding:16px 0 0;border-top:1px solid rgba(255,255,255,.3);margin:0 auto}
+.finale .fbot .copy{padding:0;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.75)}
+.finale .giant{position:relative;z-index:2;display:block;width:100%;height:auto;margin:10px 0 -1px;pointer-events:none}
+.finale .giant text{fill:rgba(255,255,255,.16);font-size:250px;letter-spacing:-10px;font-weight:700;font-family:var(--sans)}
+.finale ~ .endcap{display:none}
+@media (max-width:600px){.fphoto.finale{min-height:620px;margin-top:96px}.finale .fbot{width:calc(100% - 32px);flex-wrap:wrap;gap:8px}}
+.finale .giant{mix-blend-mode:soft-light}.finale .giant text{fill:rgba(255,255,255,.55)}
