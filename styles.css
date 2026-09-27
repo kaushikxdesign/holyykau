@@ -1284,7 +1284,7 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @media (max-width:600px){.tst .led.soft{opacity:.8;height:100%}}
 /* testimonial LED: clipped to the bracket frame, a little dimmer */
 .tst{overflow:hidden}
-.tst .led.soft{opacity:.45;border-radius:14px;clip-path:inset(0 round 14px)}
-@media (max-width:600px){.tst .led.soft{opacity:.45;border-radius:10px;clip-path:inset(0 round 10px)}}
+.tst .led.soft{opacity:.4;border-radius:24px;clip-path:inset(0 round 24px)}
+@media (max-width:600px){.tst .led.soft{opacity:.4;border-radius:20px;clip-path:inset(0 round 20px)}}
 /* testimonial LED: even across the card, no fade behind the quote */
 .tst .led.soft{-webkit-mask-image:none;mask-image:none}
