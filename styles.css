@@ -737,7 +737,7 @@ input,textarea{cursor:text}
 .brand .bk{font-size:42px}
 .brand .bd{width:10px;height:10px}
 .brand .bd,.brand:hover .bd{box-shadow:none}
-.brand .bd{background:#fff}
+.brand .bd{background:#2457FF}
 
 /* case study: looping "what it looks like" strip */
 .cs .wl{padding:72px 0 8px}
