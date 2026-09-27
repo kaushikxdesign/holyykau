@@ -1337,3 +1337,5 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 /* hover stroke: same blue-tinted border as the project cards */
 .tool:hover{border-color:rgba(120,141,255,.28)}
 .tk.open .tk-c.t-card:hover,.tk.open .tk-c.t-card:focus-visible{border-color:rgba(120,141,255,.28)}
+/* Toolkit: real app icons */
+.tl-ic img{width:28px;height:28px;display:block;border-radius:7px;box-shadow:0 0 0 1px rgba(255,255,255,.08)}
