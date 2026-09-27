@@ -1196,3 +1196,26 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 /* journey bullets: grey like the marquee ✦; links white and heavier instead of blue */
 .jr-body li::before{background:rgba(255,255,255,.28)}
 .jr-body a{color:#fff;font-weight:600}.jr-body a:hover{color:#fff;text-decoration:underline;text-decoration-color:rgba(255,255,255,.4);text-underline-offset:3px}
+/* case study meta row: divided columns, role sized to its content */
+.csx .meta{grid-template-columns:1.25fr 1fr .7fr 1fr;gap:0;padding:0;margin-top:44px}
+.csx .meta>div{padding:24px 24px 26px;border-left:1px solid var(--line)}
+.csx .meta>div:first-child{padding-left:0;border-left:0}
+.csx .meta .mono{display:block;margin-bottom:10px}
+.csx .meta b{font-size:15px;margin-top:0}
+@media (max-width:640px){.csx .meta{grid-template-columns:1fr 1fr}.csx .meta>div{padding:18px 0 18px 18px}.csx .meta>div:nth-child(odd){padding-left:0;border-left:0}.csx .meta>div:nth-child(n+3){border-top:1px solid var(--line)}.csx .meta b{white-space:normal}}
+/* case study point tiles (replaces arrow grid) */
+.csx .x-pts{list-style:none;margin:32px 0 8px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.csx .x-pts li{display:flex;align-items:baseline;gap:14px;padding:18px 20px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));font-family:"Geist",sans-serif;font-size:15.5px;line-height:1.45;color:var(--fg)}
+.csx .x-i{font-family:var(--mono);font-size:11px;letter-spacing:-.2px;color:var(--fg-3);flex:none}
+.csx .x-pts+p{margin-top:32px}
+/* case study takeaway rows (replaces arrow list) */
+.csx .x-take{border-top:0;padding-top:0}
+.csx .x-rows{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--line)}
+.csx .x-rows li{display:grid;grid-template-columns:48px 1fr;align-items:baseline;padding:18px 0;border-top:1px solid var(--line);font-family:"Geist",sans-serif;font-size:16.5px;line-height:1.5;color:var(--fg)}
+/* case study quote card (replaces blue bar) */
+.csx .x-quote{position:relative;margin:48px 0;padding:40px 44px 34px;border-radius:24px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(520px 260px at 0% 0%,rgba(36,87,255,.18),transparent 70%),linear-gradient(180deg,#101014,#0b0b0e);overflow:hidden}
+.csx .x-qm{display:block;height:58px;margin-bottom:6px;font-family:"Host Grotesk",sans-serif;font-weight:800;font-size:96px;line-height:.9;color:#2457FF}
+.csx .x-quote blockquote{margin:0;padding:0;border:0;font-family:"Host Grotesk",sans-serif;font-size:clamp(24px,2.6vw,32px);line-height:1.3;font-weight:500;letter-spacing:-.03em;color:var(--fg)}
+.csx .x-quote blockquote em{font-style:normal;color:#7291FF}
+.csx .x-quote figcaption{display:block;margin-top:26px}
+@media (max-width:640px){.csx .x-pts{grid-template-columns:1fr}.csx .x-quote{padding:30px 24px 26px;border-radius:20px}.csx .x-qm{font-size:72px;height:46px}.csx .x-rows li{grid-template-columns:36px 1fr;font-size:15.5px}}
