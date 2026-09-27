@@ -1217,5 +1217,5 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .csx .x-quote::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 45% 55% at 50% 50%,rgba(36,87,255,.14),transparent 70%)}
 .csx .x-quote figcaption{display:block;margin:0 0 22px;color:var(--fg-3)}
 .csx .x-quote blockquote{max-width:700px;margin:0 auto;padding:0;border:0!important;font-family:"Host Grotesk",sans-serif;font-size:clamp(26px,3vw,36px);line-height:1.25;font-weight:500;letter-spacing:-.035em;color:var(--fg);text-wrap:balance}
-.csx .x-quote blockquote em{font-style:normal;color:#7291FF}
+.csx .x-quote blockquote em{font-style:normal;color:#2457FF}
 @media (max-width:640px){.csx .x-pts{grid-template-columns:1fr}.csx .x-quote{margin:48px 0!important;padding:40px 4px!important}.csx .x-rows li{grid-template-columns:36px 1fr;font-size:15.5px}}
