@@ -1124,3 +1124,14 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .jr-body li.li-live::before{content:none}
 .jr-body li.li-live .livedot{position:absolute;left:0;top:.6em;width:7px;height:7px}
 .jr-body li.li-live .livedot i{width:7px;height:7px}
+
+/* first fold: banner + Projects title visible above the fold */
+.art{padding-top:40px;padding-bottom:28px;min-height:0}
+.art .blurb{margin-top:28px}
+.art .blurb .cta{margin-top:44px;margin-bottom:28px}
+.marq{margin-top:28px!important}
+#work{padding-top:56px!important}
+.marq b{color:rgba(255,255,255,.28)!important;-webkit-text-fill-color:rgba(255,255,255,.28)}
+/* dock tucks away at the top of the page */
+.dock{transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .35s}
+.dock.dock-away{transform:translate(-50%,140%);opacity:0;pointer-events:none}

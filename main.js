@@ -168,8 +168,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     svg.innerHTML = `<path id="${id}" fill="none"/><path class="trail"/><text><textPath href="#${id}" startOffset="0"></textPath></text>`;
     wrap.appendChild(svg);
     const path = svg.querySelector('path'), trail = svg.querySelector('.trail'), tp = svg.querySelector('textPath');
-    const star = msg.indexOf('✦');
-    tp.innerHTML = msg.slice(0, star) + '<tspan class="sk">✦</tspan>' + msg.slice(star + 1);
+    tp.textContent = msg;
     let loop = 0;
     const build = () => {
       const w = btn.offsetWidth, h = btn.offsetHeight, g = 13, r = Math.min(h / 2, 16) + g;
@@ -190,4 +189,11 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     btn.addEventListener('focus', start); btn.addEventListener('blur', stop);
     build(); addEventListener('resize', build);
   });
+})();
+
+// Dock stays tucked away at the very top so it never covers the first fold.
+(() => {
+  const dock = document.querySelector('.dock'); if (!dock) return;
+  const upd = () => dock.classList.toggle('dock-away', scrollY < 120 && !location.hash.match(/^#(quick-automations|quality-coach|gallery)$/));
+  addEventListener('scroll', upd, { passive: true }); addEventListener('hashchange', upd); upd();
 })();
