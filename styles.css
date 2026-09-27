@@ -1223,3 +1223,5 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .csx .take{border-top:0;padding-top:0}
 /* about: bold phrases stay in Geist, not Host Grotesk */
 #about .about b,#about .about strong{font-family:"Geist",ui-sans-serif,system-ui,sans-serif;font-weight:600}
+/* about heading: "Forever curious." in the accent blue */
+#about .ah span{color:#2457FF;-webkit-text-fill-color:#2457FF}
