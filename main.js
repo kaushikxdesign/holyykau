@@ -295,3 +295,38 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   };
   build(); addEventListener('resize', build); addEventListener('load', build);
 })();
+
+/* Testimonials: pile of tilted cards that fans out into a 3-col grid on hover/focus/tap */
+(() => {
+  const root = document.querySelector('.tk'); if (!root) return;
+  const cards = [...root.querySelectorAll('.tk-c')], GAP = 16;
+  // pile: [x offset as share of width from centre, y px, rotation, stacking]
+  const PILE = [[-.33, 70, -6, 1], [-.06, 0, -4, 6], [.2, 30, 11, 3], [-.24, 140, 0, 2], [0, 130, 9, 5], [.18, 150, 3, 4]];
+  let open = false, grid = [], pile = [];
+  const apply = () => cards.forEach((c, i) => {
+    const p = open ? grid[i] : pile[i];
+    c.style.setProperty('--x', p.x + 'px'); c.style.setProperty('--y', p.y + 'px'); c.style.setProperty('--r', p.r + 'deg');
+    c.style.setProperty('--d', (open ? i : cards.length - 1 - i) * 0.035 + 's');
+    c.style.zIndex = open ? 1 : PILE[i][3];
+  });
+  const layout = () => {
+    if (innerWidth <= 760) { root.style.height = ''; cards.forEach((c) => { c.style.width = ''; }); return; }
+    const W = root.clientWidth, cw = Math.floor((W - GAP * 2) / 3);
+    cards.forEach((c) => { c.style.width = cw + 'px'; });
+    const h = cards.map((c) => c.offsetHeight), colB = [0, 0, 0];
+    grid = cards.map((c, i) => { const col = i % 3, y = colB[col]; colB[col] += h[i] + GAP; return { x: col * (cw + GAP), y, r: 0 }; });
+    const gridH = Math.max(...colB) - GAP;
+    pile = cards.map((c, i) => ({ x: W / 2 - cw / 2 + PILE[i][0] * W, y: 20 + PILE[i][1], r: PILE[i][2] }));
+    const pileH = Math.max(...pile.map((p, i) => p.y + h[i])) + 30;
+    root.style.height = Math.max(gridH, pileH) + 'px';
+    apply();
+  };
+  const set = (v) => { if (open !== v) { open = v; root.classList.toggle('open', v); apply(); } };
+  root.addEventListener('mouseenter', () => set(true));
+  root.addEventListener('mouseleave', () => set(false));
+  root.addEventListener('focusin', () => set(true));
+  root.addEventListener('focusout', (e) => { if (!root.contains(e.relatedTarget)) set(false); });
+  root.addEventListener('click', () => { if (matchMedia('(hover: none)').matches) set(!open); });
+  addEventListener('resize', layout);
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(layout); layout();
+})();

@@ -1288,3 +1288,25 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @media (max-width:600px){.tst .led.soft{opacity:.4;border-radius:20px;clip-path:inset(0 round 20px)}}
 /* testimonial LED: even across the card, no fade behind the quote */
 .tst .led.soft{-webkit-mask-image:none;mask-image:none}
+/* ── Testimonials: scattered card pile that fans out into a grid on hover ── */
+.tk{position:relative;margin-top:8px;height:560px}
+.tk-c{position:absolute;left:0;top:0;margin:0;padding:26px 26px 22px;border-radius:20px;border:1px solid transparent;display:flex;flex-direction:column;gap:14px;cursor:default;outline:none;
+  transform:translate(var(--x,0),var(--y,0)) rotate(var(--r,0deg));transition:transform .75s cubic-bezier(.22,1,.36,1) var(--d,0s),box-shadow .5s;box-shadow:0 24px 60px -24px rgba(0,0,0,.75);will-change:transform}
+.tk-q{font-family:"Host Grotesk",ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:40px;line-height:.6;height:18px;letter-spacing:-.04em}
+.tk-c blockquote{margin:0;font-family:"Geist",ui-sans-serif,system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;letter-spacing:-.01em}
+.tk-c figcaption{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:6px}
+.tk-av{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:"Host Grotesk",sans-serif;font-weight:600;font-size:12.5px}
+.tk-c b{display:block;font-family:"Host Grotesk",ui-sans-serif,system-ui,sans-serif;font-weight:500;font-size:14.5px;letter-spacing:-.01em;line-height:1.3}
+.tk-c small{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:-.4px;line-height:1.4;margin-top:2px}
+/* tones — drawn from the site palette */
+.t-accent{background:#2457FF;color:#fff}.t-accent small{color:rgba(255,255,255,.72)}.t-accent .tk-av{background:rgba(255,255,255,.18);color:#fff}
+.t-tint{background:#141a33;border-color:rgba(114,145,255,.22);color:var(--fg)}.t-tint .tk-q{color:#7291FF}.t-tint small{color:var(--fg-3)}.t-tint .tk-av{background:rgba(114,145,255,.18);color:#9FB5FF}
+.t-pale{background:#9FB5FF;color:#08080a}.t-pale small{color:rgba(8,8,10,.6)}.t-pale .tk-av{background:rgba(8,8,10,.12);color:#08080a}
+.t-card{background:var(--card);border-color:var(--line-2);color:var(--fg)}.t-card .tk-q{color:#2457FF}.t-card small{color:var(--fg-3)}.t-card .tk-av{background:#232326;color:var(--fg-2)}
+.t-light{background:var(--fg);color:#08080a}.t-light .tk-q{color:#2457FF}.t-light small{color:#6b6964}.t-light .tk-av{background:rgba(8,8,10,.08);color:#08080a}
+.t-line{background:#0e0e11;border-color:var(--line-2);color:var(--fg)}.t-line .tk-q{color:var(--fg-3)}.t-line small{color:var(--fg-3)}.t-line .tk-av{background:#1c1c20;color:var(--fg-2)}
+.tk-c.ph blockquote{opacity:.75}
+.tk.open .tk-c:hover,.tk.open .tk-c:focus-visible{box-shadow:0 30px 70px -24px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.12)}
+/* phones: plain stacked list */
+@media (max-width:760px){.tk .t-accent{order:-1}.tk{height:auto!important;display:grid;gap:14px}.tk-c{position:relative;width:auto!important;transform:none!important;transition:none}}
+@media (prefers-reduced-motion:reduce){.tk-c{transition:none}}
