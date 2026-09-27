@@ -48,7 +48,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
       const i = y * cols + x, v = life[i];
       if (v > 0) {
-        ctx.fillStyle = `rgba(${Math.round(18 + (1 - v) * 100)},${Math.round(69 + (1 - v) * 90)},255,${0.25 + v * 0.75})`;
+        ctx.fillStyle = `rgba(${Math.round(26 + (1 - v) * 100)},${Math.round(77 + (1 - v) * 90)},255,${0.25 + v * 0.75})`;
       } else ctx.fillStyle = 'rgba(255,255,255,0.045)';
       ctx.fillRect(x * STEP, y * STEP, CELL, CELL);
     }
@@ -257,9 +257,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     ctx.clearRect(0, 0, W, H);
     for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) cell(x, y, 'rgba(255,255,255,0.035)');
     if (Math.random() < .25) sparks.set(rnd(0, cols - 1) + ',' + rnd(0, rows - 1), .3 + Math.random() * .25);
-    sparks.forEach((v, k) => { const [x, y] = k.split(',').map(Number); cell(x, y, `rgba(31,79,255,${v})`); const n = v - .025; n > 0 ? sparks.set(k, n) : sparks.delete(k); });
+    sparks.forEach((v, k) => { const [x, y] = k.split(',').map(Number); cell(x, y, `rgba(36,87,255,${v})`); const n = v - .025; n > 0 ? sparks.set(k, n) : sparks.delete(k); });
     if (ate + 1 < foods.length) { const [fx, fy] = foods[ate + 1]; const blink = .55 + .45 * Math.sin(t / 70); ctx.shadowColor = '#6f8cff'; ctx.shadowBlur = 16; cell(fx, fy, `rgba(160,180,255,${blink})`); ctx.shadowBlur = 0; }
-    for (let j = 0; j < LEN; j++) { const p = path[i - j]; if (!p) break; const a = 1 - j / LEN; if (j === 0) { ctx.shadowColor = '#1F4FFF'; ctx.shadowBlur = 18; } cell(p[0], p[1], `rgba(${31 + (1 - a) * 20},${79 + (1 - a) * 40},255,${.35 + a * .65})`); ctx.shadowBlur = 0; }
+    for (let j = 0; j < LEN; j++) { const p = path[i - j]; if (!p) break; const a = 1 - j / LEN; if (j === 0) { ctx.shadowColor = '#2457FF'; ctx.shadowBlur = 18; } cell(p[0], p[1], `rgba(${36 + (1 - a) * 20},${87 + (1 - a) * 40},255,${.35 + a * .65})`); ctx.shadowBlur = 0; }
     if (t < acc + 600) requestAnimationFrame(frame);
   };
   window.__snakeEnd = T0 + acc;
