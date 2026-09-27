@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Live LED matrix: 4px cells, 2px gap; lit cells get denser toward the bottom and twinkle.
 document.querySelectorAll('canvas.led').forEach((c) => { try {
   const ctx = c.getContext('2d'), CELL = 4, GAP = 2, STEP = CELL + GAP;
+  const mono = c.classList.contains('mono'); // monochrome variant (testimonial card)
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cols, rows, life, dpr;
   const size = () => {
@@ -48,7 +49,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
       const i = y * cols + x, v = life[i];
       if (v > 0) {
-        ctx.fillStyle = `rgba(${Math.round(26 + (1 - v) * 100)},${Math.round(77 + (1 - v) * 90)},255,${0.25 + v * 0.75})`;
+        ctx.fillStyle = mono ? `rgba(255,255,255,${0.12 + v * 0.6})` : `rgba(${Math.round(26 + (1 - v) * 100)},${Math.round(77 + (1 - v) * 90)},255,${0.25 + v * 0.75})`;
       } else ctx.fillStyle = 'rgba(255,255,255,0.045)';
       ctx.fillRect(x * STEP, y * STEP, CELL, CELL);
     }
