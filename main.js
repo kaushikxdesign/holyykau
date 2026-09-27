@@ -191,69 +191,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   });
 })();
 
-// Toolbar ↔ top bar: at the top of the homepage the dock's icons live in the nav; on scroll they drop down into the dock.
+// Dock stays tucked away at the very top so it never covers the first fold.
 (() => {
-  const dock = document.querySelector('.dock'), nin = document.querySelector('.nav .in'), links = document.querySelector('.nav .links');
-  if (!dock || !nin || !links) return;
-  const src = [...dock.querySelectorAll('a')];
-  const right = document.createElement('div'); right.className = 'nav-r';
-  const tray = document.createElement('div'); tray.className = 'navicons';
-  src.forEach((a) => { const c = a.cloneNode(true); c.removeAttribute('data-tip'); c.setAttribute('data-ntip', a.dataset.tip || a.getAttribute('aria-label') || ''); tray.appendChild(c); });
-  links.parentNode.insertBefore(right, links); right.append(tray, links);
-  const icons = [...tray.children];
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const small = () => matchMedia('(max-width: 700px)').matches;
-  const onHome = () => !/^#(quick-automations|quality-coach|gallery)$/.test(location.hash);
-  let state = null, busy = false;
-  const want = () => (onHome() && scrollY < 120 ? 'top' : 'dock');
-  const set = (s) => {
-    state = s;
-    const top = s === 'top';
-    document.documentElement.classList.toggle('icons-in-nav', top && !small());
-    dock.classList.toggle('dock-away', top);
-  };
-  const fly = (from, to, down) => Promise.all(from.map((el, i) => {
-    const a = el.getBoundingClientRect(), b = to[i].getBoundingClientRect();
-    const f = el.cloneNode(true); f.className = 'flyer'; f.removeAttribute('href'); f.style.visibility = 'visible';
-    Object.assign(f.style, { left: a.left + 'px', top: a.top + 'px', width: a.width + 'px', height: a.height + 'px' });
-    document.body.appendChild(f);
-    const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2), k = b.width / a.width;
-    const lift = down ? -26 : 26, spin = (i % 2 ? 1 : -1) * 14;
-    const anim = f.animate([
-      { transform: 'translate(0,0) scale(1) rotate(0deg)', opacity: 1 },
-      { transform: `translate(${dx * 0.18}px,${lift}px) scale(${1 + (k - 1) * 0.3}) rotate(${spin}deg)`, opacity: 1, offset: 0.22 },
-      { transform: `translate(${dx}px,${dy + (down ? 10 : -10)}px) scale(${k * 1.06}) rotate(${-spin / 3}deg)`, opacity: 1, offset: 0.86 },
-      { transform: `translate(${dx}px,${dy}px) scale(${k}) rotate(0deg)`, opacity: 1 }
-    ], { duration: 1150, delay: i * 95, easing: 'cubic-bezier(.55,0,.25,1)', fill: 'forwards' });
-    return anim.finished.then(() => f.remove(), () => f.remove());
-  }));
-  const go = async () => {
-    const w = want();
-    if (busy || w === state) return;
-    if (reduced || small() || state === null) { set(w); return; }
-    busy = true;
-    const dIcons = [...dock.querySelectorAll('a')];
-    if (w === 'dock') {
-      dock.classList.add('dock-ghost'); dock.classList.remove('dock-away');     // lay the dock out invisibly to measure targets
-      icons.forEach((e) => (e.style.visibility = 'hidden'));
-      const p = fly(icons, dIcons, true);
-      document.documentElement.classList.remove('icons-in-nav');
-      await p; state = 'dock';
-      dock.classList.remove('dock-ghost'); dock.classList.add('dock-land');
-      setTimeout(() => dock.classList.remove('dock-land'), 600);
-      icons.forEach((e) => (e.style.visibility = ''));
-    } else {
-      document.documentElement.classList.add('icons-in-nav');
-      icons.forEach((e) => (e.style.visibility = 'hidden'));
-      dock.classList.add('dock-ghost');
-      const p = fly(dIcons, icons, false);
-      await p; state = 'top';
-      dock.classList.remove('dock-ghost'); dock.classList.add('dock-away');
-      icons.forEach((e) => (e.style.visibility = ''));
-    }
-    busy = false;
-    if (want() !== state) go();
-  };
-  addEventListener('scroll', go, { passive: true }); addEventListener('hashchange', () => { set(want()); }); addEventListener('resize', () => set(want()));
-  set(want());
+  const dock = document.querySelector('.dock'); if (!dock) return;
+  const upd = () => dock.classList.toggle('dock-away', scrollY < 120 && !location.hash.match(/^#(quick-automations|quality-coach|gallery)$/));
+  addEventListener('scroll', upd, { passive: true }); addEventListener('hashchange', upd); upd();
 })();

@@ -1159,24 +1159,3 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .finale .ftag{left:auto;right:22px;bottom:18px;padding:0;background:none;border:0;-webkit-backdrop-filter:none;backdrop-filter:none;color:rgba(255,255,255,.85);text-shadow:0 1px 8px rgba(0,0,0,.55)}
 @media (max-width:600px){.finale .ftag{right:14px;bottom:12px}}
 
-/* toolbar icons in the top bar at the top of the homepage */
-.nav-r{display:flex;align-items:center;gap:22px}
-.navicons{display:flex;align-items:center;gap:6px;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.22,1,.36,1);visibility:hidden}
-.icons-in-nav .navicons{opacity:1;transform:none;pointer-events:auto;visibility:visible}
-.navicons a{position:relative;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#d8d6d2;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);transition:background .2s,color .2s,transform .2s}
-.navicons a:hover{background:rgba(255,255,255,.12);color:#fff;transform:translateY(-1px)}
-.navicons a svg{width:16px;height:16px}
-.navicons a::after{content:attr(data-ntip);position:absolute;top:calc(100% + 10px);left:50%;transform:translate(-50%,-4px);white-space:nowrap;padding:5px 9px;border-radius:8px;font-family:var(--sans);font-size:12px;color:#fff;background:rgba(20,20,24,.92);border:1px solid rgba(255,255,255,.1);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
-.navicons a:hover::after,.navicons a:focus-visible::after{opacity:1;transform:translate(-50%,0)}
-.navicons::after{content:"";width:1px;height:18px;background:rgba(255,255,255,.14);margin-left:10px}
-@media (max-width:700px){.navicons{display:none}}
-/* flying icons */
-.flyer{position:fixed;z-index:200;margin:0;border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(40,40,46,.9);border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 24px -8px rgba(0,0,0,.7);pointer-events:none;transform-origin:50% 50%;will-change:transform}
-.flyer svg{width:16px;height:16px}
-.flyer::after,.flyer::before{content:none!important}
-/* dock: laid out but invisible while icons are in flight, then lands */
-.dock.dock-ghost{opacity:0!important;transform:translateX(-50%)!important;transition:none!important;pointer-events:none}
-.dock.dock-land{animation:dockland .55s cubic-bezier(.34,1.56,.64,1)}
-@keyframes dockland{0%{transform:translate(-50%,6px) scale(.96)}100%{transform:translate(-50%,0) scale(1)}}
-.navicons::after{content:none}
-.navicons a{border:0}
