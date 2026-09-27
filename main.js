@@ -197,3 +197,73 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   const upd = () => dock.classList.toggle('dock-away', scrollY < 120 && !location.hash.match(/^#(quick-automations|quality-coach|gallery)$/));
   addEventListener('scroll', upd, { passive: true }); addEventListener('hashchange', upd); upd();
 })();
+
+
+// Intro: a Snake Xenzia-style pixel snake eats blocks that reveal greetings, ending on வணக்கம் at the centre.
+(() => {
+  const L = document.querySelector('.loader'); if (!L || L.classList.contains('skip')) return;
+  const words = [...L.querySelectorAll('.words span')].map(s => [s.textContent, s.getAttribute('lang') || 'en']);
+  const cv = document.createElement('canvas'); cv.className = 'snk-cv'; L.appendChild(cv);
+  const ctx = cv.getContext('2d'); const dpr = Math.min(devicePixelRatio || 1, 2);
+  const W = innerWidth, H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.scale(dpr, dpr);
+  const S = W < 600 ? 24 : 32, G = 5, C = S - G, cols = Math.floor(W / S), rows = Math.floor(H / S);
+  const ox = (W - cols * S) / 2 + G / 2, oy = (H - rows * S) / 2 + G / 2;
+  const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  // foods: random every run — one per random zone of a 3×3 (4×2 on phones) grid, visited nearest-first
+  const zc = W < 600 ? 2 : 3, zr = W < 600 ? 5 : 3, zones = [];
+  for (let zy = 0; zy < zr; zy++) for (let zx = 0; zx < zc; zx++) if (W < 600 ? zy !== 2 : !(zx === 1 && zy === 1)) zones.push([zx, zy]);  // keep the centre free for the finale
+  for (let i = zones.length - 1; i > 0; i--) { const j = rnd(0, i); [zones[i], zones[j]] = [zones[j], zones[i]]; }
+  const zw = cols / zc, zh = rows / zr, padX = W < 600 ? 1 : 2;
+  const pts = zones.slice(0, words.length - 1).map(([zx, zy]) => [
+    Math.round(zx * zw + padX + Math.random() * Math.max(1, zw * (W < 600 ? .45 : .55) - padX)),
+    Math.round(zy * zh + 1 + Math.random() * Math.max(1, zh - 2))]);
+  const edge = rnd(0, 3);
+  let pos = edge === 0 ? [0, rnd(2, rows - 3)] : edge === 1 ? [cols - 1, rnd(2, rows - 3)] : edge === 2 ? [rnd(2, cols - 3), 0] : [rnd(2, cols - 3), rows - 1];
+  const foods = []; let cur = pos.slice(), left = pts.slice();
+  while (left.length) { left.sort((p, q) => (Math.abs(p[0] - cur[0]) + Math.abs(p[1] - cur[1])) - (Math.abs(q[0] - cur[0]) + Math.abs(q[1] - cur[1]))); cur = left.shift(); foods.push(cur); }
+  const mid = [Math.floor(cols / 2), Math.floor(rows / 2) - 2]; foods.push(mid);  // last greeting always lands dead centre
+  const segs = []; const start = pos.slice();
+  foods.forEach((f, k) => {
+    const cells = []; const axes = k % 2 ? [1, 0] : [0, 1];
+    axes.forEach(ax => { while (pos[ax] !== f[ax]) { pos[ax] += Math.sign(f[ax] - pos[ax]); cells.push(pos.slice()); } });
+    segs.push(cells);
+  });
+  const path = [start]; segs.forEach(c => path.push(...c));
+  const T0 = performance.now() + 60, BUDGET = Math.max(1800, 2860 - T0), HOLD = 70, LEN = 7;          // whole run fits in ~2.35s
+  const STEP = (BUDGET - HOLD * segs.length) / (path.length - 1);
+  const eatT = []; let acc = 0; segs.forEach(c => { acc += c.length * STEP; eatT.push(acc); acc += HOLD; });
+  const idxAt = (t) => { let i = 0, tt = 0; for (let k = 0; k < segs.length; k++) { const d = segs[k].length * STEP; if (t < tt + d) return i + Math.floor((t - tt) / STEP); i += segs[k].length; tt += d; if (t < tt + HOLD) return i; tt += HOLD; } return path.length - 1; };
+  const sparks = new Map(); const labels = [];
+  let ate = -1, t0 = T0;
+  const cell = (x, y, fill) => { ctx.fillStyle = fill; ctx.fillRect(ox + x * S, oy + y * S, C, C); };
+  const say = (k) => {
+    const [txt, lang] = words[k], [fx, fy] = foods[k];
+    labels.forEach(l => l.classList.add('gone'));
+    const d = document.createElement('div'); d.className = 'snk-g'; d.lang = lang; d.textContent = txt;
+    L.appendChild(d);
+    const cx = ox + fx * S + C / 2, cy = oy + fy * S + C / 2;
+    const last = k === words.length - 1;
+    if (last) { d.classList.add('mid'); d.style.top = (H / 2) + 'px'; d.style.left = '50%'; requestAnimationFrame(() => d.classList.add('on')); }
+    else {
+      d.style.top = cy + 'px'; d.style.left = (cx + S) + 'px';
+      requestAnimationFrame(() => { const r = d.getBoundingClientRect(); if (r.right > W - 16) d.style.left = (cx - S - r.width) + 'px'; d.classList.add('on'); });
+    }
+    labels.push(d);
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) sparks.set((fx + dx) + ',' + (fy + dy), 1);
+  };
+  const frame = (now) => {
+    const t = Math.max(0, now - t0), i = Math.min(path.length - 1, idxAt(t));
+    while (ate + 1 < eatT.length && t >= eatT[ate + 1]) say(++ate);
+    ctx.clearRect(0, 0, W, H);
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) cell(x, y, 'rgba(255,255,255,0.035)');
+    if (Math.random() < .25) sparks.set(rnd(0, cols - 1) + ',' + rnd(0, rows - 1), .3 + Math.random() * .25);
+    sparks.forEach((v, k) => { const [x, y] = k.split(',').map(Number); cell(x, y, `rgba(31,79,255,${v})`); const n = v - .025; n > 0 ? sparks.set(k, n) : sparks.delete(k); });
+    if (ate + 1 < foods.length) { const [fx, fy] = foods[ate + 1]; const blink = .55 + .45 * Math.sin(t / 70); ctx.shadowColor = '#6f8cff'; ctx.shadowBlur = 16; cell(fx, fy, `rgba(160,180,255,${blink})`); ctx.shadowBlur = 0; }
+    for (let j = 0; j < LEN; j++) { const p = path[i - j]; if (!p) break; const a = 1 - j / LEN; if (j === 0) { ctx.shadowColor = '#1F4FFF'; ctx.shadowBlur = 18; } cell(p[0], p[1], `rgba(${31 + (1 - a) * 20},${79 + (1 - a) * 40},255,${.35 + a * .65})`); ctx.shadowBlur = 0; }
+    if (t < acc + 600) requestAnimationFrame(frame);
+  };
+  window.__snakeEnd = T0 + acc;
+  L.style.animationDelay = '3s';
+  document.documentElement.style.setProperty('--intro', '3.4s');
+  requestAnimationFrame(frame);
+})();
