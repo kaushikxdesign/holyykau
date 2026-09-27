@@ -268,3 +268,29 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   document.documentElement.style.setProperty('--intro', '3.4s');
   requestAnimationFrame(frame);
 })();
+
+// Toolbar glass: an edge-refraction map shaped to the pill, like the cursor lens.
+(() => {
+  const dock = document.querySelector('.dock');
+  if (!dock || !CSS.supports('backdrop-filter', 'url(#x)')) return;
+  const ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.style.position = 'absolute';
+  document.body.appendChild(svg);
+  let key = '';
+  const build = () => {
+    const W = Math.round(dock.offsetWidth), H = Math.round(dock.offsetHeight); if (!W || !H) return;
+    const k = W + 'x' + H; if (k === key) return; key = k;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d'), img = g.createImageData(W, H), r = H / 2, band = Math.min(18, r);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      // signed distance to the pill edge and outward normal
+      const cx = Math.min(Math.max(x + .5, r), W - r), dx = x + .5 - cx, dy = y + .5 - r, d = Math.hypot(dx, dy), inside = r - d;
+      const t = inside > 0 && inside < band ? Math.pow(1 - inside / band, 2) : 0, nx = d ? dx / d : 0, ny = d ? dy / d : 0, i = (y * W + x) * 4;
+      img.data[i] = 128 - nx * t * 127; img.data[i + 1] = 128 - ny * t * 127; img.data[i + 2] = 128; img.data[i + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+    svg.innerHTML = `<filter id="glass-dock" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage href="${c.toDataURL()}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="none" result="m"/><feDisplacementMap in="SourceGraphic" in2="m" scale="22" xChannelSelector="R" yChannelSelector="G"/></filter>`;
+    dock.classList.add('glass-ref');
+  };
+  build(); addEventListener('resize', build); addEventListener('load', build);
+})();

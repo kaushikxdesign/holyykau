@@ -1176,3 +1176,12 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 /* intro: Tamil greeting in Oi */
 .snk-g[lang="ta"]{font-family:"Oi","Noto Sans Tamil",var(--sans);font-weight:400;letter-spacing:0}
 .snk-g.mid[lang="ta"]{font-size:clamp(30px,4vw,52px)}
+
+/* toolbar: refractive glass, matching the cursor */
+.dock{background:radial-gradient(140% 120% at 30% 0%,rgba(255,255,255,.16),rgba(255,255,255,.03) 42%,rgba(31,79,255,.06) 75%,rgba(31,79,255,.14));
+  -webkit-backdrop-filter:blur(6px) saturate(1.8) brightness(1.08);backdrop-filter:blur(6px) saturate(1.8) brightness(1.08);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 1.5px rgba(255,255,255,.5),inset 0 -8px 18px rgba(31,79,255,.22),inset 0 0 0 1px rgba(255,255,255,.08),0 14px 40px -12px rgba(0,0,0,.7),0 0 34px -8px rgba(31,79,255,.4)}
+.dock.glass-ref{backdrop-filter:url(#glass-dock) blur(2px) saturate(1.8) brightness(1.1)}
+.dock a{background:rgba(255,255,255,.08);box-shadow:inset 0 1px 1px rgba(255,255,255,.22),inset 0 -2px 6px rgba(0,0,0,.25)}
+.dock a:hover{background:rgba(255,255,255,.16)}
