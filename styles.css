@@ -1261,3 +1261,6 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @media (max-width:640px){.tst{padding:44px 4px 52px}}
 /* section headers: no rule underneath */
 .lab{border-bottom:0;padding-bottom:0}
+/* footer photo tag: Geist, all caps */
+.finale .ftag{font-family:"Geist",ui-sans-serif,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:500}
+@media (max-width:600px){.finale .ftag{font-size:10.5px}}
