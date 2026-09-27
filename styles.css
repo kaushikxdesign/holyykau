@@ -1268,3 +1268,5 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .tst{border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden}
 .tst::before{inset:0}
 @media (max-width:640px){.tst{border-radius:20px;padding-left:16px;padding-right:16px}}
+/* testimonial: LED matrix at the bottom instead of the dot-field */
+.tst::before{content:none}
