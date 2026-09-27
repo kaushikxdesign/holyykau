@@ -1193,3 +1193,6 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 /* journey "Now designing": plain mono line with the hero's green dot, no pill */
 .jr-now{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;font-weight:400;letter-spacing:-.4px;text-transform:uppercase;line-height:1;color:#b4b1ac;vertical-align:middle;margin-left:4px;padding:0!important;border:0!important;background:none!important;border-radius:0!important;white-space:nowrap}
 .jr-now::before{content:"";width:8px;height:8px;border-radius:50%;background:#3ddc6a;box-shadow:0 0 10px rgba(61,220,106,.8);flex:none}
+/* journey bullets: grey like the marquee ✦; links white and heavier instead of blue */
+.jr-body li::before{background:rgba(255,255,255,.28)}
+.jr-body a{color:#fff;font-weight:600}.jr-body a:hover{color:#fff;text-decoration:underline;text-decoration-color:rgba(255,255,255,.4);text-underline-offset:3px}
