@@ -229,7 +229,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     segs.push(cells);
   });
   const path = [start]; segs.forEach(c => path.push(...c));
-  const T0 = performance.now() + 60, BUDGET = Math.max(1800, 2860 - T0), HOLD = 70, LEN = 7;          // whole run fits in ~2.35s
+  const T0 = performance.now() + 60, BUDGET = Math.max(1300, 2860 - T0), HOLD = 70, LEN = 7;          // finish by ~2.86s after page start
   const STEP = (BUDGET - HOLD * segs.length) / (path.length - 1);
   const eatT = []; let acc = 0; segs.forEach(c => { acc += c.length * STEP; eatT.push(acc); acc += HOLD; });
   const idxAt = (t) => { let i = 0, tt = 0; for (let k = 0; k < segs.length; k++) { const d = segs[k].length * STEP; if (t < tt + d) return i + Math.floor((t - tt) / STEP); i += segs[k].length; tt += d; if (t < tt + HOLD) return i; tt += HOLD; } return path.length - 1; };
@@ -263,7 +263,8 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     if (t < acc + 600) requestAnimationFrame(frame);
   };
   window.__snakeEnd = T0 + acc;
-  L.style.animationDelay = '3s';
+  L.style.animationDelay = (Math.max(3000, T0 + acc + 140) / 1000) + 's';  // never wipe before the last greeting lands
+  window.__snakeT0 = T0;
   document.documentElement.style.setProperty('--intro', '3.4s');
   requestAnimationFrame(frame);
 })();
