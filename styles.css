@@ -1308,5 +1308,5 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .tk-c.ph blockquote{opacity:.75}
 .tk.open .tk-c:hover,.tk.open .tk-c:focus-visible{box-shadow:0 30px 70px -24px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.12)}
 /* phones: plain stacked list */
-@media (max-width:760px){.tk .t-accent{order:-1}.tk{height:auto!important;display:grid;gap:14px}.tk-c{position:relative;width:auto!important;transform:none!important;transition:none}}
+@media (max-width:760px){.tk .tk-c:not(.ph){order:-1}.tk{height:auto!important;display:grid;gap:14px}.tk-c{position:relative;width:auto!important;transform:none!important;transition:none}}
 @media (prefers-reduced-motion:reduce){.tk-c{transition:none}}
