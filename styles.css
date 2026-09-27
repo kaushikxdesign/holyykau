@@ -1148,3 +1148,5 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
   -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 36%,#000 64%,rgba(0,0,0,.42) 76%,rgba(0,0,0,.34) 92%,transparent 100%),linear-gradient(90deg,transparent 0%,#000 12%,#000 88%,transparent 100%);
   mask-image:linear-gradient(180deg,transparent 0%,#000 36%,#000 64%,rgba(0,0,0,.42) 76%,rgba(0,0,0,.34) 92%,transparent 100%),linear-gradient(90deg,transparent 0%,#000 12%,#000 88%,transparent 100%);
   -webkit-mask-composite:source-in;mask-composite:intersect}
+/* brighter secondary / tertiary text */
+:root{--fg-2:#c2bfba;--fg-3:#8c8984}
