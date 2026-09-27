@@ -1138,3 +1138,8 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 /* LED matrix: brighter (same footprint as before) */
 .art .led:not(.soft){opacity:.62}
 @media (max-width:600px){.art .led:not(.soft){opacity:.5}}
+/* LED matrix extended behind the banner, dimmed there; banner has no rules */
+.art .led:not(.soft){bottom:-128px;height:420px;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 36%,#000 64%,rgba(0,0,0,.26) 76%,rgba(0,0,0,.2) 92%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 36%,#000 64%,rgba(0,0,0,.26) 76%,rgba(0,0,0,.2) 92%,transparent 100%)}
+.marq{position:relative;z-index:1;border-top:0!important;border-bottom:0!important}
+@media (max-width:600px){.art .led:not(.soft){height:320px}}
