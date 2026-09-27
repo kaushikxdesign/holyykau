@@ -18,9 +18,14 @@ def page(c):
 <div class="meta rv">{meta}</div><div class="cs-cover rv"><img src="../assets/{c['slug']}.jpg" alt="{title}: {c['coveralt']}"></div></div></div>
 {looks(c)}
 <div class="wrap"><div class="read">{body}</div>
-<div class="cs-foot"><span>© 2026 Kaushik Subramaniam M</span><a href="../index.html#work">More work →</a></div></div>
+{nextcta(c)}
+<div class="cs-foot"><span>© 2026 Kaushik Subramaniam M</span></div></div>
 </div></main>
 <script src="../main.js"></script></body></html>'''
+
+def nextcta(c):
+    n=c['next']; t1,t2=n['title']
+    return f'''<a class="x-next rv" href="{n['file']}"><span class="x-next-txt"><span class="x-k">Next project</span><span class="x-next-t">{t1} {t2.rstrip('.')}</span><span class="x-next-d">{n['desc']}</span><span class="x-next-go">View project <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><span class="x-next-img"><img src="../assets/{n['slug']}.jpg" alt="" loading="lazy"></span></a>'''
 
 def looks(c):
     slug,caps=c['slug'],c['caps']; n=len(caps)
@@ -104,5 +109,7 @@ dict(n='10',label='Measuring impact',h='The numbers.',blocks=[('numbers',[("62%"
 dict(n='11',label="What's next",h='A product is never finished.',blocks=[('p',"Quality Coach was designed as an early foundational layer for AI-assisted customer support experiences inside Freshdesk Omni. The long-term vision extends beyond grammar and tone correction toward fully contextual conversational intelligence, capable of proactively improving resolution quality, compliance adherence, empathy and operational efficiency during customer interactions.","Future iterations focus on deeper AI personalization, smarter contextual understanding, workflow-aware suggestions and tighter integration with broader AI copilot capabilities across the support ecosystem.")]),
 ])
 
+QA['file'],QC['file']='quick-automations.html','quality-coach.html'
+QA['next'],QC['next']=QC,QA
 open('work/quick-automations.html','w').write(page(QA))
 open('work/quality-coach.html','w').write(page(QC))

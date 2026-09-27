@@ -44,7 +44,8 @@ body = f'''{loader}
 # links -> in-page routes
 for a, b in [('../index.html#', '#'), ('index.html#', '#'), ('"../index.html"', '"#top"'), ('"index.html"', '"#top"'),
              ('"../gallery.html"', '"#gallery"'), ('"gallery.html"', '"#gallery"'),
-             ('"work/quick-automations.html"', '"#quick-automations"'), ('"work/quality-coach.html"', '"#quality-coach"')]:
+             ('"work/quick-automations.html"', '"#quick-automations"'), ('"work/quality-coach.html"', '"#quality-coach"'),
+             ('"quick-automations.html"', '"#quick-automations"'), ('"quality-coach.html"', '"#quality-coach"')]:
     body = body.replace(a, b)
 # images -> embedded once. <img> sources and data.js paths resolve through one
 # lookup table so a photo used in several places is only stored a single time.

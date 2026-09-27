@@ -1226,5 +1226,20 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 /* about heading: "Forever curious." in the accent blue */
 #about .ah span{color:#2457FF;-webkit-text-fill-color:#2457FF}
 /* quote dot-field: full-bleed band so the dots reach left and right, fading only at the edges */
-.csx .x-quote::before{inset:-24px auto;left:50%;width:100vw;transform:translateX(-50%);opacity:1;background-image:radial-gradient(rgba(114,145,255,.55) 1.4px,transparent 1.7px);background-size:16px 16px;-webkit-mask-image:linear-gradient(180deg,transparent,#000 28%,#000 72%,transparent),linear-gradient(90deg,transparent 2%,#000 22%,rgba(0,0,0,.4) 50%,#000 78%,transparent 98%);-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,transparent,#000 28%,#000 72%,transparent),linear-gradient(90deg,transparent 2%,#000 22%,rgba(0,0,0,.4) 50%,#000 78%,transparent 98%);mask-composite:intersect}
-.csx .x-quote::after{left:50%;right:auto;width:100vw;transform:translateX(-50%);background:radial-gradient(ellipse 40% 60% at 50% 50%,rgba(36,87,255,.14),transparent 70%)}
+.csx .x-quote::before{inset:-24px auto;left:50%;width:100vw;transform:translateX(-50%);opacity:1;background-image:radial-gradient(rgba(114,145,255,.55) 1.4px,transparent 1.7px);background-size:16px 16px;-webkit-mask-image:linear-gradient(180deg,transparent,#000 28%,#000 72%,transparent),linear-gradient(90deg,transparent 2%,#000 22%,rgba(0,0,0,.22) 50%,#000 78%,transparent 98%);-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,transparent,#000 28%,#000 72%,transparent),linear-gradient(90deg,transparent 2%,#000 22%,rgba(0,0,0,.22) 50%,#000 78%,transparent 98%);mask-composite:intersect}
+.csx .x-quote::after{left:50%;right:auto;width:100vw;transform:translateX(-50%);background:radial-gradient(ellipse 36% 55% at 50% 50%,rgba(36,87,255,.06),transparent 70%)}
+/* case study end: next-project CTA (replaces "More work") */
+.csx .x-next{display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:center;margin-top:112px;padding:28px 28px 28px 36px;border-radius:24px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(420px 220px at 0% 0%,rgba(36,87,255,.14),transparent 70%),linear-gradient(180deg,#101014,#0b0b0e);color:var(--fg);text-decoration:none;transition:border-color .4s,transform .6s cubic-bezier(.22,1,.36,1)}
+.csx .x-next:hover{border-color:rgba(36,87,255,.45);transform:translateY(-3px)}
+.csx .x-next-txt{display:flex;flex-direction:column;align-items:flex-start}
+.csx .x-next .x-k{color:var(--fg-3)}
+.csx .x-next-t{margin-top:14px;font-family:"Host Grotesk",sans-serif;font-weight:500;font-size:clamp(34px,4.4vw,54px);line-height:1;letter-spacing:-.045em}
+.csx .x-next-d{margin-top:14px;max-width:34ch;font-family:"Geist",sans-serif;font-size:15.5px;line-height:1.5;color:var(--fg-2)}
+.csx .x-next-go{margin-top:28px;display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:99px;background:#2457FF;color:#fff;font-family:"Host Grotesk",sans-serif;font-weight:600;font-size:15px}
+.csx .x-next-go svg{transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.csx .x-next:hover .x-next-go svg{transform:translateX(4px)}
+.csx .x-next-img{display:block;aspect-ratio:4/3;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.csx .x-next-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1s cubic-bezier(.22,1,.36,1)}
+.csx .x-next:hover .x-next-img img{transform:scale(1.04)}
+.csx .x-next+.cs-foot{padding-top:48px}
+@media (max-width:720px){.csx .x-next{grid-template-columns:1fr;gap:24px;padding:24px;margin-top:80px}.csx .x-next-img{order:-1}}
