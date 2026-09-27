@@ -1267,6 +1267,15 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 /* testimonial: subtle outline around the quote block */
 .tst{border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden}
 .tst::before{inset:0}
-@media (max-width:640px){.tst{border-radius:20px;padding-left:16px;padding-right:16px}}
+@media (max-width:640px){.tst{padding-left:16px;padding-right:16px}}
 /* testimonial: LED matrix at the bottom instead of the dot-field */
 .tst::before{content:none}
+/* testimonial: curved corner brackets instead of the outline; brighter LED */
+.tst{border:0;border-radius:0}
+.tst .c{display:block;width:32px;height:32px;border-color:rgba(255,255,255,.28)}
+.tst .c.tl{border-top-left-radius:14px}.tst .c.tr{border-top-right-radius:14px}
+.tst .c.bl{border-bottom-left-radius:14px}.tst .c.br{border-bottom-right-radius:14px}
+.tst .led.soft{opacity:.55}
+@media (max-width:600px){.tst .c{width:24px;height:24px}.tst .c.tl{border-top-left-radius:10px}.tst .c.tr{border-top-right-radius:10px}.tst .c.bl{border-bottom-left-radius:10px}.tst .c.br{border-bottom-right-radius:10px}.tst .led.soft{opacity:.5}}
+/* testimonial attribution name in Host Grotesk */
+.tst-item figcaption b{font-family:"Host Grotesk",ui-sans-serif,system-ui,sans-serif;font-weight:500;letter-spacing:-.01em}
