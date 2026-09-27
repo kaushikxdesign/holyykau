@@ -258,7 +258,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) cell(x, y, 'rgba(255,255,255,0.035)');
     if (Math.random() < .25) sparks.set(rnd(0, cols - 1) + ',' + rnd(0, rows - 1), .3 + Math.random() * .25);
     sparks.forEach((v, k) => { const [x, y] = k.split(',').map(Number); cell(x, y, `rgba(36,87,255,${v})`); const n = v - .025; n > 0 ? sparks.set(k, n) : sparks.delete(k); });
-    if (ate + 1 < foods.length) { const [fx, fy] = foods[ate + 1]; const blink = .55 + .45 * Math.sin(t / 70); ctx.shadowColor = '#6f8cff'; ctx.shadowBlur = 16; cell(fx, fy, `rgba(160,180,255,${blink})`); ctx.shadowBlur = 0; }
+    if (ate + 1 < foods.length) { const [fx, fy] = foods[ate + 1]; const blink = .55 + .45 * Math.sin(t / 70); ctx.shadowColor = '#7291FF'; ctx.shadowBlur = 16; cell(fx, fy, `rgba(162,183,255,${blink})`); ctx.shadowBlur = 0; }
     for (let j = 0; j < LEN; j++) { const p = path[i - j]; if (!p) break; const a = 1 - j / LEN; if (j === 0) { ctx.shadowColor = '#2457FF'; ctx.shadowBlur = 18; } cell(p[0], p[1], `rgba(${36 + (1 - a) * 20},${87 + (1 - a) * 40},255,${.35 + a * .65})`); ctx.shadowBlur = 0; }
     if (t < acc + 600) requestAnimationFrame(frame);
   };
