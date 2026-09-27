@@ -1160,3 +1160,5 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @media (max-width:600px){.finale .ftag{right:14px;bottom:12px}}
 
 .snake .trail{display:none}
+/* stamp: moved down to the empty right side beside the intro, away from the headline */
+@media (min-width:901px){.badge{top:auto;bottom:34px;right:0;width:136px;height:136px}}
