@@ -1259,3 +1259,5 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .tst-nav button:hover{border-color:rgba(255,255,255,.4)}
 .tst-dots button.on{background:#fff}
 @media (max-width:640px){.tst{padding:44px 4px 52px}}
+/* section headers: no rule underneath */
+.lab{border-bottom:0;padding-bottom:0}
