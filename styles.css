@@ -1197,7 +1197,7 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .jr-body li::before{background:rgba(255,255,255,.28)}
 .jr-body a{color:#fff;font-weight:600}.jr-body a:hover{color:#fff;text-decoration:underline;text-decoration-color:rgba(255,255,255,.4);text-underline-offset:3px}
 /* case study meta row: divided columns, role sized to its content */
-.csx .meta{grid-template-columns:1.25fr 1fr .7fr 1fr;gap:32px;padding:26px 0 28px;margin-top:44px}
+.csx .meta{grid-template-columns:1.25fr 1fr 1fr;gap:32px;padding:26px 0 28px;margin-top:44px}
 .csx .meta>div{padding:0;border:0}
 .csx .meta .mono{display:block;margin-bottom:10px}
 .csx .meta b{font-size:15px;margin-top:0}
