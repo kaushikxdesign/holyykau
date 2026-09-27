@@ -1334,3 +1334,6 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .tk.open .tk-c.t-card:hover,.tk.open .tk-c.t-card:focus-visible{box-shadow:0 24px 60px -28px rgba(0,0,0,.8);border-color:rgba(255,255,255,.1)}
 /* project cards: no blue glow inside the card on hover (outer glow stays) */
 .pc::before,.pc:hover::before{opacity:0!important}
+/* hover stroke: same blue-tinted border as the project cards */
+.tool:hover{border-color:rgba(120,141,255,.28)}
+.tk.open .tk-c.t-card:hover,.tk.open .tk-c.t-card:focus-visible{border-color:rgba(120,141,255,.28)}
