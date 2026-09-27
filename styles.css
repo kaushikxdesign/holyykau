@@ -1185,3 +1185,6 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .dock.glass-ref{backdrop-filter:url(#glass-dock) blur(2px) saturate(1.8) brightness(1.1)}
 .dock a{background:rgba(255,255,255,.08);box-shadow:inset 0 1px 1px rgba(255,255,255,.22),inset 0 -2px 6px rgba(0,0,0,.25)}
 .dock a:hover{background:rgba(255,255,255,.16)}
+/* toolbar glass: neutral, no accent tint */
+.dock{background:radial-gradient(140% 120% at 30% 0%,rgba(255,255,255,.16),rgba(255,255,255,.04) 45%,rgba(255,255,255,.02));
+  box-shadow:inset 0 1px 1.5px rgba(255,255,255,.5),inset 0 -8px 18px rgba(0,0,0,.18),inset 0 0 0 1px rgba(255,255,255,.08),0 14px 40px -12px rgba(0,0,0,.7)}
