@@ -1176,5 +1176,3 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 /* intro: Tamil greeting in Oi */
 .snk-g[lang="ta"]{font-family:"Oi","Noto Sans Tamil",var(--sans);font-weight:400;letter-spacing:0}
 .snk-g.mid[lang="ta"]{font-size:clamp(30px,4vw,52px)}
-/* intro finale: வணக்கம் in brand blue with a white glow */
-.snk-g.mid[lang="ta"]{color:#1F4FFF;text-shadow:0 0 22px rgba(255,255,255,.55),0 0 6px rgba(255,255,255,.7),0 0 1px rgba(255,255,255,.9)}
