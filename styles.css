@@ -1279,3 +1279,6 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @media (max-width:600px){.tst .c{width:24px;height:24px}.tst .c.tl{border-top-left-radius:10px}.tst .c.tr{border-top-right-radius:10px}.tst .c.bl{border-bottom-left-radius:10px}.tst .c.br{border-bottom-right-radius:10px}.tst .led.soft{opacity:.5}}
 /* testimonial attribution name in Host Grotesk */
 .tst-item figcaption b{font-family:"Host Grotesk",ui-sans-serif,system-ui,sans-serif;font-weight:500;letter-spacing:-.01em}
+/* testimonial LED: fills the whole container at 80%; dimmer behind the quote so it stays readable */
+.tst .led.soft{left:0;top:0;bottom:auto;width:100%;height:100%;max-width:none;transform:none;opacity:.8;-webkit-mask-image:radial-gradient(ellipse 48% 42% at 50% 42%,rgba(0,0,0,.18),#000 100%);mask-image:radial-gradient(ellipse 48% 42% at 50% 42%,rgba(0,0,0,.18),#000 100%)}
+@media (max-width:600px){.tst .led.soft{opacity:.8;height:100%}}
