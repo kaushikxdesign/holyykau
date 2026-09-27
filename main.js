@@ -224,7 +224,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       { transform: `translate(${dx * 0.18}px,${lift}px) scale(${1 + (k - 1) * 0.3}) rotate(${spin}deg)`, opacity: 1, offset: 0.22 },
       { transform: `translate(${dx}px,${dy + (down ? 10 : -10)}px) scale(${k * 1.06}) rotate(${-spin / 3}deg)`, opacity: 1, offset: 0.86 },
       { transform: `translate(${dx}px,${dy}px) scale(${k}) rotate(0deg)`, opacity: 1 }
-    ], { duration: 780, delay: i * 70, easing: 'cubic-bezier(.55,0,.25,1)', fill: 'forwards' });
+    ], { duration: 1150, delay: i * 95, easing: 'cubic-bezier(.55,0,.25,1)', fill: 'forwards' });
     return anim.finished.then(() => f.remove(), () => f.remove());
   }));
   const go = async () => {
