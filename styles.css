@@ -1221,3 +1221,5 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 @media (max-width:640px){.csx .x-pts{grid-template-columns:1fr}.csx .x-quote{margin:48px 0!important;padding:40px 4px!important}.csx .x-rows li{grid-template-columns:36px 1fr;font-size:15.5px}}
 /* case study section labels (e.g. Key market insights): no hairline above */
 .csx .take{border-top:0;padding-top:0}
+/* about: bold phrases stay in Geist, not Host Grotesk */
+#about .about b,#about .about strong{font-family:"Geist",ui-sans-serif,system-ui,sans-serif;font-weight:600}
