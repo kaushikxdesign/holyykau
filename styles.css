@@ -1480,3 +1480,5 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .jf-tag{position:absolute;left:8px;top:8px;padding:3px 7px;border-radius:6px;background:rgba(var(--rgb-bg),var(--o70));font-family:var(--mono);font-size:10px;font-weight:var(--fw-medium);letter-spacing:-.2px;text-transform:uppercase;color:var(--text-primary)}
 /* toolkit chips: neutral hover stroke (brand stroke stays on cards) */
 .tool:hover{border-color:var(--stroke-strong)}
+/* progress %: sits on the line, right at the tip of the blue bar */
+.rprog span{top:50%;left:min(calc(var(--p,0) * 100vw),calc(100vw - 56px));transform:translateY(-50%);padding:1px 7px;border-radius:7px;font-family:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:500;font-size:11px;line-height:16px;border-color:var(--stroke-brand)}
