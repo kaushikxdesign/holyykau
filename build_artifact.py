@@ -101,7 +101,9 @@ body{background:var(--bg);margin:0}
 '''
 js = rd('data.js') + '\n' + rd('main.js').replace("document.addEventListener('DOMContentLoaded', () => {", "(() => {", 1)
 # main.js's first block was a DOMContentLoaded handler; the script now runs at the end, so call it directly
-js = js.replace("\n});\n\n// Live LED", "\n})();\n\n// Live LED", 1)
+_o = js.index("(() => {")
+_c = js.index("\n});\n", _o)  # first top-level close after the opener
+js = js[:_c] + "\n})();\n" + js[_c + len("\n});\n"):]
 
 js = asset_js + '\n' + resume_js + '\n' + js.replace('src="${p.src}"', 'src="${(window.__A&&__A[p.src])||p.src}"').replace('src="${s.img}"', 'src="${(window.__A&&__A[s.img])||s.img}"')
 out = f'''<title>Kaushik Subramaniam</title>
