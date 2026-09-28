@@ -1570,3 +1570,8 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 @media (max-width:900px){.jumble{padding:22px 14px!important}}
 /* pegboard uses the same card styling as the rest of the homepage: surface fill, --stroke border, 24px radius */
 .jumble{background:radial-gradient(circle,rgba(var(--rgb-black),var(--o70)) 0 2.2px,transparent 2.7px) 13px 13px/26px 26px,var(--surface);border:1px solid var(--stroke);border-radius:24px;box-shadow:none}
+/* pegboard holes: punched black holes with a faint lit lower lip, so the board reads as perforated */
+.jumble{background:
+  radial-gradient(circle at 50% 46%,#000 0 3.3px,transparent 3.8px) 0 0/24px 24px,
+  radial-gradient(circle at 50% 56%,rgba(var(--rgb-white),var(--o16)) 0 3.6px,transparent 4.1px) 0 0/24px 24px,
+  var(--surface)}
