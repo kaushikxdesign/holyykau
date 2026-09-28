@@ -394,9 +394,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   bar.innerHTML = '<i></i><div class="rp-tip"><span>0%</span></div>';
   nav.appendChild(bar);
   const label = bar.querySelector('span');
-  const runner = nav.querySelector('.rp-runner');
-  if (runner) bar.querySelector('.rp-tip').appendChild(runner);
-  let lastY = scrollY, idle = 0;
+
   const target = () => {
     const v = document.querySelector('[data-view]:not([hidden])');
     if (v) return (v.dataset.view === 'home' || v.dataset.view === 'gallery') ? null : v;
@@ -412,12 +410,6 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     const p = Math.min(1, Math.max(0, (scrollY - top) / span));
     bar.style.setProperty('--p', p.toFixed(4));
     label.textContent = Math.round(p * 100) + '%';
-    if (runner && scrollY !== lastY) {
-      bar.classList.toggle('back', scrollY < lastY);
-      bar.classList.add('moving'); clearTimeout(idle);
-      idle = setTimeout(() => bar.classList.remove('moving'), 220);
-    }
-    lastY = scrollY;
     bar.classList.toggle('on', scrollY > top + 40);
   };
   const req = () => { if (!raf) raf = requestAnimationFrame(update); };
@@ -472,24 +464,25 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   });
   if (!matchMedia('(pointer:fine) and (min-width:901px)').matches) return;
   board.classList.add('is-live');
-  // structured entry state: rows of 7 on a gentle wave, alternating tilts, prints slightly overlapping
+  // entry state: a dense collage pinned to the pegboard (jittered 5x4 grid, heavy overlaps, varied sizes and tilts)
   let home = [], touched = false;
+  const seeded = (n) => { let x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); };
   const layout = () => {
-    const W = board.clientWidth, cols = 7, rows = Math.ceil(cards.length / cols), cell = W / cols;
-    const w = Math.round(cell * 1.02);
-    const wOf = (c) => c.classList.contains('jf-film') ? Math.round(w * 1.3) : w;
-    cards.forEach((c) => { c.style.width = wOf(c) + 'px'; });
+    const W = board.clientWidth, cols = 5, rows = Math.ceil(cards.length / cols);
+    const cellW = W / cols, big = new Set([0, 4, 7, 12, 17]);
+    const wOf = (c, k) => Math.round(cellW * (c.classList.contains('jf-film') ? 1.12 : big.has(k) ? 0.96 : 0.8));
+    cards.forEach((c, k) => { c.style.width = wOf(c, k) + 'px'; });
     const hs = cards.map((c) => c.offsetHeight);
-    const wave = 18, gap = -18;
-    const rowH = [...Array(rows)].map((_, r) => Math.max(...hs.slice(r * cols, r * cols + cols)));
-    let y = wave + 10;
-    const rowTop = rowH.map((h) => { const t = y; y += h + gap; return t; });
-    board.style.height = Math.round(y + wave + 20) + 'px';
+    const med = [...hs].sort((a, b) => a - b)[Math.floor(hs.length / 2)];
+    const cellH = Math.round(med * 1.02);
+    board.style.height = Math.round(cellH * rows + cellH * 0.35) + 'px';
     home = cards.map((c, k) => {
-      const r = Math.floor(k / cols), i = k % cols, n = Math.min(cols, cards.length - r * cols);
-      const cx = (W - n * cell) / 2 + cell * (i + 0.5);
-      const cy = rowTop[r] + rowH[r] / 2 + Math.sin((i / (cols - 1)) * Math.PI * 2 + r * Math.PI) * wave;
-      return { left: Math.round(cx - wOf(c) / 2), top: Math.round(cy - hs[k] / 2), tilt: ((i + r) % 2 ? 1 : -1) * (2 + (i % 3)), z: 1 + ((i * 3 + r) % 7) };
+      const r = Math.floor(k / cols), i = k % cols, w = wOf(c, k);
+      const cx = cellW * (i + 0.5) + (seeded(k + 1) - 0.5) * cellW * 0.32;
+      const cy = cellH * (r + 0.62) + (seeded(k + 41) - 0.5) * cellH * 0.3;
+      const left = Math.min(Math.max(cx - w / 2, 10), W - w - 10);
+      const top = Math.min(Math.max(cy - hs[k] / 2, 14), cellH * rows + cellH * 0.35 - hs[k] - 10);
+      return { left: Math.round(left), top: Math.round(top), tilt: Math.round((seeded(k + 7) - 0.5) * 20 * 10) / 10, z: 1 + Math.floor(seeded(k + 99) * 9) };
     });
   };
   const place = (animate) => {
@@ -507,7 +500,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   spell.type = 'button'; spell.className = 'jb-spell'; spell.hidden = true;
   spell.innerHTML = '<span aria-hidden="true">✦</span> Mischief managed';
   spell.title = 'Mischief managed: put every print back where it was';
-  board.appendChild(spell);
+  (board.previousElementSibling || board).appendChild(spell);
   let z = 30;
   spell.addEventListener('click', () => { layout(); place(true); spell.hidden = true; touched = false; });
   cards.forEach((card) => {
