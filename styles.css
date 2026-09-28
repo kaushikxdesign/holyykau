@@ -239,7 +239,7 @@ footer{padding:140px 0 48px}
 .art h1 em svg path{stroke-dasharray:600;stroke-dashoffset:600;animation:draw 1.6s .6s cubic-bezier(.65,0,.35,1) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .art .blurb{max-width:36ch;color:var(--text-secondary);font-size:17px;margin:40px 0 0 52%;position:relative;z-index:2}
-.art .blurb b{color:var(--text-primary);font-weight:var(--fw-medium)}
+.art .blurb b{color:var(--text-primary);font-weight:var(--fw-regular)}
 .art .blurb .cta{display:flex;gap:10px;margin-top:24px}
 .badge{position:absolute;right:2%;top:36px;width:150px;height:150px;z-index:3}
 .badge svg{width:100%;height:100%;animation:spin 22s linear infinite}
@@ -1001,8 +1001,8 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .btn,.btn.sm,.btn.primary,.figma{font-size:18px}
 /* hero intro in Geist Mono */
 .art .blurb p,.art .blurb p b{font-family:var(--mono)!important;letter-spacing:-.4px!important}
-.art .blurb p{font-size:16px;line-height:1.7}
-.art .blurb p b{font-weight:var(--fw-medium)}
+.art .blurb p{font-size:16px;line-height:1.7;font-weight:var(--fw-medium)}
+.art .blurb p b{font-weight:var(--fw-regular)}
 .art h1 span:first-child{color:var(--accent-pale)}
 .art h1 span:first-child{color:var(--text-secondary)}
 .art h1 span:first-child{color:var(--text-primary)}
