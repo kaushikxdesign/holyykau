@@ -11,7 +11,7 @@ def page(c):
 {head}
 <title>{title} — Kaushik Subramaniam</title><meta name="description" content="{html.escape(c['desc'])}">
 <link rel="stylesheet" href="../styles.css"></head><body>
-<div class="shell">{nav}</div><main class="cs"><div class="csx">
+<div class="nav-shell">{nav}</div><main class="cs"><div class="csx">
 <div class="wrap"><div class="cs-hero"><a class="back rv" href="../index.html">← Home</a>
 <div class="rv" style="margin-top:36px"><span class="mono">{c['kicker']}</span></div>
 <h1 class="rv">{title}</h1><p class="lede rv">{c['lede']}</p>
@@ -59,7 +59,7 @@ def blk(b):
     if k=='matrix':
         def cell(q):
             name,sub,items,hot=q
-            its=''.join(f'<li><b>{t}</b>{f" <span>{d}</span>" if d else ""}</li>' for t,d in items)
+            its=''.join(f'<li><b>{t}</b></li>' for t,d in items)
             return f'<div class="{"hot" if hot else ""}"><span class="mono">{name}</span><ul>{its}</ul></div>'
         return ('<div class="x-graph"><div class="g-yax"><span>High</span><b>Impact</b><span>Low</span></div>'
                 '<div class="matrix x-matrix">'+''.join(cell(q) for q in b[1])+'</div>'

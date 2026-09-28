@@ -32,8 +32,8 @@ fonts = '\n'.join(re.findall(r'<link href="https://fonts.googleapis.com[^>]+>', 
 loader = between(index, r'<!--loader-->', r'<!--/loader-->')
 
 body = f'''{loader}
+<div class="nav-shell">{nav}</div>
 <div class="shell" id="top">
-{nav}
 <div data-view="home">{home}</div>
 <div data-view="gallery" hidden>{gal}</div>
 </div>

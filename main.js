@@ -384,3 +384,36 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     });
   });
 })();
+
+// Case-study reading progress: bar under the sticky top bar + percentage
+(() => {
+  const nav = document.querySelector('header.nav');
+  if (!nav) return;
+  const bar = document.createElement('div');
+  bar.className = 'rprog'; bar.setAttribute('aria-hidden', 'true');
+  bar.innerHTML = '<i></i><span>0%</span>';
+  nav.appendChild(bar);
+  const label = bar.querySelector('span');
+  const target = () => {
+    const v = document.querySelector('[data-view]:not([hidden])');
+    if (v) return (v.dataset.view === 'home' || v.dataset.view === 'gallery') ? null : v;
+    return document.querySelector('main.cs');
+  };
+  let raf = 0;
+  const update = () => {
+    raf = 0;
+    const el = target();
+    if (!el) { bar.classList.remove('on'); return; }
+    const top = el.getBoundingClientRect().top + scrollY;
+    const span = Math.max(1, el.offsetHeight - innerHeight);
+    const p = Math.min(1, Math.max(0, (scrollY - top) / span));
+    bar.style.setProperty('--p', p.toFixed(4));
+    label.textContent = Math.round(p * 100) + '%';
+    bar.classList.toggle('on', scrollY > top + 40);
+  };
+  const req = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', req);
+  addEventListener('hashchange', () => setTimeout(update, 50));
+  update();
+})();
