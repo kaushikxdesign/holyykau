@@ -1482,3 +1482,22 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .tool:hover{border-color:var(--stroke-strong)}
 /* progress %: sits on the line, right at the tip of the blue bar */
 .rprog span{top:50%;left:min(calc(var(--p,0) * 100vw),calc(100vw - 56px));transform:translateY(-50%);padding:1px 7px;border-radius:7px;font-family:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:500;font-size:11px;line-height:16px;border-color:var(--stroke-brand)}
+/* homepage gallery teaser: 8 prints in two loose rows */
+.jumble{height:640px}
+.j1{width:24%;left:0;top:40px;transform:rotate(-5deg);z-index:1}
+.j2{width:21%;left:21%;top:0;transform:rotate(3deg);z-index:1}
+.j3{width:27%;left:40%;top:70px;transform:rotate(-2deg);z-index:3}
+.j4{width:22%;left:63%;top:10px;transform:rotate(5deg);z-index:1}
+.j5{width:16%;left:84%;top:60px;transform:rotate(-4deg);z-index:2}
+.j6{width:25%;left:3%;top:330px;transform:rotate(4deg);z-index:2}
+.j7{width:20%;left:29%;top:380px;transform:rotate(-5deg);z-index:4}
+.j8{width:25%;left:54%;top:350px;transform:rotate(3deg);z-index:3}
+@media (max-width:900px){.jumble{height:auto}}
+.j3{width:26%;left:40%}
+.j4{width:20%;left:67%;top:0}
+.j5{left:85%;top:120px}
+.j6{left:6%}
+.j7{left:33%}
+.j8{width:24%;left:57%}
+.jf-tag{white-space:nowrap}
+@media (max-width:600px){.jf-tag{font-size:8.5px;padding:2px 5px;left:6px;top:6px}.jf-play{width:34px;height:34px;margin:-17px 0 0 -17px}.jf-play::after{left:13px;top:10px;border-width:7px 0 7px 11px}}
