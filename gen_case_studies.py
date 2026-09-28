@@ -52,7 +52,7 @@ def blk(b):
     if k=='twocol':
         a=''.join(f'<li>{x}</li>' for x in b[2]); f=''.join(f'<li>{x}</li>' for x in b[4])
         return f'<div class="twocol"><div><h4>{b[1]}</h4><ol>{a}</ol></div><div><h4>{b[3]}</h4><ol>{f}</ol></div></div>'
-    if k=='templates': return '<div class="cards">'+''.join(f'<div class="card"><span class="x-n">{b[2]} {i:02d}</span><h4>{t}</h4><p>{d}</p></div>' for i,(t,d) in enumerate(b[1],1))+'</div>'
+    if k=='templates': return '<div class="cards">'+''.join(f'<div class="card"><span class="x-n x-num">{b[2]} {i:02d}</span><h4>{t}</h4><p>{d}</p></div>' for i,(t,d) in enumerate(b[1],1))+'</div>'
     if k=='insights': return f'<div class="take"><h4>{b[1]}</h4></div><div class="cards x-ins2">'+''.join(f'<div class="card"><h4>{t}</h4><p>{d}</p></div>' for t,d in b[2])+'</div>'
     if k=='edge': return '<div class="edge"><h4>Our edge</h4><ul>'+''.join(f'<li>{x}</li>' for x in b[1])+'</ul></div>'
     if k=='dims': return '<ol class="dims">'+''.join(f'<li><span>{i:02d}</span>{x}</li>' for i,x in enumerate(b[1],1))+'<li class="x-always"><span>Plus</span>Always on</li></ol>'
@@ -67,7 +67,7 @@ def blk(b):
     if k=='shots': return '<div class="x-shots">'+''.join(f'<figure><span class="x-shot"><img src="../assets/screens/{src}.jpg" alt="{cap}" loading="lazy"></span><figcaption class="x-k">{cap}</figcaption></figure>' for src,cap in b[1])+'</div>'
     if k=='features':
         n=len(b[1])
-        return '<div class="x-scards">'+''.join(f'<div class="x-scard" style="--i:{i-1}"><div class="x-sc-in"><div class="x-sc-t"><span class="x-n">Feature {i:02d} <em>/ {i:02d} of {n:02d}</em></span><h3>{t}</h3><p>{d}</p></div><span class="x-shot"><img src="../assets/screens/{img}.jpg" alt="{t} screen" loading="lazy"></span></div></div>' for i,(t,d,img) in enumerate(b[1],1))+'</div>'
+        return '<div class="x-scards">'+''.join(f'<div class="x-scard" style="--i:{i-1}"><div class="x-sc-in"><div class="x-sc-t"><span class="x-n x-num">Feature {i:02d} <em>/ {i:02d} of {n:02d}</em></span><h3>{t}</h3><p>{d}</p></div><span class="x-shot"><img src="../assets/screens/{img}.jpg" alt="{t} screen" loading="lazy"></span></div></div>' for i,(t,d,img) in enumerate(b[1],1))+'</div>'
     if k=='numbers':
         return '<div class="x-ngrid">'+''.join(f'<div class="x-ncard{" x-wide2" if len(x)>2 else ""}"><b>{x[0]}</b><p>{x[1]}</p></div>' for x in b[1])+'</div>'
     raise ValueError(k)
