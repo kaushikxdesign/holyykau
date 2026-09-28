@@ -1586,13 +1586,7 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .rprog .rp-tip{left:calc(var(--p,0) * (100% - 28px))}
 /* hero greeting in secondary text; the "I design" line stays primary */
 .art h1 span:first-child{color:var(--text-secondary)}
-/* Made in Madras: a static rubber stamp, one worn ink, printed at a tilt */
-.badge{width:96px;height:96px;transform:rotate(-9deg);color:var(--text-secondary)}
+/* Made in Madras: the original ring badge, held still and in one colour */
 .badge svg{animation:none}
-.badge .st-ink{fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
-.badge .st-o{stroke-width:2.6}
-.badge .st-t{fill:currentColor;stroke:none;font-family:"Geist Mono",ui-monospace,monospace;font-size:13px;font-weight:var(--fw-medium)}
-.badge .st-tt{fill:currentColor;stroke:none;font-family:"Oi",serif;font-size:10.5px}
-.badge .st-s{fill:currentColor;stroke:none;font-size:12px}
-@media (max-width:900px){.badge{width:96px;height:96px}}
-@media (max-width:600px){.badge{display:block}}
+.badge .star{color:var(--text-secondary)}
+
