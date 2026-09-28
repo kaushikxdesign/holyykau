@@ -1456,6 +1456,6 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .csx .edge{border:1px solid var(--accent)!important}
 .csx .edge h4,.csx .x-matrix .hot .mono,.csx .x-hot .x-k,.csx .x-matrix .hot .x-k{color:var(--text-brand)!important}
 .csx .edge li{background:var(--surface)!important;border:1px solid var(--stroke)!important;border-radius:12px!important;color:var(--text-primary)}
-/* Our edge: brand stroke at 20%; Big bets: the earlier top-down brand gradient, softer */
-.csx .edge{border-color:rgba(var(--rgb-accent),.2)!important}
+/* Our edge: brand stroke at 50%; Big bets: the earlier top-down brand gradient, softer */
+.csx .edge{border-color:rgba(var(--rgb-accent),var(--o50))!important}
 .csx .x-matrix div.hot,.csx .x-graph .x-matrix>div.hot{background:linear-gradient(180deg,rgba(var(--rgb-accent),var(--o8)),rgba(var(--rgb-accent),var(--o2))),var(--surface)!important}
