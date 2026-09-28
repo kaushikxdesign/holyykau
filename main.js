@@ -34,7 +34,7 @@ const TOK = (() => {
   const cs = getComputedStyle(document.documentElement);
   const rgb = (name, fb) => { const h = (cs.getPropertyValue(name).trim() || fb).replace('#', ''); const n = parseInt(h.length === 3 ? h.replace(/./g, '$&$&') : h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
   const str = (name, fb) => cs.getPropertyValue(name).trim() || fb;
-  return { accent: rgb('--accent', '#2457ff'), soft: rgb('--accent-soft', '#788dff'), pale: rgb('--accent-pale', '#9fb5ff'), white: rgb('--white', '#fff'),
+  return { accent: rgb('--accent', '#0A84FF'), soft: rgb('--accent-soft', '#78BBFF'), pale: rgb('--accent-pale', '#A2D0FF'), white: rgb('--white', '#fff'),
     dot: str('--grid-dot', 'rgba(255,255,255,.045)'), dotFaint: str('--grid-dot-faint', 'rgba(255,255,255,.035)') };
 })();
 const mixRGB = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(',');
