@@ -1590,3 +1590,5 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .badge svg{animation:none}
 .badge .star{color:var(--text-secondary)}
 
+/* phones and tablets: the film takes a full row, the shots and photos fill in around it */
+@media (max-width:900px){.jumble{grid-auto-flow:dense;height:auto!important}.jumble .jf-film{grid-column:span 2;width:auto!important}}

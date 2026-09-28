@@ -489,27 +489,52 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   });
   if (!matchMedia('(pointer:fine) and (min-width:901px)').matches) return;
   board.classList.add('is-live');
-  // entry state: a dense collage pinned to the pegboard (jittered 5x4 grid, heavy overlaps, varied sizes and tilts)
+  // entry state: three zones pinned to the pegboard. Top left holds the Dribbble shots,
+  // bottom left the short film as the biggest card, and the photos fill the rest as a loose collage.
   let home = [], touched = false;
   const seeded = (n) => { let x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); };
+  const shots = cards.filter((c) => c.tagName === 'A' && !c.classList.contains('jf-film'));
+  const film = cards.find((c) => c.classList.contains('jf-film'));
+  const photos = cards.filter((c) => c.classList.contains('jf-photo'));
+  const tiltOf = (k, amp = 16) => Math.round((seeded(k + 7) - 0.5) * amp * 10) / 10;
   const layout = () => {
-    const W = board.clientWidth, rows = 3, cols = Math.ceil(cards.length / rows);
-    const cellW = W / 6, big = new Set([0, 4, 7, 12, 17]);
-    const wOf = (c, k) => Math.round(cellW * (c.classList.contains('jf-film') ? 1.3 : big.has(k) ? 1.12 : 0.95));
-    cards.forEach((c, k) => { c.style.width = wOf(c, k) + 'px'; });
-    const hs = cards.map((c) => c.offsetHeight);
-    const med = [...hs].sort((a, b) => a - b)[Math.floor(hs.length / 2)];
-    const cellH = Math.round(med * 1.02);
-    board.style.height = Math.round(cellH * rows + cellH * 0.35) + 'px';
-    home = cards.map((c, k) => {
-      const r = Math.floor(k / cols), i = k % cols, w = wOf(c, k);
-      const inRow = Math.min(cols, cards.length - r * cols), rowCell = W / inRow;
-      const cx = rowCell * (i + 0.5) + (seeded(k + 1) - 0.5) * rowCell * 0.3;
-      const cy = cellH * (r + 0.62) + (seeded(k + 41) - 0.5) * cellH * 0.3;
-      const left = Math.min(Math.max(cx - w / 2, 10), W - w - 10);
-      const top = Math.min(Math.max(cy - hs[k] / 2, 14), cellH * rows + cellH * 0.35 - hs[k] - 10);
-      return { left: Math.round(left), top: Math.round(top), tilt: Math.round((seeded(k + 7) - 0.5) * 20 * 10) / 10, z: 1 + Math.floor(seeded(k + 99) * 9) };
+    const W = board.clientWidth, pad = 22, leftW = Math.round(W * 0.34), gapX = 18;
+    const rightX = leftW + gapX, rightW = W - rightX - pad;
+    const pcols = 4, prows = Math.ceil(photos.length / pcols), cellW = rightW / pcols;
+    const big = new Set([0, 5, 9]);
+    const shotW = Math.round(leftW * 0.58), filmW = Math.round(leftW * 0.92);
+    shots.forEach((c) => { c.style.width = shotW + 'px'; });
+    if (film) film.style.width = filmW + 'px';
+    photos.forEach((c, k) => { c.style.width = Math.round(cellW * (big.has(k) ? 1.0 : 0.9)) + 'px'; });
+    const pos = new Map();
+    // zone 1: the two shots, overlapping like prints pinned one over another
+    const sh = shots.map((c) => c.offsetHeight), shotsH = Math.max(...sh, 0) + 64;
+    shots.forEach((c, k) => {
+      const left = k === 0 ? pad : leftW - shotW;
+      const top = pad + 6 + (k === 0 ? 0 : 84);
+      pos.set(c, { left, top, tilt: k === 0 ? -4.5 : 4, z: 3 + k });
     });
+    // zone 2: the film, larger and centred under the shots
+    const filmTop = pad + shotsH + 34;
+    if (film) pos.set(film, { left: Math.round(pad + (leftW - pad - filmW) / 2 + 6), top: filmTop, tilt: -2, z: 12 });
+    const leftH = film ? filmTop + film.offsetHeight + pad + 10 : filmTop;
+    // zone 3: photos in a jittered grid across the rest of the board
+    const ph = photos.map((c) => c.offsetHeight);
+    const med = [...ph].sort((x, y) => x - y)[Math.floor(ph.length / 2)] || 200;
+    const cellH = Math.round(med * 1.08);
+    const H = Math.max(leftH, pad * 2 + cellH * prows + cellH * 0.3);
+    const rowH = (H - pad * 2) / prows;
+    photos.forEach((c, k) => {
+      const r = Math.floor(k / pcols), i = k % pcols, w = c.offsetWidth;
+      const inRow = Math.min(pcols, photos.length - r * pcols), rowCell = rightW / inRow;
+      const cx = rightX + rowCell * (i + 0.5) + (seeded(k + 1) - 0.5) * rowCell * 0.2;
+      const cy = pad + rowH * (r + 0.5) + (seeded(k + 41) - 0.5) * rowH * 0.2;
+      const left = Math.min(Math.max(cx - w / 2, rightX - 14), W - w - 10);
+      const top = Math.min(Math.max(cy - ph[k] / 2, 12), H - ph[k] - 10);
+      pos.set(c, { left: Math.round(left), top: Math.round(top), tilt: tiltOf(k), z: ph[k] > med * 1.2 ? 1 : 2 + Math.floor(seeded(k + 99) * 8) });
+    });
+    board.style.height = Math.round(H) + 'px';
+    home = cards.map((c) => pos.get(c));
   };
   const place = (animate) => {
     cards.forEach((c, k) => {
