@@ -341,3 +341,46 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   addEventListener('resize', layout);
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(layout); layout();
 })();
+
+// Journey accordion: one company open at a time, with smooth height + fade
+(() => {
+  const rows = [...document.querySelectorAll('details.jr-row')];
+  if (!rows.length) return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const EASE = 'cubic-bezier(.22,1,.36,1)';
+  const anims = new WeakMap();
+  const settle = (d) => { d.style.height = ''; d.style.overflow = ''; anims.delete(d); };
+  rows.forEach((d) => d.classList.toggle('is-open', d.open));
+
+  const run = (d, from, to, done) => {
+    anims.get(d)?.cancel();
+    d.style.overflow = 'hidden';
+    const a = d.animate({ height: [from + 'px', to + 'px'] }, { duration: reduce ? 0 : 420, easing: EASE });
+    anims.set(d, a);
+    a.onfinish = () => { done && done(); settle(d); };
+    a.oncancel = () => { d.style.overflow = ''; };
+  };
+  const open = (d) => {
+    const from = d.offsetHeight;
+    d.open = true; d.classList.add('is-open');
+    const to = d.scrollHeight;
+    const body = d.querySelector('.jr-body');
+    if (body && !reduce) body.animate({ opacity: [0, 1], transform: ['translateY(-6px)', 'none'] }, { duration: 360, delay: 80, easing: EASE, fill: 'backwards' });
+    run(d, from, to);
+  };
+  const close = (d) => {
+    const from = d.offsetHeight;
+    const to = d.querySelector('summary').offsetHeight;
+    d.classList.remove('is-open');
+    run(d, from, to, () => { d.open = false; });
+  };
+
+  rows.forEach((d) => {
+    d.querySelector('summary').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (d.classList.contains('is-open')) { close(d); return; }
+      rows.forEach((o) => { if (o !== d && o.classList.contains('is-open')) close(o); });
+      open(d);
+    });
+  });
+})();
