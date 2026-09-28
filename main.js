@@ -468,9 +468,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   let home = [], touched = false;
   const seeded = (n) => { let x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); };
   const layout = () => {
-    const W = board.clientWidth, cols = 5, rows = Math.ceil(cards.length / cols);
+    const W = board.clientWidth, cols = 6, rows = Math.ceil(cards.length / cols);
     const cellW = W / cols, big = new Set([0, 4, 7, 12, 17]);
-    const wOf = (c, k) => Math.round(cellW * (c.classList.contains('jf-film') ? 1.12 : big.has(k) ? 0.96 : 0.8));
+    const wOf = (c, k) => Math.round(cellW * (c.classList.contains('jf-film') ? 1.3 : big.has(k) ? 1.12 : 0.95));
     cards.forEach((c, k) => { c.style.width = wOf(c, k) + 'px'; });
     const hs = cards.map((c) => c.offsetHeight);
     const med = [...hs].sort((a, b) => a - b)[Math.floor(hs.length / 2)];
@@ -478,7 +478,8 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     board.style.height = Math.round(cellH * rows + cellH * 0.35) + 'px';
     home = cards.map((c, k) => {
       const r = Math.floor(k / cols), i = k % cols, w = wOf(c, k);
-      const cx = cellW * (i + 0.5) + (seeded(k + 1) - 0.5) * cellW * 0.32;
+      const inRow = Math.min(cols, cards.length - r * cols), rowCell = W / inRow;
+      const cx = rowCell * (i + 0.5) + (seeded(k + 1) - 0.5) * rowCell * 0.3;
       const cy = cellH * (r + 0.62) + (seeded(k + 41) - 0.5) * cellH * 0.3;
       const left = Math.min(Math.max(cx - w / 2, 10), W - w - 10);
       const top = Math.min(Math.max(cy - hs[k] / 2, 14), cellH * rows + cellH * 0.35 - hs[k] - 10);
