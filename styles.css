@@ -808,7 +808,7 @@ input,textarea{cursor:text}
 .edge li{padding:6px 12px;border-radius:999px;background:rgba(var(--rgb-white),var(--o6));font-size:14px;color:var(--fg)}
 .dims{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .dims li{border-radius:12px;padding:14px 16px;background:var(--card);color:var(--fg);font-size:15px;display:flex;flex-direction:column;gap:6px}
-.dims li span{font-family:var(--mono);font-size:11px;color:var(--accent)}
+.dims li span{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--accent)}
 @media (max-width:600px){.twocol{grid-template-columns:1fr}}
 /* hero photo tile:smaller, tucked against the name */
 .art h1 .me{width:.5em;height:.5em;min-width:36px;min-height:36px;border-radius:.14em;border-width:2px;margin-left:.16em;vertical-align:baseline;transform:rotate(4deg)}
