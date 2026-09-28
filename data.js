@@ -23,4 +23,9 @@ window.PHOTOS = [
   { src: 'assets/photos/edge-of-light.jpg', caption: 'edge of light', alt: 'Black-and-white: a tiny figure on a ridge beside a sunlit wall' },
   { src: 'assets/photos/held.jpg', caption: 'held', alt: 'A hand holding a small yellow flower over dark leaves' },
   { src: 'assets/photos/one-bloom.jpg', caption: 'one yellow bloom', alt: 'A single small yellow flower among dark leaves' },
+  { src: 'assets/photos/sea-level.jpg', caption: 'sea level', alt: 'A low wave catching the last of an orange sunset' },
+  { src: 'assets/photos/morning-catch.jpg', caption: 'morning catch', alt: 'A steel basket of small silver fish on a dark ground' },
+  { src: 'assets/photos/hands-up.jpg', caption: 'hands up', alt: 'Silhouetted crowd at a concert, two fingers raised toward a hazy stage' },
+  { src: 'assets/photos/light-on-water.jpg', caption: 'light on water', alt: 'Streaks of light dancing on dark teal water' },
+  { src: 'assets/photos/through-the-gap.jpg', caption: 'through the gap', alt: 'Two men talking against a pink sky, framed through a dark gap' },
 ];
