@@ -1558,3 +1558,16 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .jumble .jf-film{z-index:12}
 .j1{left:1.5%}.j15{left:1.5%}.j8{left:4%}
 .jumble{height:830px}
+/* reading progress: the % chip and a little runner ride the tip of the bar */
+.nav > .rp-runner{display:none}
+.rprog .rp-tip{position:absolute;top:50%;left:min(calc(var(--p,0) * 100vw),calc(100vw - 96px));display:flex;align-items:center;gap:6px;transform:translateY(-50%)}
+.rprog .rp-tip span{position:static;transform:none;left:auto;top:auto}
+.rprog .rp-runner{display:block;height:34px;width:auto;transform:translateY(-15px);transform-origin:50% 100%;animation:rp-idle 1.6s ease-in-out infinite;filter:drop-shadow(0 2px 3px rgba(var(--rgb-black),var(--o50)))}
+.rprog.moving .rp-runner{animation:rp-run .32s linear infinite}
+.rprog.back .rp-runner{scale:-1 1}
+@keyframes rp-idle{0%,100%{transform:translateY(-15px)}50%{transform:translateY(-16.5px)}}
+@keyframes rp-run{0%{transform:translateY(-15px) rotate(-3deg)}25%{transform:translateY(-19px) rotate(0deg)}50%{transform:translateY(-15px) rotate(3deg) scaleY(.96)}75%{transform:translateY(-19px) rotate(0deg)}100%{transform:translateY(-15px) rotate(-3deg)}}
+@media (prefers-reduced-motion:reduce){.rprog .rp-runner,.rprog.moving .rp-runner{animation:none}}
+.rprog .rp-runner{height:42px;transform:translateY(-20px)}
+@keyframes rp-idle{0%,100%{transform:translateY(-20px)}50%{transform:translateY(-22px)}}
+@keyframes rp-run{0%{transform:translateY(-20px) rotate(-3deg)}25%{transform:translateY(-25px) rotate(0deg)}50%{transform:translateY(-20px) rotate(3deg) scaleY(.96)}75%{transform:translateY(-25px) rotate(0deg)}100%{transform:translateY(-20px) rotate(-3deg)}}

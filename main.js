@@ -391,9 +391,12 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   if (!nav) return;
   const bar = document.createElement('div');
   bar.className = 'rprog'; bar.setAttribute('aria-hidden', 'true');
-  bar.innerHTML = '<i></i><span>0%</span>';
+  bar.innerHTML = '<i></i><div class="rp-tip"><span>0%</span></div>';
   nav.appendChild(bar);
   const label = bar.querySelector('span');
+  const runner = nav.querySelector('.rp-runner');
+  if (runner) bar.querySelector('.rp-tip').appendChild(runner);
+  let lastY = scrollY, idle = 0;
   const target = () => {
     const v = document.querySelector('[data-view]:not([hidden])');
     if (v) return (v.dataset.view === 'home' || v.dataset.view === 'gallery') ? null : v;
@@ -409,6 +412,12 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     const p = Math.min(1, Math.max(0, (scrollY - top) / span));
     bar.style.setProperty('--p', p.toFixed(4));
     label.textContent = Math.round(p * 100) + '%';
+    if (runner && scrollY !== lastY) {
+      bar.classList.toggle('back', scrollY < lastY);
+      bar.classList.add('moving'); clearTimeout(idle);
+      idle = setTimeout(() => bar.classList.remove('moving'), 220);
+    }
+    lastY = scrollY;
     bar.classList.toggle('on', scrollY > top + 40);
   };
   const req = () => { if (!raf) raf = requestAnimationFrame(update); };
