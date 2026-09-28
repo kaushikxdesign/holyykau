@@ -12,9 +12,15 @@ window.SHOTS = [
   { title: 'Card Checkout - Daily UI', url: 'https://dribbble.com/shots/8935068-Card-Checkout-Daily-UI', img: 'assets/shots/card-checkout-daily-ui-5068.jpg' },
   { title: 'ToDo Task Application Landing Page', url: 'https://dribbble.com/shots/8679612-ToDo-Task-Application-Landing-Page', img: 'assets/shots/todo-task-application-landing-page-9612.jpg' },
 ];
-// Photography: save images to assets/photos/ and set `src` + `caption`.
+// Photography (from Kaushik's gallery PDF), resized to 1400px on the long edge.
 window.PHOTOS = [
-  { src: '', caption: 'untitled', ratio: '4/5' }, { src: '', caption: 'untitled', ratio: '3/2' },
-  { src: '', caption: 'untitled', ratio: '4/5' }, { src: '', caption: 'untitled', ratio: '2/3' },
-  { src: '', caption: 'untitled', ratio: '3/2' }, { src: '', caption: 'untitled', ratio: '4/5' },
+  { src: 'assets/photos/looking-up.jpg', caption: 'looking up', alt: 'Silhouette of a person looking up against a flat yellow sky' },
+  { src: 'assets/photos/into-the-fog.jpg', caption: 'into the fog', alt: 'A lone figure walking into a foggy forest' },
+  { src: 'assets/photos/blue-hour.jpg', caption: 'blue hour', alt: 'The sea at blue hour under a violet sky' },
+  { src: 'assets/photos/blood-moon.jpg', caption: 'blood moon', alt: 'A red moon in a deep blue night sky, framed by dark leaves' },
+  { src: 'assets/photos/still-water.jpg', caption: 'still water', alt: 'Mountains reflected in still water under a warm sky' },
+  { src: 'assets/photos/handful-of-gold.jpg', caption: 'a handful of gold', alt: 'Cupped hands holding yellow flowers in the dark' },
+  { src: 'assets/photos/edge-of-light.jpg', caption: 'edge of light', alt: 'Black-and-white: a tiny figure on a ridge beside a sunlit wall' },
+  { src: 'assets/photos/held.jpg', caption: 'held', alt: 'A hand holding a small yellow flower over dark leaves' },
+  { src: 'assets/photos/one-bloom.jpg', caption: 'one yellow bloom', alt: 'A single small yellow flower among dark leaves' },
 ];
