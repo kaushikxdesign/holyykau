@@ -1451,3 +1451,8 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .csx .x-i,.csx .x-n.x-num,.twocol li::before,.hmw li::before,.dims li:not(.x-always) span{color:var(--text-brand)!important}
 /* case-study list numbers and card labels: one size and weight, matching the eyebrows */
 .csx .x-i,.csx .x-n,.twocol li::before,.hmw li::before,.dims li span{font-size:12px!important;font-weight:var(--fw-medium)!important}
+/* Our edge + Big bets back on tokens: surface containers, brand labels, brand stroke on Our edge; pills styled like Toolkit cards */
+.csx .edge,.csx .x-matrix div.hot,.csx .x-graph .x-matrix>div.hot{background:var(--surface)!important}
+.csx .edge{border:1px solid var(--accent)!important}
+.csx .edge h4,.csx .x-matrix .hot .mono,.csx .x-hot .x-k,.csx .x-matrix .hot .x-k{color:var(--text-brand)!important}
+.csx .edge li{background:var(--surface)!important;border:1px solid var(--stroke)!important;border-radius:12px!important;color:var(--text-primary)}
