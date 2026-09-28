@@ -60,8 +60,10 @@ def blk(b):
         def cell(q):
             name,sub,items,hot=q
             its=''.join(f'<li><b>{t}</b>{f" <span>{d}</span>" if d else ""}</li>' for t,d in items)
-            return f'<div class="{"hot" if hot else ""}"><span class="mono">{name} · {sub}</span><ul>{its}</ul></div>'
-        return '<div class="matrix x-matrix">'+''.join(cell(q) for q in b[1])+'</div>'
+            return f'<div class="{"hot" if hot else ""}"><span class="mono">{name}</span><ul>{its}</ul></div>'
+        return ('<div class="x-graph"><div class="g-yax"><span>High</span><b>Impact</b><span>Low</span></div>'
+                '<div class="matrix x-matrix">'+''.join(cell(q) for q in b[1])+'</div>'
+                '<div class="g-xax"><span>Low</span><b>Effort</b><span>High</span></div></div>')
     if k=='shots': return '<div class="x-shots">'+''.join(f'<figure><span class="x-shot"><img src="../assets/screens/{src}.jpg" alt="{cap}" loading="lazy"></span><figcaption class="x-k">{cap}</figcaption></figure>' for src,cap in b[1])+'</div>'
     if k=='features':
         n=len(b[1])

@@ -1344,3 +1344,30 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .pc,.jr,.tk-c.t-card,.tool{background:var(--surface);border:1px solid var(--stroke)}
 .jr-row+.jr-row{border-top-color:var(--stroke)}
 .pc:hover,.tool:hover,.tk.open .tk-c.t-card:hover,.tk.open .tk-c.t-card:focus-visible{border-color:var(--stroke-hover)}
+/* ── Case studies: shared card surface ── */
+.csx .card,.csx .twocol>div,.csx .x-matrix>div:not(.hot),.csx .dims li:not(.x-always),.csx .x-sc-in,.csx .x-ncard{background:var(--surface);border:1px solid var(--stroke)}
+.csx .x-next{background:radial-gradient(420px 220px at 0% 0%,rgba(36,87,255,.14),transparent 70%),var(--surface);border:1px solid var(--stroke)}
+/* accent cards (Our edge, Big bets): soft blue wash + pale-blue stroke, no glow */
+.csx .edge,.csx .x-matrix div.hot{background:linear-gradient(180deg,rgba(36,87,255,.09),rgba(36,87,255,.03)),var(--surface);border:1px solid rgba(114,145,255,.38);box-shadow:none}
+.csx .edge{margin-bottom:40px}
+.csx .edge h4,.csx .x-matrix .hot .mono{color:#9FB5FF}
+.csx .edge li{background:rgba(36,87,255,.18);border:1px solid rgba(114,145,255,.35);color:#fff}
+.csx .x-matrix .hot li b{color:#fff}
+/* Impact / Effort as a 2x2 graph with axes */
+.csx .x-graph{display:grid;grid-template-columns:34px 1fr;grid-template-rows:1fr auto;column-gap:14px;row-gap:12px;margin-top:40px}
+.csx .x-graph .x-matrix{grid-column:2;grid-row:1;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--stroke);border-radius:20px;background:var(--surface);overflow:hidden}
+.csx .x-graph .x-matrix>div{background:none;border:0;border-radius:0;box-shadow:none;padding:26px 28px 30px;min-height:170px}
+.csx .x-graph .x-matrix>div:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.12)}
+.csx .x-graph .x-matrix>div:nth-child(odd){border-right:1px solid rgba(255,255,255,.12)}
+.csx .x-graph .x-matrix>div.hot{background:linear-gradient(180deg,rgba(36,87,255,.12),rgba(36,87,255,.04));border-top:0;border-left:0;border-right:0}
+.csx .x-graph .x-matrix .mono{font-size:11.5px;letter-spacing:-.2px}
+.csx .g-yax{grid-column:1;grid-row:1;position:relative}
+.csx .g-yax span{position:absolute;left:50%;transform:translateX(-50%)}
+.csx .g-yax span:first-child{top:4px}.csx .g-yax span:last-child{bottom:4px}
+.csx .g-yax b{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg);white-space:nowrap;font-family:var(--mono);font-weight:400;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-2)}
+.csx .g-yax b::after{content:" \2192";color:var(--fg-3)}
+.csx .g-xax{grid-column:2;grid-row:2;display:flex;align-items:center;justify-content:space-between;padding:0 6px}
+.csx .g-xax b{font-family:var(--mono);font-weight:400;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-2)}
+.csx .g-xax b::after{content:" \2192";color:var(--fg-3)}
+.csx .g-yax span,.csx .g-xax span{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--fg-3)}
+@media (max-width:640px){.csx .x-graph .x-matrix{grid-template-columns:1fr 1fr}.csx .x-graph .x-matrix>div{padding:16px 14px 18px;min-height:140px}.csx .x-graph .x-matrix li{font-size:13.5px}.csx .x-graph{grid-template-columns:30px 1fr;column-gap:8px}}
