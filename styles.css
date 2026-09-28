@@ -1592,3 +1592,8 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 
 /* phones and tablets: the film takes a full row, the shots and photos fill in around it */
 @media (max-width:900px){.jumble{grid-auto-flow:dense;height:auto!important}.jumble .jf-film{grid-column:span 2;width:auto!important}}
+/* pegboard prints sit straight: no tilts on the board or in the phone grid */
+@media (max-width:900px){.jumble .jf:nth-child(odd),.jumble .jf:nth-child(even){transform:none;margin-top:0}}
+.jumble .jf-film{z-index:2}
+/* hero: "better." in primary text; the hand-drawn loop around it stays brand blue */
+.art h1 em{color:var(--text-primary);-webkit-text-fill-color:var(--text-primary)}

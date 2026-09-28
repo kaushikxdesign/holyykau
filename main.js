@@ -489,51 +489,81 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   });
   if (!matchMedia('(pointer:fine) and (min-width:901px)').matches) return;
   board.classList.add('is-live');
-  // entry state: three zones pinned to the pegboard. Top left holds the Dribbble shots,
-  // bottom left the short film as the biggest card, and the photos fill the rest as a loose collage.
+  // entry state: three tidy zones, no tilts. Top left holds the Dribbble shots side by side,
+  // bottom left the short film at full zone width, and the photos fill the rest as an even masonry grid.
   let home = [], touched = false;
-  const seeded = (n) => { let x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); };
   const shots = cards.filter((c) => c.tagName === 'A' && !c.classList.contains('jf-film'));
   const film = cards.find((c) => c.classList.contains('jf-film'));
   const photos = cards.filter((c) => c.classList.contains('jf-photo'));
-  const tiltOf = (k, amp = 16) => Math.round((seeded(k + 7) - 0.5) * amp * 10) / 10;
+  const ratio = (c) => {
+    const box = c.querySelector('.jf-img');
+    if (box && !box.dataset.ar) box.dataset.ar = box.style.aspectRatio || '3/2';
+    const r = (box ? box.dataset.ar : '3/2').split('/').map(Number); return r[1] / r[0];
+  };
+  // split the photos across 4 columns once so column heights come out as even as possible
+  // (exhaustive search over a reference width; relative heights barely change with the board width)
+  const split = (() => {
+    const pcols = 4, cost = photos.map((c, k) => ({ k, h: 150 * ratio(c) + 65 })).sort((a, b) => b.h - a.h);
+    const sums = Array(pcols).fill(0), pick = [];
+    let best = { spread: Infinity, pick: [] };
+    const dfs = (n) => {
+      if (n === cost.length) {
+        const spread = Math.max(...sums) - Math.min(...sums);
+        if (spread < best.spread) best = { spread, pick: [...pick] };
+        return;
+      }
+      const seen = new Set();
+      for (let i = 0; i < pcols && best.spread > 1; i++) {
+        if (seen.has(sums[i])) continue; seen.add(sums[i]);
+        sums[i] += cost[n].h; pick[n] = i; dfs(n + 1); sums[i] -= cost[n].h;
+      }
+    };
+    dfs(0);
+    const out = []; cost.forEach((it, n) => { out[it.k] = best.pick[n]; });
+    return out;
+  })();
   const layout = () => {
-    const W = board.clientWidth, pad = 22, leftW = Math.round(W * 0.34), gapX = 18;
-    const rightX = leftW + gapX, rightW = W - rightX - pad;
-    const pcols = 4, prows = Math.ceil(photos.length / pcols), cellW = rightW / pcols;
-    const big = new Set([0, 5, 9]);
-    const shotW = Math.round(leftW * 0.58), filmW = Math.round(leftW * 0.92);
-    shots.forEach((c) => { c.style.width = shotW + 'px'; });
-    if (film) film.style.width = filmW + 'px';
-    photos.forEach((c, k) => { c.style.width = Math.round(cellW * (big.has(k) ? 1.0 : 0.9)) + 'px'; });
-    const pos = new Map();
-    // zone 1: the two shots, overlapping like prints pinned one over another
-    const sh = shots.map((c) => c.offsetHeight), shotsH = Math.max(...sh, 0) + 64;
-    shots.forEach((c, k) => {
-      const left = k === 0 ? pad : leftW - shotW;
-      const top = pad + 6 + (k === 0 ? 0 : 84);
-      pos.set(c, { left, top, tilt: k === 0 ? -4.5 : 4, z: 3 + k });
+    const W = board.clientWidth, pad = 28, gap = 22, pcols = 4, frame = 9 * 2, capH = 34 - 9;
+    // print height for a given width: the image plus its paper frame and caption strip
+    const hOf = (c, w) => Math.round((w - frame) * ratio(c) + frame + capH);
+    const plan = (leftW) => {
+      const shotW = (leftW - gap) / 2, rightX = pad + leftW + gap * 1.6, colW = (W - pad - rightX - gap * (pcols - 1)) / pcols;
+      const shotH = Math.max(...shots.map((c) => hOf(c, shotW)));
+      const filmH = film ? hOf(film, leftW) : 0;
+      const leftH = shotH + (film ? gap + filmH : 0);
+      const items = photos.map((c, k) => ({ k, h: hOf(c, colW) + gap }));
+      const cols = Array.from({ length: pcols }, () => ({ h: -gap, items: [] }));
+      items.forEach((it) => { const col = cols[split[it.k]]; col.items.push({ k: it.k, h: it.h - gap }); col.h += it.h; });
+      cols.forEach((col) => col.items.sort((a, b) => a.k - b.k));
+      const rightH = Math.max(...cols.map((c) => c.h));
+      return { leftW, shotW, rightX, colW, shotH, filmH, leftH, rightH, cols };
+    };
+    // pick the left zone width that makes both sides end at the same height
+    let best = null;
+    for (let f = 0.26; f <= 0.44; f += 0.005) {
+      const p = plan(Math.round((W - pad * 2) * f));
+      const cost = Math.abs(p.leftH - p.rightH);
+      if (!best || cost < best.cost) best = { ...p, cost };
+    }
+    const P = best, pos = new Map();
+    shots.forEach((c, k) => { c.style.width = Math.round(P.shotW) + 'px'; pos.set(c, { left: Math.round(pad + k * (P.shotW + gap)), top: pad, tilt: 0, z: 2 }); });
+    if (film) { film.style.width = P.leftW + 'px'; pos.set(film, { left: pad, top: Math.round(pad + P.shotH + gap), tilt: 0, z: 2 }); }
+    // every column ends flush with the tallest side: the slack goes into that column's gaps
+    const T = Math.max(P.leftH, P.rightH);
+    // every column ends flush with the tallest side: short columns give the slack to their photos
+    // (a slightly taller crop, object-fit cover), so the gaps stay an even 22px everywhere
+    P.cols.forEach((col, i) => {
+      const grow = (T - col.h) / col.items.length, imgW = P.colW - frame;
+      let y = pad;
+      col.items.forEach((it) => {
+        const c = photos[it.k], box = c.querySelector('.jf-img'), h = it.h + grow;
+        c.style.width = Math.round(P.colW) + 'px';
+        if (box) box.style.aspectRatio = `${Math.round(imgW)} / ${Math.round(imgW * ratio(c) + grow)}`;
+        pos.set(c, { left: Math.round(P.rightX + i * (P.colW + gap)), top: Math.round(y), tilt: 0, z: 2 });
+        y += h + gap;
+      });
     });
-    // zone 2: the film, larger and centred under the shots
-    const filmTop = pad + shotsH + 34;
-    if (film) pos.set(film, { left: Math.round(pad + (leftW - pad - filmW) / 2 + 6), top: filmTop, tilt: -2, z: 12 });
-    const leftH = film ? filmTop + film.offsetHeight + pad + 10 : filmTop;
-    // zone 3: photos in a jittered grid across the rest of the board
-    const ph = photos.map((c) => c.offsetHeight);
-    const med = [...ph].sort((x, y) => x - y)[Math.floor(ph.length / 2)] || 200;
-    const cellH = Math.round(med * 1.08);
-    const H = Math.max(leftH, pad * 2 + cellH * prows + cellH * 0.3);
-    const rowH = (H - pad * 2) / prows;
-    photos.forEach((c, k) => {
-      const r = Math.floor(k / pcols), i = k % pcols, w = c.offsetWidth;
-      const inRow = Math.min(pcols, photos.length - r * pcols), rowCell = rightW / inRow;
-      const cx = rightX + rowCell * (i + 0.5) + (seeded(k + 1) - 0.5) * rowCell * 0.2;
-      const cy = pad + rowH * (r + 0.5) + (seeded(k + 41) - 0.5) * rowH * 0.2;
-      const left = Math.min(Math.max(cx - w / 2, rightX - 14), W - w - 10);
-      const top = Math.min(Math.max(cy - ph[k] / 2, 12), H - ph[k] - 10);
-      pos.set(c, { left: Math.round(left), top: Math.round(top), tilt: tiltOf(k), z: ph[k] > med * 1.2 ? 1 : 2 + Math.floor(seeded(k + 99) * 8) });
-    });
-    board.style.height = Math.round(H) + 'px';
+    board.style.height = Math.round(pad * 2 + T) + 'px';
     home = cards.map((c) => pos.get(c));
   };
   const place = (animate) => {
@@ -541,7 +571,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       const h = home[k];
       c.classList.toggle('returning', !!animate);
       c.style.left = h.left + 'px'; c.style.top = h.top + 'px';
-      c.style.transform = `rotate(${h.tilt}deg)`; c.style.zIndex = c.classList.contains('jf-film') ? 12 : h.z;
+      c.style.transform = `rotate(${h.tilt}deg)`; c.style.zIndex = h.z;
     });
     if (animate) setTimeout(() => cards.forEach((c) => c.classList.remove('returning')), 750);
   };
@@ -555,7 +585,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   let z = 30;
   spell.addEventListener('click', () => { layout(); place(true); spell.hidden = true; touched = false; });
   cards.forEach((card) => {
-    let sx, sy, ox, oy, moved = false, id = null, rot = 0;
+    let sx, sy, ox, oy, moved = false, id = null;
     card.setAttribute('draggable', 'false');
     card.addEventListener('dragstart', (e) => e.preventDefault());
     card.addEventListener('pointerdown', (e) => {
@@ -563,8 +593,6 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       e.preventDefault();
       id = e.pointerId; moved = false; dragged = false; sx = e.clientX; sy = e.clientY;
       ox = card.offsetLeft; oy = card.offsetTop;
-      const m = getComputedStyle(card).transform.match(/matrix\(([^,]+),([^,]+)/);
-      rot = m ? Math.round(Math.atan2(parseFloat(m[2]), parseFloat(m[1])) * 180 / Math.PI) : 0;
       card.setPointerCapture(id);
       card.style.zIndex = ++z;
     });
@@ -576,7 +604,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       const maxX = board.clientWidth - card.offsetWidth, maxY = board.clientHeight - card.offsetHeight;
       card.style.left = Math.min(Math.max(ox + dx, -20), maxX + 20) + 'px';
       card.style.top = Math.min(Math.max(oy + dy, -20), maxY + 20) + 'px';
-      card.style.transform = `rotate(${Math.max(-8, Math.min(8, rot + dx * 0.02))}deg) scale(1.04)`;
+      card.style.transform = 'scale(1.04)';
     });
     const end = (e) => {
       if (e.pointerId !== id) return;
@@ -584,7 +612,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       if (moved) {
         dragged = true;
         card.classList.remove('dragging');
-        card.style.transform = `rotate(${Math.round((Math.random() * 12 - 6) * 10) / 10}deg)`;
+        card.style.transform = 'none';
       }
     };
     card.addEventListener('pointerup', end);
