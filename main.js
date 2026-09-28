@@ -427,7 +427,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     let spin = null;
     tool.addEventListener('mouseenter', () => {
       if (spin && spin.playState === 'running') { spin.effect.updateTiming({ iterations: Infinity }); return; }
-      spin = img.animate([{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(360deg)' }], { duration: 1400, iterations: Infinity, easing: 'linear' });
+      spin = img.animate([{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(360deg)' }], { duration: 700, iterations: Infinity, easing: 'linear' });
     });
     tool.addEventListener('mouseleave', () => {
       if (!spin) return;
