@@ -15,7 +15,7 @@
   /* strokes */
   --stroke:rgba(255,255,255,.07);
   --stroke-strong:rgba(255,255,255,.12);
-  --stroke-hover:rgba(120,141,255,.28);
+  --stroke-hover:var(--accent-line);
   /* brand */
   --accent:#2457ff;
   --accent-deep:#1a4dff;
