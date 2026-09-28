@@ -468,8 +468,8 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   let home = [], touched = false;
   const seeded = (n) => { let x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); };
   const layout = () => {
-    const W = board.clientWidth, cols = 6, rows = Math.ceil(cards.length / cols);
-    const cellW = W / cols, big = new Set([0, 4, 7, 12, 17]);
+    const W = board.clientWidth, rows = 3, cols = Math.ceil(cards.length / rows);
+    const cellW = W / 6, big = new Set([0, 4, 7, 12, 17]);
     const wOf = (c, k) => Math.round(cellW * (c.classList.contains('jf-film') ? 1.3 : big.has(k) ? 1.12 : 0.95));
     cards.forEach((c, k) => { c.style.width = wOf(c, k) + 'px'; });
     const hs = cards.map((c) => c.offsetHeight);

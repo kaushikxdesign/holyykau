@@ -1568,3 +1568,5 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .jumble .jf::before{content:"";position:absolute;left:50%;top:-5px;width:12px;height:12px;margin-left:-6px;border-radius:50%;z-index:2;background:radial-gradient(circle at 35% 30%,#f2f2f2,#9a9aa0 45%,#3a3a40 80%);box-shadow:0 2px 3px rgba(var(--rgb-black),var(--o70))}
 .lab .jb-spell{position:static;margin-left:auto;align-self:center;animation:jb-in .4s cubic-bezier(.22,1,.36,1)}
 @media (max-width:900px){.jumble{padding:22px 14px!important}}
+/* pegboard uses the same card styling as the rest of the homepage: surface fill, --stroke border, 24px radius */
+.jumble{background:radial-gradient(circle,rgba(var(--rgb-black),var(--o70)) 0 2.2px,transparent 2.7px) 13px 13px/26px 26px,var(--surface);border:1px solid var(--stroke);border-radius:24px;box-shadow:none}
