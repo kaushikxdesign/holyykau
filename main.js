@@ -29,6 +29,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Brand colours for the canvas animations, read from the CSS colour tokens so the palette lives in one place.
+const TOK = (() => {
+  const cs = getComputedStyle(document.documentElement);
+  const rgb = (name, fb) => { const h = (cs.getPropertyValue(name).trim() || fb).replace('#', ''); const n = parseInt(h.length === 3 ? h.replace(/./g, '$&$&') : h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
+  return { accent: rgb('--accent', '#2457ff'), soft: rgb('--accent-soft', '#788dff'), pale: rgb('--accent-pale', '#9fb5ff') };
+})();
+const mixRGB = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(',');
+const toHex = (c) => '#' + c.map(v => v.toString(16).padStart(2, '0')).join('');
+
 // Live LED matrix: 4px cells, 2px gap; lit cells get denser toward the bottom and twinkle.
 document.querySelectorAll('canvas.led').forEach((c) => { try {
   const ctx = c.getContext('2d'), CELL = 4, GAP = 2, STEP = CELL + GAP;
@@ -49,7 +58,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
       const i = y * cols + x, v = life[i];
       if (v > 0) {
-        ctx.fillStyle = mono ? `rgba(255,255,255,${0.12 + v * 0.6})` : `rgba(${Math.round(26 + (1 - v) * 100)},${Math.round(77 + (1 - v) * 90)},255,${0.25 + v * 0.75})`;
+        ctx.fillStyle = mono ? `rgba(255,255,255,${0.12 + v * 0.6})` : `rgba(${mixRGB(TOK.accent, TOK.pale, 1 - v)},${0.25 + v * 0.75})`;
       } else ctx.fillStyle = 'rgba(255,255,255,0.045)';
       ctx.fillRect(x * STEP, y * STEP, CELL, CELL);
     }
@@ -258,9 +267,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     ctx.clearRect(0, 0, W, H);
     for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) cell(x, y, 'rgba(255,255,255,0.035)');
     if (Math.random() < .25) sparks.set(rnd(0, cols - 1) + ',' + rnd(0, rows - 1), .3 + Math.random() * .25);
-    sparks.forEach((v, k) => { const [x, y] = k.split(',').map(Number); cell(x, y, `rgba(36,87,255,${v})`); const n = v - .025; n > 0 ? sparks.set(k, n) : sparks.delete(k); });
-    if (ate + 1 < foods.length) { const [fx, fy] = foods[ate + 1]; const blink = .55 + .45 * Math.sin(t / 70); ctx.shadowColor = '#7291FF'; ctx.shadowBlur = 16; cell(fx, fy, `rgba(162,183,255,${blink})`); ctx.shadowBlur = 0; }
-    for (let j = 0; j < LEN; j++) { const p = path[i - j]; if (!p) break; const a = 1 - j / LEN; if (j === 0) { ctx.shadowColor = '#2457FF'; ctx.shadowBlur = 18; } cell(p[0], p[1], `rgba(${36 + (1 - a) * 20},${87 + (1 - a) * 40},255,${.35 + a * .65})`); ctx.shadowBlur = 0; }
+    sparks.forEach((v, k) => { const [x, y] = k.split(',').map(Number); cell(x, y, `rgba(${TOK.accent.join(',')},${v})`); const n = v - .025; n > 0 ? sparks.set(k, n) : sparks.delete(k); });
+    if (ate + 1 < foods.length) { const [fx, fy] = foods[ate + 1]; const blink = .55 + .45 * Math.sin(t / 70); ctx.shadowColor = toHex(TOK.soft); ctx.shadowBlur = 16; cell(fx, fy, `rgba(${TOK.pale.join(',')},${blink})`); ctx.shadowBlur = 0; }
+    for (let j = 0; j < LEN; j++) { const p = path[i - j]; if (!p) break; const a = 1 - j / LEN; if (j === 0) { ctx.shadowColor = toHex(TOK.accent); ctx.shadowBlur = 18; } cell(p[0], p[1], `rgba(${mixRGB(TOK.accent, TOK.pale, 1 - a)},${.35 + a * .65})`); ctx.shadowBlur = 0; }
     if (t < acc + 600) requestAnimationFrame(frame);
   };
   window.__snakeEnd = T0 + acc;
