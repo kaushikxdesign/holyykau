@@ -1520,3 +1520,13 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .jumble.is-live .jf.dragging{cursor:grabbing;transition:box-shadow .2s;box-shadow:0 40px 80px -20px rgba(var(--rgb-black),var(--o90))}
 .jumble .jf img{-webkit-user-drag:none}
 @media (max-width:900px){.jumble{height:auto}.jb-hint{display:none}}
+/* board: Reparo charm (appears after the first drag) and the glide back into the pattern */
+.jb-spell{position:absolute;right:0;top:-38px;display:inline-flex;align-items:center;gap:6px;padding:0;border:0;background:none;cursor:pointer;font-family:var(--mono);font-size:12px;font-weight:var(--fw-medium);letter-spacing:-.2px;color:var(--text-brand);animation:jb-in .4s cubic-bezier(.22,1,.36,1)}
+.jb-spell:hover span{display:inline-block;animation:jb-twirl .6s cubic-bezier(.22,1,.36,1)}
+.jb-spell:focus-visible{outline:2px solid var(--accent-soft);outline-offset:4px;border-radius:4px}
+.jumble .jf.returning{transition:left .7s cubic-bezier(.22,1,.36,1),top .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+@keyframes jb-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@keyframes jb-twirl{to{transform:rotate(180deg) scale(1.2)}}
+@media (prefers-reduced-motion:reduce){.jumble .jf.returning{transition:none}.jb-spell,.jb-spell:hover span{animation:none}}
+.jb-spell{top:-34px}
+.jb-spell[hidden],.jb-hint[hidden]{display:none}
