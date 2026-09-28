@@ -1575,3 +1575,10 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
   radial-gradient(circle at 50% 46%,#000 0 3.3px,transparent 3.8px) 0 0/24px 24px,
   radial-gradient(circle at 50% 56%,rgba(var(--rgb-white),var(--o16)) 0 3.6px,transparent 4.1px) 0 0/24px 24px,
   var(--surface)}
+/* reading bar: the brand-blue crewmate runs at the tip of the bar (replaces the % chip) */
+.rprog .rp-tip{left:min(calc(var(--p,0) * 100vw),calc(100vw - 48px));gap:0}
+.rprog .rp-run{display:block;width:46px;height:46px;margin-left:-8px;transform:translateY(-19px);pointer-events:none}
+.rprog .rp-run svg{display:block}
+.rprog.back .rp-run{scale:-1 1}
+.rprog .rp-tip .rp-run{display:block;width:34px;height:40px;margin-left:-6px;transform:translateY(-19px);pointer-events:none}
+.rprog .rp-tip .rp-run svg{width:100%!important;height:100%!important}

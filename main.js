@@ -391,9 +391,29 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   if (!nav) return;
   const bar = document.createElement('div');
   bar.className = 'rprog'; bar.setAttribute('aria-hidden', 'true');
-  bar.innerHTML = '<i></i><div class="rp-tip"><span>0%</span></div>';
+  bar.innerHTML = '<i></i><div class="rp-tip"><div class="rp-run" aria-hidden="true"></div></div>';
   nav.appendChild(bar);
-  const label = bar.querySelector('span');
+  const runEl = bar.querySelector('.rp-run');
+  let run = null, lastY = scrollY, idle = 0;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (window.lottie && window.RUNNER_ANIM) {
+    run = lottie.loadAnimation({ container: runEl, renderer: 'svg', loop: true, autoplay: false, animationData: window.RUNNER_ANIM });
+    // crop the 500x500 frame to the crewmate's bounds across every frame, so it fills the box
+    run.addEventListener('DOMLoaded', () => {
+      const svg = runEl.querySelector('svg'), g = svg && svg.querySelector('g');
+      if (g) {
+        let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+        for (let f = 0; f < run.totalFrames; f += 2) {
+          run.goToAndStop(f, true);
+          const b = g.getBBox();
+          if (b.width && b.height) { x0 = Math.min(x0, b.x); y0 = Math.min(y0, b.y); x1 = Math.max(x1, b.x + b.width); y1 = Math.max(y1, b.y + b.height); }
+        }
+        if (isFinite(x0)) { const pad = 4; svg.setAttribute('viewBox', `${x0 - pad} ${y0 - pad} ${x1 - x0 + pad * 2} ${y1 - y0 + pad * 2}`); svg.setAttribute('preserveAspectRatio', 'xMidYMax meet'); }
+      }
+      run.goToAndStop(0, true);
+      if (!still) run.play();
+    });
+  }
 
   const target = () => {
     const v = document.querySelector('[data-view]:not([hidden])');
@@ -409,7 +429,12 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     const span = Math.max(1, el.offsetHeight - innerHeight);
     const p = Math.min(1, Math.max(0, (scrollY - top) / span));
     bar.style.setProperty('--p', p.toFixed(4));
-    label.textContent = Math.round(p * 100) + '%';
+    if (run && !still && scrollY !== lastY) {
+      bar.classList.toggle('back', scrollY < lastY);
+      run.setSpeed(1.6); clearTimeout(idle);
+      idle = setTimeout(() => run.setSpeed(1), 220);
+    }
+    lastY = scrollY;
     bar.classList.toggle('on', scrollY > top + 40);
   };
   const req = () => { if (!raf) raf = requestAnimationFrame(update); };

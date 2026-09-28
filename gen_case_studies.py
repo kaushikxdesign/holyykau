@@ -21,7 +21,7 @@ def page(c):
 {nextcta(c)}
 <div class="cs-foot"><span>© 2026 Kaushik Subramaniam M</span></div></div>
 </div></main>
-<script src="../main.js"></script></body></html>'''
+<script src="../vendor/lottie_light.min.js"></script><script src="../assets/lottie/runner-anim.js"></script><script src="../main.js"></script></body></html>'''
 
 def nextcta(c):
     n=c['next']; t1,t2=n['title']

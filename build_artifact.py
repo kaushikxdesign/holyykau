@@ -102,6 +102,7 @@ js = rd('data.js') + '\n' + rd('main.js').replace("document.addEventListener('DO
 _o = js.index("(() => {")
 _c = js.index("\n});\n", _o)  # first top-level close after the opener
 js = js[:_c] + "\n})();\n" + js[_c + len("\n});\n"):]
+js = rd('vendor/lottie_light.min.js') + '\n' + rd('assets/lottie/runner-anim.js') + '\n' + js
 
 js = asset_js + '\n' + resume_js + '\n' + js.replace('src="${p.src}"', 'src="${(window.__A&&__A[p.src])||p.src}"').replace('src="${s.img}"', 'src="${(window.__A&&__A[s.img])||s.img}"')
 out = f'''<title>Kaushik Subramaniam</title>
