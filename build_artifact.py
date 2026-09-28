@@ -54,6 +54,26 @@ assets = {p: data_uri(p) for p in paths}
 body = re.sub(r'src="(?:\.\./)?(assets/[\w\-/]+\.(?:jpg|jpeg|png))"', lambda m: f'data-asset="{m.group(1)}"', body)
 for p in paths:  # CSS url() backgrounds are inlined directly
     body = re.sub(r'url\((?:\.\./)?' + re.escape(p) + r'\)', 'url(' + assets[p] + ')', body)
+# résumé: the PDF travels inside the page. In the claude.ai viewer the save goes
+# through the downloads capability; anywhere else it falls back to a blob link.
+body = re.sub(r'<a href="(?:\.\./)?assets/Kaushik-Subramaniam-Resume\.pdf" download', '<a href="#resume" data-resume', body)
+resume_js = 'window.__RESUME="' + base64.b64encode(open(os.path.join(ROOT, 'assets/Kaushik-Subramaniam-Resume.pdf'), 'rb').read()).decode() + '";' + r'''
+(() => {
+  const name = 'Kaushik-Subramaniam-Resume.pdf';
+  const dl = (window.claude && claude.use) ? claude.use('downloads').catch(() => null) : Promise.resolve(null);
+  const blob = () => { const s = atob(window.__RESUME), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new Blob([u], { type: 'application/pdf' }); };
+  document.addEventListener('click', async (e) => {
+    const a = e.target.closest && e.target.closest('a[data-resume]');
+    if (!a) return;
+    e.preventDefault();
+    const d = await dl;
+    if (d) { try { await d.save({ filename: name, data: blob() }); } catch (err) {} return; }
+    const u = URL.createObjectURL(blob()), t = document.createElement('a');
+    t.href = u; t.download = name; document.body.appendChild(t); t.click(); t.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 4000);
+  });
+})();
+'''
 asset_js = 'window.__A=' + json.dumps(assets) + ';document.querySelectorAll("img[data-asset]").forEach(function(i){i.src=window.__A[i.dataset.asset]||"";});'
 
 router = r'''
@@ -83,7 +103,7 @@ js = rd('data.js') + '\n' + rd('main.js').replace("document.addEventListener('DO
 # main.js's first block was a DOMContentLoaded handler; the script now runs at the end, so call it directly
 js = js.replace("\n});\n\n// Live LED", "\n})();\n\n// Live LED", 1)
 
-js = asset_js + '\n' + js.replace('src="${p.src}"', 'src="${(window.__A&&__A[p.src])||p.src}"').replace('src="${s.img}"', 'src="${(window.__A&&__A[s.img])||s.img}"')
+js = asset_js + '\n' + resume_js + '\n' + js.replace('src="${p.src}"', 'src="${(window.__A&&__A[p.src])||p.src}"').replace('src="${s.img}"', 'src="${(window.__A&&__A[s.img])||s.img}"')
 out = f'''<title>Kaushik Subramaniam</title>
 <meta name="description" content="Kaushik Subramaniam, Senior Product Designer at Multiplier. I design for the better.">
 {fonts}
