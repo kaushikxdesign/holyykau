@@ -417,3 +417,22 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   addEventListener('hashchange', () => setTimeout(update, 50));
   update();
 })();
+
+// Toolkit: logo spins smoothly while hovered, then finishes its current turn instead of snapping back
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.tool').forEach((tool) => {
+    const img = tool.querySelector('.tl-ic img');
+    if (!img || !img.animate) return;
+    let spin = null;
+    tool.addEventListener('mouseenter', () => {
+      if (spin && spin.playState === 'running') { spin.effect.updateTiming({ iterations: Infinity }); return; }
+      spin = img.animate([{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(360deg)' }], { duration: 1400, iterations: Infinity, easing: 'linear' });
+    });
+    tool.addEventListener('mouseleave', () => {
+      if (!spin) return;
+      const t = spin.effect.getComputedTiming();
+      spin.effect.updateTiming({ iterations: (t.currentIteration || 0) + 1 });
+    });
+  });
+})();
