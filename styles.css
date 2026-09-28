@@ -772,7 +772,7 @@ input,textarea{cursor:text}
 .dock .status em{font-family:var(--sans);font-size:14px;font-weight:500;letter-spacing:0;color:var(--fg)}
 .dock .status:hover,.dock .status:focus-visible{background:none;padding:0 12px 0 8px}
 @media (max-width:600px){.dock .status:hover em,.dock .status:focus-visible em{font-size:12px}}
-.brand .bk{font-family:var(--sans);font-weight:800;font-size:34px;letter-spacing:-.04em}
+.brand .bk{font-family:var(--sans);font-weight:600;font-size:34px;letter-spacing:-.04em}
 .brand{gap:2px}
 .brand .bd{width:8px;height:8px}
 .brand .bk{font-size:42px}
@@ -1333,7 +1333,7 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .tk{position:relative;margin-top:8px;height:560px}
 .tk-c{position:absolute;left:0;top:0;margin:0;padding:26px 26px 22px;border-radius:20px;border:1px solid transparent;display:flex;flex-direction:column;gap:14px;cursor:default;outline:none;
   transform:translate(var(--x,0),var(--y,0)) rotate(var(--r,0deg));transition:transform .75s cubic-bezier(.22,1,.36,1) var(--d,0s),box-shadow .5s;box-shadow:0 24px 60px -24px rgba(var(--rgb-black),var(--o70));will-change:transform}
-.tk-q{font-family:"Host Grotesk",ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:40px;line-height:.6;height:18px;letter-spacing:-.04em}
+.tk-q{font-family:"Host Grotesk",ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:40px;line-height:.6;height:18px;letter-spacing:-.04em}
 .tk-c blockquote{margin:0;font-family:"Geist",ui-sans-serif,system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;letter-spacing:-.01em}
 .tk-c figcaption{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:6px}
 .tk-av{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:"Host Grotesk",sans-serif;font-weight:600;font-size:12.5px}
