@@ -302,7 +302,7 @@ footer{padding:140px 0 48px}
 .it,.art h1 em,.gal-hero h1 em,.marq i,.links a:nth-child(2),.pola figcaption{font-style:italic;font-weight:400}
 .ptxt .idx{font-weight:300;letter-spacing:-.05em}
 .facts b,.metric b{font-weight:500;letter-spacing:-.04em}
-.links a{font-size:17px;font-weight:450}
+.links a{font-size:17px;font-weight:400}
 .marq div{font-size:28px;letter-spacing:-.02em}
 .pola figcaption,.wall .pola figcaption{font-family:var(--mono);font-style:normal;font-size:11.5px;letter-spacing:.02em}
 .tl .yr,.facts span,.metric span,.meta .mono,.quote cite,.pimg .cap,.strip,.badge text,.cs-foot,.fbar,.kit li span,.tl .role,.hero .exif{font-family:var(--mono)}
