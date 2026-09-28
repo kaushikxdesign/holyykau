@@ -1422,3 +1422,7 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 
 /* buttons always set in Geist */
 .btn,.btn.sm,.btn.primary,.figma,.csx .x-next-go,button{font-family:"Geist",ui-sans-serif,system-ui,sans-serif}
+/* journey current-role dot breathes like the hero live dot */
+.jr-now{position:relative}
+.jr-now::after{content:"";position:absolute;left:0;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--live);animation:dockping 2.2s cubic-bezier(0,0,.2,1) infinite}
+@media (prefers-reduced-motion:reduce){.jr-now::after{animation:none}}
