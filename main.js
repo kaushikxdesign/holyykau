@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
 const TOK = (() => {
   const cs = getComputedStyle(document.documentElement);
   const rgb = (name, fb) => { const h = (cs.getPropertyValue(name).trim() || fb).replace('#', ''); const n = parseInt(h.length === 3 ? h.replace(/./g, '$&$&') : h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
-  return { accent: rgb('--accent', '#2457ff'), soft: rgb('--accent-soft', '#788dff'), pale: rgb('--accent-pale', '#9fb5ff') };
+  const str = (name, fb) => cs.getPropertyValue(name).trim() || fb;
+  return { accent: rgb('--accent', '#2457ff'), soft: rgb('--accent-soft', '#788dff'), pale: rgb('--accent-pale', '#9fb5ff'), white: rgb('--white', '#fff'),
+    dot: str('--grid-dot', 'rgba(255,255,255,.045)'), dotFaint: str('--grid-dot-faint', 'rgba(255,255,255,.035)') };
 })();
 const mixRGB = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(',');
 const toHex = (c) => '#' + c.map(v => v.toString(16).padStart(2, '0')).join('');
@@ -58,8 +60,8 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
       const i = y * cols + x, v = life[i];
       if (v > 0) {
-        ctx.fillStyle = mono ? `rgba(255,255,255,${0.12 + v * 0.6})` : `rgba(${mixRGB(TOK.accent, TOK.pale, 1 - v)},${0.25 + v * 0.75})`;
-      } else ctx.fillStyle = 'rgba(255,255,255,0.045)';
+        ctx.fillStyle = mono ? `rgba(${TOK.white.join(',')},${0.12 + v * 0.6})` : `rgba(${mixRGB(TOK.accent, TOK.pale, 1 - v)},${0.25 + v * 0.75})`;
+      } else ctx.fillStyle = TOK.dot;
       ctx.fillRect(x * STEP, y * STEP, CELL, CELL);
     }
   };
@@ -265,7 +267,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     const t = Math.max(0, now - t0), i = Math.min(path.length - 1, idxAt(t));
     while (ate + 1 < eatT.length && t >= eatT[ate + 1]) say(++ate);
     ctx.clearRect(0, 0, W, H);
-    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) cell(x, y, 'rgba(255,255,255,0.035)');
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) cell(x, y, TOK.dotFaint);
     if (Math.random() < .25) sparks.set(rnd(0, cols - 1) + ',' + rnd(0, rows - 1), .3 + Math.random() * .25);
     sparks.forEach((v, k) => { const [x, y] = k.split(',').map(Number); cell(x, y, `rgba(${TOK.accent.join(',')},${v})`); const n = v - .025; n > 0 ? sparks.set(k, n) : sparks.delete(k); });
     if (ate + 1 < foods.length) { const [fx, fy] = foods[ate + 1]; const blink = .55 + .45 * Math.sin(t / 70); ctx.shadowColor = toHex(TOK.soft); ctx.shadowBlur = 16; cell(fx, fy, `rgba(${TOK.pale.join(',')},${blink})`); ctx.shadowBlur = 0; }

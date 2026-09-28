@@ -23,6 +23,9 @@
   --accent-pale:#9fb5ff;
   --accent-line:rgba(120,141,255,.38);
   --accent-wash:rgba(36,87,255,.12);
+  /* canvas grids (LED matrix, snake intro) */
+  --grid-dot:rgba(255,255,255,.045);
+  --grid-dot-faint:rgba(255,255,255,.035);
   /* status */
   --live:#3ddc6a;
   /* print (gallery polaroids) */
