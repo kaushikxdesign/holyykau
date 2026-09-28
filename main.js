@@ -463,17 +463,44 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   });
   if (!matchMedia('(pointer:fine) and (min-width:901px)').matches) return;
   board.classList.add('is-live');
+  // structured entry state: rows of 7 on a gentle wave, alternating tilts, prints slightly overlapping
+  let home = [], touched = false;
+  const layout = () => {
+    const W = board.clientWidth, cols = 7, rows = Math.ceil(cards.length / cols), cell = W / cols;
+    const w = Math.round(cell * 1.02);
+    const wOf = (c) => c.classList.contains('jf-film') ? Math.round(w * 1.3) : w;
+    cards.forEach((c) => { c.style.width = wOf(c) + 'px'; });
+    const hs = cards.map((c) => c.offsetHeight);
+    const wave = 18, gap = -18;
+    const rowH = [...Array(rows)].map((_, r) => Math.max(...hs.slice(r * cols, r * cols + cols)));
+    let y = wave + 10;
+    const rowTop = rowH.map((h) => { const t = y; y += h + gap; return t; });
+    board.style.height = Math.round(y + wave + 20) + 'px';
+    home = cards.map((c, k) => {
+      const r = Math.floor(k / cols), i = k % cols, n = Math.min(cols, cards.length - r * cols);
+      const cx = (W - n * cell) / 2 + cell * (i + 0.5);
+      const cy = rowTop[r] + rowH[r] / 2 + Math.sin((i / (cols - 1)) * Math.PI * 2 + r * Math.PI) * wave;
+      return { left: Math.round(cx - wOf(c) / 2), top: Math.round(cy - hs[k] / 2), tilt: ((i + r) % 2 ? 1 : -1) * (2 + (i % 3)), z: 1 + ((i * 3 + r) % 7) };
+    });
+  };
+  const place = (animate) => {
+    cards.forEach((c, k) => {
+      const h = home[k];
+      c.classList.toggle('returning', !!animate);
+      c.style.left = h.left + 'px'; c.style.top = h.top + 'px';
+      c.style.transform = `rotate(${h.tilt}deg)`; c.style.zIndex = c.classList.contains('jf-film') ? 12 : h.z;
+    });
+    if (animate) setTimeout(() => cards.forEach((c) => c.classList.remove('returning')), 750);
+  };
+  layout(); place(false);
+  addEventListener('resize', () => { if (!touched) { layout(); place(false); } });
   const spell = document.createElement('button');
   spell.type = 'button'; spell.className = 'jb-spell'; spell.hidden = true;
   spell.innerHTML = '<span aria-hidden="true">✦</span> Mischief managed';
   spell.title = 'Mischief managed: put every print back where it was';
   board.appendChild(spell);
   let z = 30;
-  spell.addEventListener('click', () => {
-    cards.forEach((c) => { c.classList.add('returning'); c.style.left = c.style.top = c.style.transform = c.style.zIndex = ''; });
-    setTimeout(() => cards.forEach((c) => c.classList.remove('returning')), 750);
-    spell.hidden = true;
-  });
+  spell.addEventListener('click', () => { layout(); place(true); spell.hidden = true; touched = false; });
   cards.forEach((card) => {
     let sx, sy, ox, oy, moved = false, id = null, rot = 0;
     card.setAttribute('draggable', 'false');
@@ -492,7 +519,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       if (e.pointerId !== id) return;
       const dx = e.clientX - sx, dy = e.clientY - sy;
       if (!moved && Math.hypot(dx, dy) < 5) return;
-      if (!moved) { moved = true; card.classList.add('dragging'); spell.hidden = false; }
+      if (!moved) { moved = true; card.classList.add('dragging'); spell.hidden = false; touched = true; }
       const maxX = board.clientWidth - card.offsetWidth, maxY = board.clientHeight - card.offsetHeight;
       card.style.left = Math.min(Math.max(ox + dx, -20), maxX + 20) + 'px';
       card.style.top = Math.min(Math.max(oy + dy, -20), maxY + 20) + 'px';
