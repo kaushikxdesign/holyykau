@@ -1339,3 +1339,8 @@ h1,h2,h3,h4,b,strong,.btn,.figma,.brand,.marq div,.giant text,.pc h3,.pc-stats b
 .tk.open .tk-c.t-card:hover,.tk.open .tk-c.t-card:focus-visible{border-color:rgba(120,141,255,.28)}
 /* Toolkit: real app icons */
 .tl-ic img{width:28px;height:28px;display:block;border-radius:7px;box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+/* ── Shared card surface (single source of truth for every card on the homepage) ── */
+:root{--surface:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),#08080a;--stroke:rgba(255,255,255,.07);--stroke-hover:rgba(120,141,255,.28)}
+.pc,.jr,.tk-c.t-card,.tool{background:var(--surface);border:1px solid var(--stroke)}
+.jr-row+.jr-row{border-top-color:var(--stroke)}
+.pc:hover,.tool:hover,.tk.open .tk-c.t-card:hover,.tk.open .tk-c.t-card:focus-visible{border-color:var(--stroke-hover)}
