@@ -437,50 +437,43 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   });
 })();
 
-// Homepage gallery board: prints start in a tidy two-row wave; visitors can drag them anywhere,
-// and the "Reparo" charm glides every print back into the pattern.
+// Homepage gallery board: prints start in a crowded scatter; visitors can drag them anywhere.
+// "Mischief managed" glides every print back. Clicking a photo (without dragging) enlarges it.
 (() => {
   const board = document.querySelector('[data-board]');
-  if (!board || !matchMedia('(pointer:fine) and (min-width:901px)').matches) return;
-  board.classList.add('is-live');
+  if (!board) return;
   const cards = [...board.querySelectorAll('.jf')];
-  const hint = board.querySelector('.jb-hint');
+  const lb = document.querySelector('.lightbox');
+  const open = (card) => {
+    const img = card.querySelector('img');
+    if (!lb || !img) return;
+    lb.innerHTML = `<img src="${img.currentSrc || img.src}" alt="${img.alt}">`;
+    lb.classList.add('on');
+  };
+  if (lb && !lb.dataset.wired) {
+    lb.dataset.wired = '1';
+    lb.addEventListener('click', () => lb.classList.remove('on'));
+    document.addEventListener('keydown', (e) => e.key === 'Escape' && lb.classList.remove('on'));
+  }
+  let dragged = false;
+  cards.forEach((c) => {
+    if (!c.classList.contains('jf-photo')) return;
+    c.addEventListener('click', () => { if (!dragged) open(c); dragged = false; });
+    c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(c); } });
+  });
+  if (!matchMedia('(pointer:fine) and (min-width:901px)').matches) return;
+  board.classList.add('is-live');
   const spell = document.createElement('button');
   spell.type = 'button'; spell.className = 'jb-spell'; spell.hidden = true;
-  spell.innerHTML = '<span aria-hidden="true">✦</span> Reparo';
-  spell.title = 'Reparo: put every print back where it was';
+  spell.innerHTML = '<span aria-hidden="true">✦</span> Mischief managed';
+  spell.title = 'Mischief managed: put every print back where it was';
   board.appendChild(spell);
-  let home = [], touched = false, z = 20;
-
-  // tidy layout: 6 columns x 2 rows, centred on a gentle wave, tilts alternating
-  const layout = () => {
-    const W = board.clientWidth, cols = 6, cell = W / cols, w = Math.round(cell * 0.86);
-    cards.forEach((c) => { c.style.width = w + 'px'; });
-    const hs = cards.map((c) => c.offsetHeight);
-    const rowH = Math.max(...hs), gap = 56, wave = 22;
-    board.style.height = Math.round(rowH * 2 + gap + wave * 2 + 40) + 'px';
-    home = cards.map((c, k) => {
-      const r = Math.floor(k / cols), i = k % cols;
-      const cx = cell * (i + 0.5), cy = wave + rowH / 2 + r * (rowH + gap) + Math.sin((i / (cols - 1)) * Math.PI * 2 + r * Math.PI) * wave;
-      const tilt = ((i + r) % 2 ? 1 : -1) * (2 + (i % 3));
-      return { left: Math.round(cx - w / 2), top: Math.round(cy - hs[k] / 2), tilt, z: k + 1 };
-    });
-  };
-  const place = (animate) => {
-    cards.forEach((c, k) => {
-      const h = home[k];
-      c.classList.toggle('returning', !!animate);
-      c.style.left = h.left + 'px'; c.style.top = h.top + 'px';
-      c.style.transform = `rotate(${h.tilt}deg)`; c.style.zIndex = h.z;
-    });
-    if (animate) setTimeout(() => cards.forEach((c) => c.classList.remove('returning')), 750);
-  };
-  layout(); place(false);
-  addEventListener('resize', () => { if (!touched) { layout(); place(false); } });
-
-  const setTouched = (v) => { touched = v; spell.hidden = !v; if (hint) hint.hidden = v; };
-  spell.addEventListener('click', () => { layout(); place(true); z = 20; setTouched(false); });
-
+  let z = 30;
+  spell.addEventListener('click', () => {
+    cards.forEach((c) => { c.classList.add('returning'); c.style.left = c.style.top = c.style.transform = c.style.zIndex = ''; });
+    setTimeout(() => cards.forEach((c) => c.classList.remove('returning')), 750);
+    spell.hidden = true;
+  });
   cards.forEach((card) => {
     let sx, sy, ox, oy, moved = false, id = null, rot = 0;
     card.setAttribute('draggable', 'false');
@@ -488,7 +481,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     card.addEventListener('pointerdown', (e) => {
       if (e.button !== 0) return;
       e.preventDefault();
-      id = e.pointerId; moved = false; sx = e.clientX; sy = e.clientY;
+      id = e.pointerId; moved = false; dragged = false; sx = e.clientX; sy = e.clientY;
       ox = card.offsetLeft; oy = card.offsetTop;
       const m = getComputedStyle(card).transform.match(/matrix\(([^,]+),([^,]+)/);
       rot = m ? Math.round(Math.atan2(parseFloat(m[2]), parseFloat(m[1])) * 180 / Math.PI) : 0;
@@ -499,7 +492,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       if (e.pointerId !== id) return;
       const dx = e.clientX - sx, dy = e.clientY - sy;
       if (!moved && Math.hypot(dx, dy) < 5) return;
-      if (!moved) { moved = true; card.classList.add('dragging'); setTouched(true); }
+      if (!moved) { moved = true; card.classList.add('dragging'); spell.hidden = false; }
       const maxX = board.clientWidth - card.offsetWidth, maxY = board.clientHeight - card.offsetHeight;
       card.style.left = Math.min(Math.max(ox + dx, -20), maxX + 20) + 'px';
       card.style.top = Math.min(Math.max(oy + dy, -20), maxY + 20) + 'px';
@@ -509,6 +502,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       if (e.pointerId !== id) return;
       id = null;
       if (moved) {
+        dragged = true;
         card.classList.remove('dragging');
         card.style.transform = `rotate(${Math.round((Math.random() * 12 - 6) * 10) / 10}deg)`;
       }

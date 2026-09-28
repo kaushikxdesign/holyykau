@@ -2,7 +2,7 @@
 
 The viewer only allows inline CSS/JS and data: images, wraps the file in its own
 <html>/<head>/<body>, and cannot follow links to other published HTML files. So this
-inlines everything and turns the gallery and case studies into hash-routed views.
+inlines everything and turns the case studies into hash-routed views.
 Run: python3 build_artifact.py  ->  dist/kaushik.html
 """
 import base64, json, os, re
@@ -19,14 +19,13 @@ def between(html, start_pat, end_pat):
     m = re.search(start_pat + r'.*?' + end_pat, html, re.S)
     return m.group(0) if m else ''
 
-index, gallery = rd('index.html'), rd('gallery.html')
+index = rd('index.html')
 cases = {'quick-automations': rd('work/quick-automations.html'), 'quality-coach': rd('work/quality-coach.html')}
 
 nav = between(index, r'<header class="nav">', r'</header>')
 home = between(index, r'<main>', r'</main>')
 footer = between(index, r'<footer class="fphoto', r'</footer>')
 dock = between(index, r'<nav class="dock"', r'</nav>')
-gal = between(gallery, r'<main>', r'</main>')
 case_views = {k: between(v, r'<main class="cs">', r'</main>') for k, v in cases.items()}
 fonts = '\n'.join(re.findall(r'<link href="https://fonts.googleapis.com[^>]+>', index))
 loader = between(index, r'<!--loader-->', r'<!--/loader-->')
@@ -35,7 +34,6 @@ body = f'''{loader}
 <div class="nav-shell">{nav}</div>
 <div class="shell" id="top">
 <div data-view="home">{home}</div>
-<div data-view="gallery" hidden>{gal}</div>
 </div>
 ''' + ''.join(f'<div data-view="{k}" hidden>{v}</div>\n' for k, v in case_views.items()) + f'''<div class="shell">{footer}</div>
 {dock}

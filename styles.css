@@ -1530,3 +1530,31 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 @media (prefers-reduced-motion:reduce){.jumble .jf.returning{transition:none}.jb-spell,.jb-spell:hover span{animation:none}}
 .jb-spell{top:-34px}
 .jb-spell[hidden],.jb-hint[hidden]{display:none}
+/* homepage gallery board: 20 prints, crowded scatter (entry state; Mischief managed restores it) */
+.jumble{height:880px}
+.j1{width:16.5%;left:-1.0%;top:35px;transform:rotate(4.7deg);z-index:4}
+.j2{width:15.5%;left:11.5%;top:31px;transform:rotate(-2.6deg);z-index:5}
+.j3{width:16.5%;left:25.0%;top:33px;transform:rotate(-5.6deg);z-index:7}
+.j4{width:16.5%;left:45.0%;top:42px;transform:rotate(-5.7deg);z-index:9}
+.j5{width:20%;left:51.2%;top:-7px;transform:rotate(-5.6deg);z-index:8}
+.j6{width:13%;left:70.9%;top:37px;transform:rotate(-5.1deg);z-index:5}
+.j7{width:16.5%;left:84.5%;top:43px;transform:rotate(5.9deg);z-index:7}
+.j8{width:11.5%;left:4.9%;top:325px;transform:rotate(-6.2deg);z-index:6}
+.j9{width:16.5%;left:15.0%;top:286px;transform:rotate(-2.4deg);z-index:2}
+.j10{width:16.5%;left:26.8%;top:313px;transform:rotate(2.4deg);z-index:1}
+.j11{width:15.5%;left:44.7%;top:245px;transform:rotate(-7.6deg);z-index:1}
+.j12{width:11.5%;left:58.3%;top:323px;transform:rotate(4.5deg);z-index:4}
+.j13{width:18%;left:71.5%;top:267px;transform:rotate(-3.9deg);z-index:1}
+.j14{width:13%;left:88.0%;top:306px;transform:rotate(-2.8deg);z-index:2}
+.j15{width:16.5%;left:-1.0%;top:537px;transform:rotate(3.1deg);z-index:9}
+.j16{width:16.5%;left:14.6%;top:541px;transform:rotate(-4.5deg);z-index:7}
+.j17{width:16.5%;left:30.7%;top:534px;transform:rotate(-2.0deg);z-index:5}
+.j18{width:16.5%;left:53.6%;top:502px;transform:rotate(-4.4deg);z-index:2}
+.j19{width:13%;left:65.3%;top:512px;transform:rotate(3.5deg);z-index:6}
+.j20{width:16.5%;left:84.5%;top:531px;transform:rotate(-2.5deg);z-index:4}
+.jumble .jf-photo{cursor:zoom-in}
+.jumble.is-live .jf-photo{cursor:grab}
+@media (max-width:900px){.jumble{grid-template-columns:repeat(3,1fr)!important;gap:18px 12px!important}.jf-cap{font-size:9.5px}}
+.jumble .jf-film{z-index:12}
+.j1{left:1.5%}.j15{left:1.5%}.j8{left:4%}
+.jumble{height:830px}
