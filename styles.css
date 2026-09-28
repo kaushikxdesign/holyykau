@@ -716,7 +716,7 @@ input,textarea{cursor:text}
 .jr .co-logo img{width:100%;height:100%;object-fit:cover}
 .jr-t{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
 .jr-co{display:flex;align-items:center;gap:10px}
-.jr-co b{font-size:22px;font-weight:600;letter-spacing:-.02em;color:var(--fg)}
+.jr-co b{font-size:22px;font-weight:500;letter-spacing:-.02em;color:var(--fg)}
 .jr-now{font-size:12px;padding:2px 9px;border-radius:7px;border:1px solid rgba(var(--rgb-accent),var(--o50));color:var(--accent-pale)}
 .jr-role{font-size:15px;color:var(--fg);opacity:.85}
 .jr-date{font-size:14px;color:var(--fg-3)}
