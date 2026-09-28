@@ -1501,3 +1501,22 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .j8{width:24%;left:57%}
 .jf-tag{white-space:nowrap}
 @media (max-width:600px){.jf-tag{font-size:8.5px;padding:2px 5px;left:6px;top:6px}.jf-play{width:34px;height:34px;margin:-17px 0 0 -17px}.jf-play::after{left:13px;top:10px;border-width:7px 0 7px 11px}}
+/* homepage gallery board: 12 crowded prints you can drag around (desktop) */
+.jumble{height:780px}
+.j1{width:22%;left:0;top:70px;transform:rotate(-6deg);z-index:1}
+.j2{width:19%;left:17%;top:0;transform:rotate(4deg);z-index:2}
+.j3{width:25%;left:33%;top:90px;transform:rotate(-2deg);z-index:5}
+.j4{width:19%;left:55%;top:10px;transform:rotate(5deg);z-index:2}
+.j5{width:14%;left:72%;top:60px;transform:rotate(-4deg);z-index:3}
+.j6{width:16%;left:84%;top:190px;transform:rotate(6deg);z-index:4}
+.j7{width:14%;left:1%;top:330px;transform:rotate(5deg);z-index:3}
+.j8{width:18%;left:13%;top:410px;transform:rotate(-5deg);z-index:4}
+.j9{width:22%;left:30%;top:430px;transform:rotate(3deg);z-index:6}
+.j10{width:22%;left:51%;top:330px;transform:rotate(-4deg);z-index:5}
+.j11{width:21%;left:68%;top:430px;transform:rotate(4deg);z-index:6}
+.j12{width:15%;left:85%;top:500px;transform:rotate(-3deg);z-index:5}
+.jb-hint{position:absolute;right:0;top:-34px;font-family:var(--mono);font-size:12px;font-weight:var(--fw-medium);letter-spacing:-.2px;color:var(--text-tertiary)}
+.jumble.is-live .jf{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.jumble.is-live .jf.dragging{cursor:grabbing;transition:box-shadow .2s;box-shadow:0 40px 80px -20px rgba(var(--rgb-black),var(--o90))}
+.jumble .jf img{-webkit-user-drag:none}
+@media (max-width:900px){.jumble{height:auto}.jb-hint{display:none}}

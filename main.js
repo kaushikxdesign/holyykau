@@ -436,3 +436,49 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     });
   });
 })();
+
+// Homepage gallery board: drag prints around (fine pointers, wide screens). A tap without movement still opens the link.
+(() => {
+  const board = document.querySelector('[data-board]');
+  if (!board || !matchMedia('(pointer:fine) and (min-width:901px)').matches) return;
+  board.classList.add('is-live');
+  let z = 20;
+  board.querySelectorAll('.jf').forEach((card) => {
+    let sx, sy, ox, oy, moved = false, id = null, rot = 0;
+    card.setAttribute('draggable', 'false');
+    card.addEventListener('dragstart', (e) => e.preventDefault());
+    card.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      id = e.pointerId; moved = false; sx = e.clientX; sy = e.clientY;
+      const b = board.getBoundingClientRect(), r = card.getBoundingClientRect();
+      ox = card.offsetLeft; oy = card.offsetTop;
+      const m = getComputedStyle(card).transform.match(/matrix\(([^,]+),([^,]+)/);
+      rot = m ? Math.round(Math.atan2(parseFloat(m[2]), parseFloat(m[1])) * 180 / Math.PI) : 0;
+      card.setPointerCapture(id);
+      card.style.zIndex = ++z;
+    });
+    card.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== id) return;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (!moved && Math.hypot(dx, dy) < 5) return;
+      if (!moved) { moved = true; card.classList.add('dragging'); }
+      const maxX = board.clientWidth - card.offsetWidth, maxY = board.clientHeight - card.offsetHeight;
+      card.style.left = Math.min(Math.max(ox + dx, -20), maxX + 20) + 'px';
+      card.style.top = Math.min(Math.max(oy + dy, -20), maxY + 20) + 'px';
+      card.style.transform = `rotate(${Math.max(-8, Math.min(8, rot + dx * 0.02))}deg) scale(1.04)`;
+    });
+    const end = (e) => {
+      if (e.pointerId !== id) return;
+      id = null;
+      if (moved) {
+        card.classList.remove('dragging');
+        card.style.transform = `rotate(${Math.round((Math.random() * 12 - 6) * 10) / 10}deg)`;
+      }
+    };
+    card.addEventListener('pointerup', end);
+    card.addEventListener('pointercancel', end);
+    // a drag should not also follow the link
+    card.addEventListener('click', (e) => { if (moved) { e.preventDefault(); moved = false; } });
+  });
+})();

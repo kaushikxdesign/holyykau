@@ -28,4 +28,7 @@ window.PHOTOS = [
   { src: 'assets/photos/hands-up.jpg', caption: 'hands up', alt: 'Silhouetted crowd at a concert, two fingers raised toward a hazy stage' },
   { src: 'assets/photos/light-on-water.jpg', caption: 'light on water', alt: 'Streaks of light dancing on dark teal water' },
   { src: 'assets/photos/through-the-gap.jpg', caption: 'through the gap', alt: 'Two men talking against a pink sky, framed through a dark gap' },
+  { src: 'assets/photos/rose-hills.jpg', caption: 'rose hills', alt: 'Green hills under a soft pink sky' },
+  { src: 'assets/photos/the-long-walk.jpg', caption: 'the long walk', alt: 'A man with a bag walking across a bridge in hazy morning light' },
+  { src: 'assets/photos/dragonfly.jpg', caption: 'dragonfly', alt: 'An orange dragonfly hovering over dark water' },
 ];
