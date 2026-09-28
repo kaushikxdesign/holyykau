@@ -55,7 +55,7 @@ def blk(b):
     if k=='templates': return '<div class="cards">'+''.join(f'<div class="card"><span class="x-n">{b[2]} {i:02d}</span><h4>{t}</h4><p>{d}</p></div>' for i,(t,d) in enumerate(b[1],1))+'</div>'
     if k=='insights': return f'<div class="take"><h4>{b[1]}</h4></div><div class="cards x-ins2">'+''.join(f'<div class="card"><h4>{t}</h4><p>{d}</p></div>' for t,d in b[2])+'</div>'
     if k=='edge': return '<div class="edge"><h4>Our edge</h4><ul>'+''.join(f'<li>{x}</li>' for x in b[1])+'</ul></div>'
-    if k=='dims': return '<ol class="dims">'+''.join(f'<li><span>{i:02d}</span>{x}</li>' for i,x in enumerate(b[1],1))+'<li class="x-always"><span>+</span>Always on</li></ol>'
+    if k=='dims': return '<ol class="dims">'+''.join(f'<li><span>{i:02d}</span>{x}</li>' for i,x in enumerate(b[1],1))+'<li class="x-always"><span>Plus</span>Always on</li></ol>'
     if k=='matrix':
         def cell(q):
             name,sub,items,hot=q
