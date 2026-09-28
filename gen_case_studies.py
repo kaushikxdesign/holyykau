@@ -39,7 +39,7 @@ def looks(c):
 def sec(i,s):
     if s.get('wide'):
         return f'<section class="x-wide rv"><span class="x-k">{s["label"]}</span><h2>{s["h"]}</h2>{"".join(blk(b) for b in s["blocks"])}</section>'
-    return f'<section class="x-sec rv"><div class="x-lab"><span class="x-k">{s["n"]} — {s["label"]}</span></div><div class="x-body"><h2>{s["h"]}</h2>{"".join(blk(b) for b in s["blocks"])}</div></section>'
+    return f'<section class="x-sec rv"><div class="x-lab"><span class="x-k">{s["label"]}</span></div><div class="x-body"><h2>{s["h"]}</h2>{"".join(blk(b) for b in s["blocks"])}</div></section>'
 
 def blk(b):
     k=b[0]
