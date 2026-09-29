@@ -1606,3 +1606,18 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .btn.primary{background:var(--cta-primary)}
 .btn.primary:hover{background:var(--cta-primary-hover);filter:none}
 .btn.primary:active{background:var(--cta-primary-pressed);filter:none}
+
+/* pegboard runs edge to edge like the hero LED matrix: the board surface and holes fade out on all four sides,
+   the prints stay crisp in a centred band */
+#trying .jumble{width:100vw;margin-left:calc(50% - 50vw);border:0;border-radius:0;background:none;box-shadow:none;isolation:isolate}
+#trying .jumble::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 46%,#000 0 3.3px,transparent 3.8px) 0 0/24px 24px,
+    radial-gradient(circle at 50% 56%,rgba(var(--rgb-white),var(--o16)) 0 3.6px,transparent 4.1px) 0 0/24px 24px,
+    var(--surface);
+  background-repeat:round;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 84%,transparent 100%),linear-gradient(90deg,transparent 0%,#000 12%,#000 88%,transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 84%,transparent 100%),linear-gradient(90deg,transparent 0%,#000 12%,#000 88%,transparent 100%);
+  mask-composite:intersect}
+@media (max-width:900px){#trying .jumble{padding:56px 16px!important}}

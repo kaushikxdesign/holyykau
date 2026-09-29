@@ -508,61 +508,66 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     if (box && !box.dataset.ar) box.dataset.ar = box.style.aspectRatio || '3/2';
     const r = (box ? box.dataset.ar : '3/2').split('/').map(Number); return r[1] / r[0];
   };
-  // split the photos across 4 columns once so column heights come out as even as possible
-  // (exhaustive search over a reference width; relative heights barely change with the board width)
-  const split = (() => {
-    const pcols = 4, cost = photos.map((c, k) => ({ k, h: 150 * ratio(c) + 65 })).sort((a, b) => b.h - a.h);
-    const sums = Array(pcols).fill(0), pick = [];
-    let best = { spread: Infinity, pick: [] };
-    const dfs = (n) => {
-      if (n === cost.length) {
-        const spread = Math.max(...sums) - Math.min(...sums);
-        if (spread < best.spread) best = { spread, pick: [...pick] };
-        return;
+  // split the photos across the columns so column heights come out as even as possible:
+  // tallest first into the shortest column, then single moves and pairwise swaps until nothing improves.
+  // Relative heights barely change with the board width, so each column count is solved once and cached.
+  const splits = new Map();
+  const splitFor = (pcols) => {
+    if (splits.has(pcols)) return splits.get(pcols);
+    const cost = photos.map((c, k) => ({ k, h: 150 * ratio(c) + 65 }));
+    const pick = [], sums = Array(pcols).fill(0);
+    [...cost].sort((x, y) => y.h - x.h).forEach((it) => { const i = sums.indexOf(Math.min(...sums)); pick[it.k] = i; sums[i] += it.h; });
+    const spread = () => Math.max(...sums) - Math.min(...sums);
+    for (let improved = true; improved;) {
+      improved = false;
+      for (const a of cost) {
+        for (let i = 0; i < pcols; i++) {           // move a to column i
+          const from = pick[a.k]; if (i === from) continue;
+          const before = spread(); sums[from] -= a.h; sums[i] += a.h;
+          if (spread() < before - 0.5) { pick[a.k] = i; improved = true; } else { sums[from] += a.h; sums[i] -= a.h; }
+        }
+        for (const b of cost) {                      // swap a and b
+          const ia = pick[a.k], ib = pick[b.k]; if (ia === ib) continue;
+          const before = spread(), d = a.h - b.h; sums[ia] -= d; sums[ib] += d;
+          if (spread() < before - 0.5) { pick[a.k] = ib; pick[b.k] = ia; improved = true; } else { sums[ia] += d; sums[ib] -= d; }
+        }
       }
-      const seen = new Set();
-      for (let i = 0; i < pcols && best.spread > 1; i++) {
-        if (seen.has(sums[i])) continue; seen.add(sums[i]);
-        sums[i] += cost[n].h; pick[n] = i; dfs(n + 1); sums[i] -= cost[n].h;
-      }
-    };
-    dfs(0);
-    const out = []; cost.forEach((it, n) => { out[it.k] = best.pick[n]; });
-    return out;
-  })();
+    }
+    splits.set(pcols, pick);
+    return pick;
+  };
   const layout = () => {
-    const W = board.clientWidth, pad = 28, gap = 22, pcols = 4, frame = 9 * 2, capH = 34 - 9;
+    // the board runs edge to edge; prints sit in a centred band clear of the faded edges
+    const BW = board.clientWidth, W = Math.min(BW * 0.8, 1480), x0 = (BW - W) / 2, padY = 88;
+    const gap = 22, pcols = W >= 1240 ? 5 : 4, frame = 9 * 2, capH = 34 - 9, split = splitFor(pcols);
     // print height for a given width: the image plus its paper frame and caption strip
     const hOf = (c, w) => Math.round((w - frame) * ratio(c) + frame + capH);
     const plan = (leftW) => {
-      const shotW = (leftW - gap) / 2, rightX = pad + leftW + gap * 1.6, colW = (W - pad - rightX - gap * (pcols - 1)) / pcols;
+      const shotW = (leftW - gap) / 2, rightX = x0 + leftW + gap * 1.6, colW = (x0 + W - rightX - gap * (pcols - 1)) / pcols;
       const shotH = Math.max(...shots.map((c) => hOf(c, shotW)));
       const filmH = film ? hOf(film, leftW) : 0;
       const leftH = shotH + (film ? gap + filmH : 0);
-      const items = photos.map((c, k) => ({ k, h: hOf(c, colW) + gap }));
       const cols = Array.from({ length: pcols }, () => ({ h: -gap, items: [] }));
-      items.forEach((it) => { const col = cols[split[it.k]]; col.items.push({ k: it.k, h: it.h - gap }); col.h += it.h; });
-      cols.forEach((col) => col.items.sort((a, b) => a.k - b.k));
+      photos.forEach((c, k) => { const h = hOf(c, colW), col = cols[split[k]]; col.items.push({ k, h }); col.h += h + gap; });
       const rightH = Math.max(...cols.map((c) => c.h));
       return { leftW, shotW, rightX, colW, shotH, filmH, leftH, rightH, cols };
     };
     // pick the left zone width that makes both sides end at the same height
     let best = null;
-    for (let f = 0.26; f <= 0.44; f += 0.005) {
-      const p = plan(Math.round((W - pad * 2) * f));
+    for (let f = 0.24; f <= 0.42; f += 0.005) {
+      const p = plan(Math.round(W * f));
       const cost = Math.abs(p.leftH - p.rightH);
       if (!best || cost < best.cost) best = { ...p, cost };
     }
     const P = best, pos = new Map();
-    shots.forEach((c, k) => { c.style.width = Math.round(P.shotW) + 'px'; pos.set(c, { left: Math.round(pad + k * (P.shotW + gap)), top: pad, tilt: tiltOf.get(c) || 0, z: 2 }); });
-    if (film) { film.style.width = P.leftW + 'px'; pos.set(film, { left: pad, top: Math.round(pad + P.shotH + gap), tilt: tiltOf.get(film) || 0, z: 2 }); }
-    // every column ends flush with the tallest side: the slack goes into that column's gaps
-    const T = Math.max(P.leftH, P.rightH);
+    shots.forEach((c, k) => { c.style.width = Math.round(P.shotW) + 'px'; pos.set(c, { left: Math.round(x0 + k * (P.shotW + gap)), top: padY, tilt: tiltOf.get(c) || 0, z: 2 }); });
+    if (film) { film.style.width = P.leftW + 'px'; pos.set(film, { left: Math.round(x0), top: Math.round(padY + P.shotH + gap), tilt: tiltOf.get(film) || 0, z: 2 }); }
     // every column ends flush with the tallest side: short columns give the slack to their photos
     // (a slightly taller crop, object-fit cover), so the gaps stay an even 22px everywhere
+    const T = Math.max(P.leftH, P.rightH);
     P.cols.forEach((col, i) => {
       const grow = (T - col.h) / col.items.length, imgW = P.colW - frame;
-      let y = pad;
+      let y = padY;
       col.items.forEach((it) => {
         const c = photos[it.k], box = c.querySelector('.jf-img'), h = it.h + grow;
         c.style.width = Math.round(P.colW) + 'px';
@@ -571,7 +576,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
         y += h + gap;
       });
     });
-    board.style.height = Math.round(pad * 2 + T) + 'px';
+    board.style.height = Math.round(padY * 2 + T) + 'px';
     home = cards.map((c) => pos.get(c));
   };
   const place = (animate) => {
