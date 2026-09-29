@@ -487,6 +487,13 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     c.addEventListener('click', () => { if (!dragged) open(c); dragged = false; });
     c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(c); } });
   });
+  // a few prints (4, chosen by a fixed seed) hang slightly crooked; the rest sit straight
+  const tiltSeed = (n) => { const x = Math.sin(n * 7919 + 104729) * 43758.5453; return x - Math.floor(x); };
+  const tiltOf = new Map();
+  cards.map((c, k) => ({ c, k, r: tiltSeed(k + 3) })).sort((a, b) => a.r - b.r).slice(0, 4).forEach(({ c, k, r }, n) => {
+    const deg = Math.round((1.2 + tiltSeed(k + 11) * 1.4) * (n % 2 ? 1 : -1) * 10) / 10;
+    tiltOf.set(c, deg); c.style.setProperty('--tilt', deg + 'deg');
+  });
   if (!matchMedia('(pointer:fine) and (min-width:901px)').matches) return;
   board.classList.add('is-live');
   // entry state: three tidy zones, no tilts. Top left holds the Dribbble shots side by side,
@@ -546,8 +553,8 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       if (!best || cost < best.cost) best = { ...p, cost };
     }
     const P = best, pos = new Map();
-    shots.forEach((c, k) => { c.style.width = Math.round(P.shotW) + 'px'; pos.set(c, { left: Math.round(pad + k * (P.shotW + gap)), top: pad, tilt: 0, z: 2 }); });
-    if (film) { film.style.width = P.leftW + 'px'; pos.set(film, { left: pad, top: Math.round(pad + P.shotH + gap), tilt: 0, z: 2 }); }
+    shots.forEach((c, k) => { c.style.width = Math.round(P.shotW) + 'px'; pos.set(c, { left: Math.round(pad + k * (P.shotW + gap)), top: pad, tilt: tiltOf.get(c) || 0, z: 2 }); });
+    if (film) { film.style.width = P.leftW + 'px'; pos.set(film, { left: pad, top: Math.round(pad + P.shotH + gap), tilt: tiltOf.get(film) || 0, z: 2 }); }
     // every column ends flush with the tallest side: the slack goes into that column's gaps
     const T = Math.max(P.leftH, P.rightH);
     // every column ends flush with the tallest side: short columns give the slack to their photos
@@ -559,7 +566,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
         const c = photos[it.k], box = c.querySelector('.jf-img'), h = it.h + grow;
         c.style.width = Math.round(P.colW) + 'px';
         if (box) box.style.aspectRatio = `${Math.round(imgW)} / ${Math.round(imgW * ratio(c) + grow)}`;
-        pos.set(c, { left: Math.round(P.rightX + i * (P.colW + gap)), top: Math.round(y), tilt: 0, z: 2 });
+        pos.set(c, { left: Math.round(P.rightX + i * (P.colW + gap)), top: Math.round(y), tilt: tiltOf.get(c) || 0, z: 2 });
         y += h + gap;
       });
     });
@@ -579,11 +586,53 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   addEventListener('resize', () => { if (!touched) { layout(); place(false); } });
   const spell = document.createElement('button');
   spell.type = 'button'; spell.className = 'jb-spell'; spell.hidden = true;
-  spell.innerHTML = '<span aria-hidden="true">✦</span> Mischief managed';
+  spell.innerHTML = '<span aria-hidden="true">🪄</span> Mischief managed';
   spell.title = 'Mischief managed: put every print back where it was';
   (board.previousElementSibling || board).appendChild(spell);
   let z = 30;
-  spell.addEventListener('click', () => { layout(); place(true); spell.hidden = true; touched = false; });
+  // the button crumbles away like a snap: it breaks into pixels left to right, and they drift off turning gold
+  const snap = (btn) => {
+    const r = btn.getBoundingClientRect();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !r.width) { btn.hidden = true; return; }
+    const cs = getComputedStyle(btn), dpr = Math.min(devicePixelRatio || 1, 2), mX = 40, mY = 70, mR = 140;
+    const cw = r.width + mX + mR, ch = r.height + mY * 2;
+    const cv = document.createElement('canvas');
+    cv.width = cw * dpr; cv.height = ch * dpr;
+    Object.assign(cv.style, { position: 'absolute', left: (r.left + scrollX - mX) + 'px', top: (r.top + scrollY - mY) + 'px', width: cw + 'px', height: ch + 'px', pointerEvents: 'none', zIndex: 60 });
+    document.body.appendChild(cv);
+    const g = cv.getContext('2d', { willReadFrequently: true }); g.scale(dpr, dpr);
+    const icon = btn.querySelector('span'), ir = icon.getBoundingClientRect();
+    g.textBaseline = 'middle'; g.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; g.fillStyle = cs.color;
+    const cy = mY + r.height / 2;
+    g.fillText('🪄', mX + (ir.left - r.left), cy);
+    g.fillText('Mischief managed', mX + (ir.right - r.left) + parseFloat(cs.columnGap || cs.gap || 6), cy);
+    const img = g.getImageData(0, 0, cv.width, cv.height).data, step = 1.5, parts = [];
+    for (let y = 0; y < ch; y += step) for (let x = 0; x < cw; x += step) {
+      const i = (Math.floor(y * dpr) * cv.width + Math.floor(x * dpr)) * 4;
+      if (img[i + 3] > 60) parts.push({ x, y, r0: img[i], g0: img[i + 1], b0: img[i + 2], a0: img[i + 3] / 255,
+        d: ((x - mX) / r.width) * 420 + Math.random() * 260, vx: .25 + Math.random() * 1.1, vy: -(.15 + Math.random() * .9),
+        w: Math.random() * 6.28, gold: [[232, 182, 74], [245, 201, 92], [201, 150, 46], [255, 222, 140]][Math.floor(Math.random() * 4)] });
+    }
+    btn.style.visibility = 'hidden';
+    const t0 = performance.now(), life = 760;
+    const tick = (now) => {
+      const t = now - t0; let alive = false;
+      g.clearRect(0, 0, cw, ch);
+      for (const p of parts) {
+        const k = (t - p.d) / life;
+        if (k >= 1) continue;
+        alive = true;
+        if (k <= 0) { g.fillStyle = `rgba(${p.r0},${p.g0},${p.b0},${p.a0})`; g.fillRect(p.x, p.y, step, step); continue; }
+        const e = k * k, f = Math.min(1, k * 2.4), px = p.x + p.vx * t * .09 * k + Math.sin(p.w + k * 5) * 3 * k, py = p.y + p.vy * t * .07 * k;
+        const c = p.gold.map((v, j) => Math.round([p.r0, p.g0, p.b0][j] * (1 - f) + v * f));
+        g.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${(1 - e) * p.a0})`;
+        g.fillRect(px, py, step * (1 - k * .4), step * (1 - k * .4));
+      }
+      if (alive) requestAnimationFrame(tick); else { cv.remove(); btn.hidden = true; btn.style.visibility = ''; }
+    };
+    requestAnimationFrame(tick);
+  };
+  spell.addEventListener('click', () => { layout(); place(true); snap(spell); touched = false; });
   cards.forEach((card) => {
     let sx, sy, ox, oy, moved = false, id = null;
     card.setAttribute('draggable', 'false');
@@ -600,7 +649,10 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       if (e.pointerId !== id) return;
       const dx = e.clientX - sx, dy = e.clientY - sy;
       if (!moved && Math.hypot(dx, dy) < 5) return;
-      if (!moved) { moved = true; card.classList.add('dragging'); spell.hidden = false; touched = true; }
+      if (!moved) {
+        moved = true; card.classList.add('dragging'); spell.hidden = false; spell.style.visibility = ''; touched = true;
+        if (card.hasAttribute('href')) { card.dataset.href = card.getAttribute('href'); card.removeAttribute('href'); }
+      }
       const maxX = board.clientWidth - card.offsetWidth, maxY = board.clientHeight - card.offsetHeight;
       card.style.left = Math.min(Math.max(ox + dx, -20), maxX + 20) + 'px';
       card.style.top = Math.min(Math.max(oy + dy, -20), maxY + 20) + 'px';
@@ -612,7 +664,8 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       if (moved) {
         dragged = true;
         card.classList.remove('dragging');
-        card.style.transform = 'none';
+        card.style.transform = tiltOf.has(card) ? `rotate(${tiltOf.get(card)}deg)` : 'none';
+        if (card.dataset.href) setTimeout(() => { card.setAttribute('href', card.dataset.href); delete card.dataset.href; }, 80);
       }
     };
     card.addEventListener('pointerup', end);
