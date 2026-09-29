@@ -1597,9 +1597,9 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .jumble .jf-film{z-index:2}
 /* hero: "better." in primary text; the hand-drawn loop around it stays brand blue */
 .art h1 em{color:var(--text-primary);-webkit-text-fill-color:var(--text-primary)}
-/* Mischief managed: wand and label in gold, the same gold the button crumbles into; the usual Geist Mono tracking */
+/* spell button: primary text, Geist Mono 500, the usual tracking; it crumbles into gold, and only "mischief managed" is gold */
 :root{--gold:#e8b64a}
-.lab .jb-spell,.jb-spell{color:var(--gold);letter-spacing:-.4px}
+.lab .jb-spell,.jb-spell{color:var(--text-primary);font-family:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:var(--fw-medium);letter-spacing:-.4px}
 /* pegboard holes fit a whole number of rows and columns, so the bottom and right edges match the top and left (no sliced holes) */
 .jumble{background-repeat:round}
 /* primary CTA: flat fills per state (no brightness filters) */
