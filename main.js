@@ -271,7 +271,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     if (Math.random() < .25) sparks.set(rnd(0, cols - 1) + ',' + rnd(0, rows - 1), .3 + Math.random() * .25);
     sparks.forEach((v, k) => { const [x, y] = k.split(',').map(Number); cell(x, y, `rgba(${TOK.accent.join(',')},${v})`); const n = v - .025; n > 0 ? sparks.set(k, n) : sparks.delete(k); });
     if (ate + 1 < foods.length) { const [fx, fy] = foods[ate + 1]; const blink = .55 + .45 * Math.sin(t / 70); ctx.shadowColor = toHex(TOK.soft); ctx.shadowBlur = 16; cell(fx, fy, `rgba(${TOK.pale.join(',')},${blink})`); ctx.shadowBlur = 0; }
-    for (let j = 0; j < LEN; j++) { const p = path[i - j]; if (!p) break; const a = 1 - j / LEN; if (j === 0) { ctx.shadowColor = toHex(TOK.accent); ctx.shadowBlur = 18; } cell(p[0], p[1], `rgba(${mixRGB(TOK.accent, TOK.pale, 1 - a)},${.35 + a * .65})`); ctx.shadowBlur = 0; }
+    for (let j = 0; j < LEN; j++) { const p = path[i - j]; if (!p) break; const a = 1 - .8 * j / (LEN - 1); /* pure brand blue; only the opacity fades, 100% to 20% */ if (j === 0) { ctx.shadowColor = toHex(TOK.accent); ctx.shadowBlur = 18; } cell(p[0], p[1], `rgba(${TOK.accent.join(',')},${a})`); ctx.shadowBlur = 0; }
     if (t < acc + 600) requestAnimationFrame(frame);
   };
   window.__snakeEnd = T0 + acc;
