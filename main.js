@@ -488,7 +488,10 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(c); } });
   });
   // every print hangs crooked (1.5 to 4.5 degrees, fixed seed, directions mixed); the film tilts least
-  const tiltSeed = (n) => { const x = Math.sin(n * 7919 + 104729) * 43758.5453; return x - Math.floor(x); };
+  // a fresh seed on every visit, so the board is arranged differently each time; within a visit it stays put
+  // (Mischief managed returns to this visit's arrangement)
+  const visit = Math.floor(Math.random() * 100000);
+  const tiltSeed = (n) => { const x = Math.sin((n + visit) * 7919 + 104729) * 43758.5453; return x - Math.floor(x); };
   const tiltOf = new Map();
   cards.forEach((c, k) => {
     const mag = (1.5 + tiltSeed(k + 11) * 3) * (c.classList.contains('jf-film') ? 0.45 : 1);
@@ -510,7 +513,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   };
   // jumbled board, no zones: three loose rows across the full width. Rows are justified to the board width
   // (every print in a row shares an image height, the film is drawn 15% larger), then each row drifts up or down
-  // and every print gets a small nudge and tilt. Fixed seeds, so the jumble is the same on every visit.
+  // and every print gets a small nudge and tilt. A new seed each visit, so the jumble changes every time.
   const frame = 9 * 2, capH = 34 - 9;
   const rows = (() => {
     const tall = photos.filter((c) => ratio(c) > 1.1), rest = photos.filter((c) => ratio(c) <= 1.1);
@@ -518,15 +521,17 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     const R = [[], [], []], sum = [0, 0, 0];
     const put = (r, c) => { R[r].push(c); sum[r] += unit(c); };
     // anchors: one shot top, one bottom; film in the middle; the two portraits in the top and bottom rows
-    if (shots[0]) put(0, shots[0]); if (shots[1]) put(2, shots[1]); if (film) put(1, film);
-    tall.forEach((c, n) => put(n % 2 ? 0 : 2, c));
+    // which outer row gets which shot / portrait flips from visit to visit
+    const top = visit % 2 ? 2 : 0, bottom = 2 - top;
+    if (shots[0]) put(top, shots[0]); if (shots[1]) put(bottom, shots[1]); if (film) put(1, film);
+    tall.forEach((c, n) => put(n % 2 ? top : bottom, c));
     // the rest go to whichever row is shortest, so rows come out close in length
     [...rest].sort((x, y) => unit(y) - unit(x)).forEach((c) => put(sum.indexOf(Math.min(...sum)), c));
     // seeded shuffle inside each row, then keep portraits at opposite ends and the film off-centre
     R.forEach((row, r) => row.sort((x, y) => tiltSeed(cards.indexOf(x) * 3 + r) - tiltSeed(cards.indexOf(y) * 3 + r)));
     const moveTo = (row, c, i) => { row.splice(row.indexOf(c), 1); row.splice(i, 0, c); };
-    tall.forEach((c, n) => { const row = R[n % 2 ? 0 : 2]; moveTo(row, c, n % 2 ? 1 : row.length - 2); });
-    if (film) moveTo(R[1], film, 1);
+    tall.forEach((c, n) => { const row = R[n % 2 ? top : bottom]; moveTo(row, c, n % 2 ? 1 : row.length - 2); });
+    if (film) moveTo(R[1], film, 1 + Math.floor(tiltSeed(97) * Math.max(1, R[1].length - 2)));
     return R;
   })();
   const layout = () => {
