@@ -508,89 +508,54 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     if (box && !box.dataset.ar) box.dataset.ar = box.style.aspectRatio || '3/2';
     const r = (box ? box.dataset.ar : '3/2').split('/').map(Number); return r[1] / r[0];
   };
-  // split the photos across the columns so column heights come out as even as possible:
-  // tallest first into the shortest column, then single moves and pairwise swaps until nothing improves.
-  // Relative heights barely change with the board width, so each column count is solved once and cached.
-  const splits = new Map();
-  const splitFor = (pcols) => {
-    if (splits.has(pcols)) return splits.get(pcols);
-    const cost = photos.map((c, k) => ({ k, h: 150 * ratio(c) + 65, tall: ratio(c) > 1.1 }));
-    const pick = [], sums = Array(pcols).fill(0);
-    // tall (portrait) prints are spread out first, never sharing or neighbouring a column, and stay put
-    const talls = cost.filter((it) => it.tall);
-    talls.forEach((it, n) => { const i = Math.min(pcols - 1, Math.round((n + 0.5) * pcols / talls.length - 0.5)); pick[it.k] = i; sums[i] += it.h; });
-    cost.filter((it) => !it.tall).sort((x, y) => y.h - x.h).forEach((it) => { const i = sums.indexOf(Math.min(...sums)); pick[it.k] = i; sums[i] += it.h; });
-    const spread = () => Math.max(...sums) - Math.min(...sums);
-    for (let improved = true; improved;) {
-      improved = false;
-      for (const a of cost) {
-        if (a.tall) continue;
-        for (let i = 0; i < pcols; i++) {           // move a to column i
-          const from = pick[a.k]; if (i === from) continue;
-          const before = spread(); sums[from] -= a.h; sums[i] += a.h;
-          if (spread() < before - 0.5) { pick[a.k] = i; improved = true; } else { sums[from] += a.h; sums[i] -= a.h; }
-        }
-        for (const b of cost) {                      // swap a and b
-          const ia = pick[a.k], ib = pick[b.k]; if (ia === ib || b.tall) continue;
-          const before = spread(), d = a.h - b.h; sums[ia] -= d; sums[ib] += d;
-          if (spread() < before - 0.5) { pick[a.k] = ib; pick[b.k] = ia; improved = true; } else { sums[ia] += d; sums[ib] -= d; }
-        }
-      }
-    }
-    splits.set(pcols, pick);
-    return pick;
-  };
+  // jumbled board, no zones: three loose rows across the full width. Rows are justified to the board width
+  // (every print in a row shares an image height, the film is drawn 30% larger), then each row drifts up or down
+  // and every print gets a small nudge and tilt. Fixed seeds, so the jumble is the same on every visit.
+  const frame = 9 * 2, capH = 34 - 9;
+  const rows = (() => {
+    const tall = photos.filter((c) => ratio(c) > 1.1), rest = photos.filter((c) => ratio(c) <= 1.1);
+    const unit = (c) => (c === film ? 1.3 : 1) / ratio(c);           // width per unit of image height
+    const R = [[], [], []], sum = [0, 0, 0];
+    const put = (r, c) => { R[r].push(c); sum[r] += unit(c); };
+    // anchors: one shot top, one bottom; film in the middle; the two portraits in the top and bottom rows
+    if (shots[0]) put(0, shots[0]); if (shots[1]) put(2, shots[1]); if (film) put(1, film);
+    tall.forEach((c, n) => put(n % 2 ? 0 : 2, c));
+    // the rest go to whichever row is shortest, so rows come out close in length
+    [...rest].sort((x, y) => unit(y) - unit(x)).forEach((c) => put(sum.indexOf(Math.min(...sum)), c));
+    // seeded shuffle inside each row, then keep portraits at opposite ends and the film off-centre
+    R.forEach((row, r) => row.sort((x, y) => tiltSeed(cards.indexOf(x) * 3 + r) - tiltSeed(cards.indexOf(y) * 3 + r)));
+    const moveTo = (row, c, i) => { row.splice(row.indexOf(c), 1); row.splice(i, 0, c); };
+    tall.forEach((c, n) => { const row = R[n % 2 ? 0 : 2]; moveTo(row, c, n % 2 ? 1 : row.length - 2); });
+    if (film) moveTo(R[1], film, 1);
+    return R;
+  })();
   const layout = () => {
-    // the board runs edge to edge; prints use nearly its full width, a small margin in from each side
-    const BW = board.clientWidth, W = Math.min(BW - 2 * Math.max(40, BW * 0.045), 1760), x0 = (BW - W) / 2, padY = 88;
-    const gap = 14, pcols = W >= 1180 ? 5 : 4, frame = 9 * 2, capH = 34 - 9, split = splitFor(pcols);
-    // print height for a given width: the image plus its paper frame and caption strip
-    const hOf = (c, w) => Math.round((w - frame) * ratio(c) + frame + capH);
-    const plan = (leftW) => {
-      const shotW = (leftW - gap) / 2, rightX = x0 + leftW + gap * 1.6, colW = (x0 + W - rightX - gap * (pcols - 1)) / pcols;
-      const shotH = Math.max(...shots.map((c) => hOf(c, shotW)));
-      const filmH = film ? hOf(film, leftW) : 0;
-      const leftH = shotH + (film ? gap + filmH : 0);
-      const cols = Array.from({ length: pcols }, () => ({ h: -gap, items: [] }));
-      photos.forEach((c, k) => { const h = hOf(c, colW), col = cols[split[k]]; col.items.push({ k, h }); col.h += h + gap; });
-      const rightH = Math.max(...cols.map((c) => c.h));
-      return { leftW, shotW, rightX, colW, shotH, filmH, leftH, rightH, cols };
-    };
-    // pick the left zone width that makes both sides end at the same height
-    let best = null;
-    for (let f = 0.24; f <= 0.42; f += 0.005) {
-      const p = plan(Math.round(W * f));
-      const cost = Math.abs(p.leftH - p.rightH);
-      if (!best || cost < best.cost) best = { ...p, cost };
-    }
-    const P = best, pos = new Map();
-    shots.forEach((c, k) => { c.style.width = Math.round(P.shotW) + 'px'; pos.set(c, { left: Math.round(x0 + k * (P.shotW + gap)), top: padY, tilt: tiltOf.get(c) || 0, z: 2 }); });
-    if (film) { film.style.width = P.leftW + 'px'; pos.set(film, { left: Math.round(x0), top: Math.round(padY + P.shotH + gap), tilt: tiltOf.get(film) || 0, z: 2 }); }
-    // short columns give some of their slack to their photos (a slightly taller crop, object-fit cover),
-    // capped at 12% of each photo's height so landscapes never turn into tall cards
-    const T = Math.max(P.leftH, P.rightH);
-    P.cols.forEach((col, i) => {
-      const imgW = P.colW - frame, grow = Math.min((T - col.h) / col.items.length, imgW * 0.667 * 0.12);
-      let y = padY;
-      col.items.forEach((it) => {
-        const c = photos[it.k], box = c.querySelector('.jf-img'), h = it.h + grow;
-        c.style.width = Math.round(P.colW) + 'px';
-        if (box) box.style.aspectRatio = `${Math.round(imgW)} / ${Math.round(imgW * ratio(c) + grow)}`;
-        pos.set(c, { left: Math.round(P.rightX + i * (P.colW + gap)), top: Math.round(y), tilt: tiltOf.get(c) || 0, z: 2 });
-        y += h + gap;
+    const BW = board.clientWidth, W = Math.min(BW - 2 * Math.max(40, BW * 0.045), 1760), x0 = (BW - W) / 2;
+    const gap = 12, rowGap = 26, padY = 48, pos = new Map();
+    let y = padY;
+    rows.forEach((row, r) => {
+      // justify: image height so the row's widths plus gaps fill W exactly
+      const units = row.reduce((t, c) => t + (c === film ? 1.3 : 1) / ratio(c), 0);
+      const ih = (W - gap * (row.length - 1) - frame * row.length) / units;
+      const dims = row.map((c) => { const s = c === film ? 1.3 : 1, iw = ih * s / ratio(c); return { c, w: iw + frame, h: iw * ratio(c) + frame + capH }; });
+      const rowH = ih + frame + capH;
+      const shiftY = (tiltSeed(r + 71) - 0.5) * 36, shiftX = (tiltSeed(r + 83) - 0.5) * 32;
+      let x = x0 + shiftX;
+      dims.forEach(({ c, w, h }) => {
+        const k = cards.indexOf(c);
+        const dx = (tiltSeed(k + 23) - 0.5) * 16, dy = (tiltSeed(k + 37) - 0.5) * 26;
+        c.style.width = Math.round(w) + 'px';
+        const box = c.querySelector('.jf-img'); if (box) box.style.aspectRatio = box.dataset.ar;
+        const left = Math.round(Math.min(Math.max(x + dx, 8), BW - w - 8));
+        const top = Math.round(Math.max(y + (rowH - h) / 2 + shiftY + dy, 12));
+        pos.set(c, { left, top, tilt: tiltOf.get(c) || 0, z: 2 + Math.floor(tiltSeed(k + 51) * 8), slot: { left: Math.round(x), top: Math.round(y + (rowH - h) / 2) } });
+        x += w + gap;
       });
+      y += rowH + rowGap;
     });
-    // jumble: nudge every print off its slot by a fixed-seed offset, so neighbours just kiss or overlap a little
-    cards.forEach((c, k) => {
-      const p = pos.get(c), film = c.classList.contains('jf-film');
-      const dx = (tiltSeed(k + 23) - 0.5) * (film ? 16 : 24), dy = (tiltSeed(k + 37) - 0.5) * (film ? 16 : 30);
-      p.left = Math.round(Math.min(Math.max(p.left + dx, 8), BW - c.offsetWidth - 8));
-      p.top = Math.round(Math.max(p.top + dy, 24));
-      p.z = 2 + Math.floor(tiltSeed(k + 51) * 8);
-      p.slot = { left: p.left - Math.round(dx), top: p.top - Math.round(dy) };
-    });
+    const H = y - rowGap + padY;
     // captions stay readable: where one print's caption strip runs under a neighbour, lift that print above it;
-    // if both captions would be covered, the later print goes back to its slot
+    // if both captions would be covered, the later print goes back to its unshifted spot
     const boxOf = (c) => { const p = pos.get(c); return { l: p.left - 6, t: p.top - 6, r: p.left + c.offsetWidth + 6, b: p.top + c.offsetHeight + 6 }; };
     const hit = (a, b) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
     const capOf = (x) => ({ l: x.l, r: x.r, t: x.b - 44, b: x.b });
@@ -600,12 +565,12 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
         const A = boxOf(cards[i]), B = boxOf(cards[j]); if (!hit(A, B)) continue;
         const pa = pos.get(cards[i]), pb = pos.get(cards[j]), aUnder = hit(capOf(A), B), bUnder = hit(capOf(B), A);
         const aOnTop = pa.z > pb.z;
-        if (aUnder && bUnder) { if (pb.slot) { pb.left = Math.min(pb.slot.left, BW - cards[j].offsetWidth - 8); pb.top = Math.max(pb.slot.top, 24); delete pb.slot; changed = true; } }
+        if (aUnder && bUnder) { if (pb.slot) { pb.left = pb.slot.left; pb.top = pb.slot.top; delete pb.slot; changed = true; } }
         else if (aUnder && !aOnTop) { pa.z = Math.min(pb.z + 1, 20); changed = true; }
         else if (bUnder && aOnTop) { pb.z = Math.min(pa.z + 1, 20); changed = true; }
       }
     }
-    board.style.height = Math.round(padY * 2 + T) + 'px';
+    board.style.height = Math.round(Math.max(H, ...cards.map((c) => pos.get(c).top + c.offsetHeight + 24))) + 'px';
     home = cards.map((c) => pos.get(c));
   };
   const place = (animate) => {
