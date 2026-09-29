@@ -1657,3 +1657,9 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 /* reading bar: the running fox is wide and low, so the tip box is wider; its right edge still meets the bar end at 100% */
 .rprog .rp-tip{left:calc(var(--p,0) * (100% - 44px))}
 .rprog .rp-tip .rp-run{width:50px;height:30px;margin-left:-6px;transform:translateY(-15px)}
+
+/* hero photo tile links to About, where the same photo is shown large */
+.art h1 .me-link{display:inline-block;vertical-align:middle;cursor:pointer}
+.art h1 .me-link .me{vertical-align:middle}
+.art h1 .me-link:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:4px;border-radius:16px}
+#about{scroll-margin-top:88px}

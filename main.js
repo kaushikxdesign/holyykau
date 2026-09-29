@@ -729,3 +729,14 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     card.addEventListener('click', (e) => { if (moved) { e.preventDefault(); moved = false; } });
   });
 })();
+
+// Hero photo tile: scroll to About ourselves (a plain #about jump can be swallowed by the page's host)
+(() => {
+  const link = document.querySelector('.me-link'), about = document.getElementById('about');
+  if (!link || !about) return;
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    about.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+})();
