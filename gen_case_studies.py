@@ -48,7 +48,7 @@ def blk(b):
     if k=='hmw': return '<ol class="hmw">'+''.join(f'<li>{x}</li>' for x in b[1])+'</ol>'
     if k=='rows': return '<div class="cards">'+''.join(f'<div class="card"><span class="x-n">{cat}</span><h4>{t}</h4><p>{d}</p></div>' for cat,t,d in b[1])+'</div>'
     if k=='ast': return f'<div class="take x-take"><h4>{b[1]}</h4><ol class="x-rows">'+''.join(f'<li><span class="x-i">{i:02d}</span><span>{x}</span></li>' for i,x in enumerate(b[2],1))+'</ol></div>'
-    if k=='quote': return f'<figure class="x-quote"><figcaption class="x-k">✦ Key insight</figcaption><blockquote>{b[1]}</blockquote></figure>'
+    if k=='quote': return f'<figure class="x-quote"><figcaption class="x-k"><svg class="i-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C12.6 6.6 17.4 11.4 24 12 17.4 12.6 12.6 17.4 12 24 11.4 17.4 6.6 12.6 0 12 6.6 11.4 11.4 6.6 12 0Z"/></svg> Key insight</figcaption><blockquote>{b[1]}</blockquote></figure>'
     if k=='twocol':
         a=''.join(f'<li>{x}</li>' for x in b[2]); f=''.join(f'<li>{x}</li>' for x in b[4])
         return f'<div class="twocol"><div><h4>{b[1]}</h4><ol>{a}</ol></div><div><h4>{b[3]}</h4><ol>{f}</ol></div></div>'
