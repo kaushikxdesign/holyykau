@@ -1601,3 +1601,8 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .lab .jb-spell,.jb-spell{color:var(--text-primary)}
 /* pegboard holes fit a whole number of rows and columns, so the bottom and right edges match the top and left (no sliced holes) */
 .jumble{background-repeat:round}
+/* primary CTA: flat fills per state (no brightness filters) */
+:root{--cta-primary:#151518;--cta-primary-hover:var(--surface-raised);--cta-primary-pressed:#101012}
+.btn.primary{background:var(--cta-primary)}
+.btn.primary:hover{background:var(--cta-primary-hover);filter:none}
+.btn.primary:active{background:var(--cta-primary-pressed);filter:none}
