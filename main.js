@@ -785,7 +785,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     if (started) return; started = true;
     await document.fonts.ready;
     await spin(A, B);
-    await new Promise((r) => setTimeout(r, 1600));
+    await new Promise((r) => setTimeout(r, 2000));
     await spin(B, A);
   };
   // start once the hero has finished drawing in (the loop around "better." is the last thing to land) and is on screen
