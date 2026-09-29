@@ -514,20 +514,24 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   const splits = new Map();
   const splitFor = (pcols) => {
     if (splits.has(pcols)) return splits.get(pcols);
-    const cost = photos.map((c, k) => ({ k, h: 150 * ratio(c) + 65 }));
+    const cost = photos.map((c, k) => ({ k, h: 150 * ratio(c) + 65, tall: ratio(c) > 1.1 }));
     const pick = [], sums = Array(pcols).fill(0);
-    [...cost].sort((x, y) => y.h - x.h).forEach((it) => { const i = sums.indexOf(Math.min(...sums)); pick[it.k] = i; sums[i] += it.h; });
+    // tall (portrait) prints are spread out first, never sharing or neighbouring a column, and stay put
+    const talls = cost.filter((it) => it.tall);
+    talls.forEach((it, n) => { const i = Math.min(pcols - 1, Math.round((n + 0.5) * pcols / talls.length - 0.5)); pick[it.k] = i; sums[i] += it.h; });
+    cost.filter((it) => !it.tall).sort((x, y) => y.h - x.h).forEach((it) => { const i = sums.indexOf(Math.min(...sums)); pick[it.k] = i; sums[i] += it.h; });
     const spread = () => Math.max(...sums) - Math.min(...sums);
     for (let improved = true; improved;) {
       improved = false;
       for (const a of cost) {
+        if (a.tall) continue;
         for (let i = 0; i < pcols; i++) {           // move a to column i
           const from = pick[a.k]; if (i === from) continue;
           const before = spread(); sums[from] -= a.h; sums[i] += a.h;
           if (spread() < before - 0.5) { pick[a.k] = i; improved = true; } else { sums[from] += a.h; sums[i] -= a.h; }
         }
         for (const b of cost) {                      // swap a and b
-          const ia = pick[a.k], ib = pick[b.k]; if (ia === ib) continue;
+          const ia = pick[a.k], ib = pick[b.k]; if (ia === ib || b.tall) continue;
           const before = spread(), d = a.h - b.h; sums[ia] -= d; sums[ib] += d;
           if (spread() < before - 0.5) { pick[a.k] = ib; pick[b.k] = ia; improved = true; } else { sums[ia] += d; sums[ib] -= d; }
         }
@@ -537,9 +541,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     return pick;
   };
   const layout = () => {
-    // the board runs edge to edge; prints sit in a centred band clear of the faded edges
-    const BW = board.clientWidth, W = Math.min(BW * 0.8, 1480), x0 = (BW - W) / 2, padY = 88;
-    const gap = 14, pcols = W >= 1240 ? 5 : 4, frame = 9 * 2, capH = 34 - 9, split = splitFor(pcols);
+    // the board runs edge to edge; prints use nearly its full width, a small margin in from each side
+    const BW = board.clientWidth, W = Math.min(BW - 2 * Math.max(40, BW * 0.045), 1760), x0 = (BW - W) / 2, padY = 88;
+    const gap = 14, pcols = W >= 1180 ? 5 : 4, frame = 9 * 2, capH = 34 - 9, split = splitFor(pcols);
     // print height for a given width: the image plus its paper frame and caption strip
     const hOf = (c, w) => Math.round((w - frame) * ratio(c) + frame + capH);
     const plan = (leftW) => {
@@ -562,11 +566,11 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     const P = best, pos = new Map();
     shots.forEach((c, k) => { c.style.width = Math.round(P.shotW) + 'px'; pos.set(c, { left: Math.round(x0 + k * (P.shotW + gap)), top: padY, tilt: tiltOf.get(c) || 0, z: 2 }); });
     if (film) { film.style.width = P.leftW + 'px'; pos.set(film, { left: Math.round(x0), top: Math.round(padY + P.shotH + gap), tilt: tiltOf.get(film) || 0, z: 2 }); }
-    // every column ends flush with the tallest side: short columns give the slack to their photos
-    // (a slightly taller crop, object-fit cover), so the gaps stay an even 22px everywhere
+    // short columns give some of their slack to their photos (a slightly taller crop, object-fit cover),
+    // capped at 12% of each photo's height so landscapes never turn into tall cards
     const T = Math.max(P.leftH, P.rightH);
     P.cols.forEach((col, i) => {
-      const grow = (T - col.h) / col.items.length, imgW = P.colW - frame;
+      const imgW = P.colW - frame, grow = Math.min((T - col.h) / col.items.length, imgW * 0.667 * 0.12);
       let y = padY;
       col.items.forEach((it) => {
         const c = photos[it.k], box = c.querySelector('.jf-img'), h = it.h + grow;
@@ -583,7 +587,24 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       p.left = Math.round(Math.min(Math.max(p.left + dx, 8), BW - c.offsetWidth - 8));
       p.top = Math.round(Math.max(p.top + dy, 24));
       p.z = 2 + Math.floor(tiltSeed(k + 51) * 8);
+      p.slot = { left: p.left - Math.round(dx), top: p.top - Math.round(dy) };
     });
+    // captions stay readable: where one print's caption strip runs under a neighbour, lift that print above it;
+    // if both captions would be covered, the later print goes back to its slot
+    const boxOf = (c) => { const p = pos.get(c); return { l: p.left - 6, t: p.top - 6, r: p.left + c.offsetWidth + 6, b: p.top + c.offsetHeight + 6 }; };
+    const hit = (a, b) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
+    const capOf = (x) => ({ l: x.l, r: x.r, t: x.b - 44, b: x.b });
+    for (let pass = 0, changed = true; changed && pass < 8; pass++) {
+      changed = false;
+      for (let i = 0; i < cards.length; i++) for (let j = i + 1; j < cards.length; j++) {
+        const A = boxOf(cards[i]), B = boxOf(cards[j]); if (!hit(A, B)) continue;
+        const pa = pos.get(cards[i]), pb = pos.get(cards[j]), aUnder = hit(capOf(A), B), bUnder = hit(capOf(B), A);
+        const aOnTop = pa.z > pb.z;
+        if (aUnder && bUnder) { if (pb.slot) { pb.left = Math.min(pb.slot.left, BW - cards[j].offsetWidth - 8); pb.top = Math.max(pb.slot.top, 24); delete pb.slot; changed = true; } }
+        else if (aUnder && !aOnTop) { pa.z = Math.min(pb.z + 1, 20); changed = true; }
+        else if (bUnder && aOnTop) { pb.z = Math.min(pa.z + 1, 20); changed = true; }
+      }
+    }
     board.style.height = Math.round(padY * 2 + T) + 'px';
     home = cards.map((c) => pos.get(c));
   };
