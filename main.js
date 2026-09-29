@@ -509,12 +509,12 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     const r = (box ? box.dataset.ar : '3/2').split('/').map(Number); return r[1] / r[0];
   };
   // jumbled board, no zones: three loose rows across the full width. Rows are justified to the board width
-  // (every print in a row shares an image height, the film is drawn 30% larger), then each row drifts up or down
+  // (every print in a row shares an image height, the film is drawn 15% larger), then each row drifts up or down
   // and every print gets a small nudge and tilt. Fixed seeds, so the jumble is the same on every visit.
   const frame = 9 * 2, capH = 34 - 9;
   const rows = (() => {
     const tall = photos.filter((c) => ratio(c) > 1.1), rest = photos.filter((c) => ratio(c) <= 1.1);
-    const unit = (c) => (c === film ? 1.3 : 1) / ratio(c);           // width per unit of image height
+    const unit = (c) => (c === film ? 1.15 : 1) / ratio(c);           // width per unit of image height
     const R = [[], [], []], sum = [0, 0, 0];
     const put = (r, c) => { R[r].push(c); sum[r] += unit(c); };
     // anchors: one shot top, one bottom; film in the middle; the two portraits in the top and bottom rows
@@ -535,9 +535,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     let y = padY;
     rows.forEach((row, r) => {
       // justify: image height so the row's widths plus gaps fill W exactly
-      const units = row.reduce((t, c) => t + (c === film ? 1.3 : 1) / ratio(c), 0);
+      const units = row.reduce((t, c) => t + (c === film ? 1.15 : 1) / ratio(c), 0);
       const ih = (W - gap * (row.length - 1) - frame * row.length) / units;
-      const dims = row.map((c) => { const s = c === film ? 1.3 : 1, iw = ih * s / ratio(c); return { c, w: iw + frame, h: iw * ratio(c) + frame + capH }; });
+      const dims = row.map((c) => { const s = c === film ? 1.15 : 1, iw = ih * s / ratio(c); return { c, w: iw + frame, h: iw * ratio(c) + frame + capH }; });
       const rowH = ih + frame + capH;
       const shiftY = (tiltSeed(r + 71) - 0.5) * 36, shiftX = (tiltSeed(r + 83) - 0.5) * 32;
       let x = x0 + shiftX;

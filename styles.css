@@ -1597,8 +1597,9 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .jumble .jf-film{z-index:2}
 /* hero: "better." in primary text; the hand-drawn loop around it stays brand blue */
 .art h1 em{color:var(--text-primary);-webkit-text-fill-color:var(--text-primary)}
-/* Mischief managed: wand and label in primary text */
-.lab .jb-spell,.jb-spell{color:var(--text-primary)}
+/* Mischief managed: wand and label in gold, the same gold the button crumbles into */
+:root{--gold:#e8b64a}
+.lab .jb-spell,.jb-spell{color:var(--gold)}
 /* pegboard holes fit a whole number of rows and columns, so the bottom and right edges match the top and left (no sliced holes) */
 .jumble{background-repeat:round}
 /* primary CTA: flat fills per state (no brightness filters) */
