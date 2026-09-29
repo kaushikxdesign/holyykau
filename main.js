@@ -398,7 +398,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (window.lottie && window.RUNNER_ANIM) {
     run = lottie.loadAnimation({ container: runEl, renderer: 'svg', loop: true, autoplay: false, animationData: window.RUNNER_ANIM });
-    // crop the 500x500 frame to the crewmate's bounds across every frame, so it fills the box
+    // crop the square frame to the fox's bounds across every frame, so it fills the box
     run.addEventListener('DOMLoaded', () => {
       const svg = runEl.querySelector('svg'), g = svg && svg.querySelector('g');
       if (g) {
@@ -411,7 +411,6 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
         if (isFinite(x0)) { const pad = 4; svg.setAttribute('viewBox', `${x0 - pad} ${y0 - pad} ${x1 - x0 + pad * 2} ${y1 - y0 + pad * 2}`); svg.setAttribute('preserveAspectRatio', 'xMidYMax meet'); }
       }
       run.goToAndStop(0, true);
-      if (!still) run.play();
     });
   }
 
@@ -431,8 +430,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     bar.style.setProperty('--p', p.toFixed(4));
     if (run && !still && scrollY !== lastY) {
       bar.classList.toggle('back', scrollY < lastY);
-      run.setSpeed(1.6); clearTimeout(idle);
-      idle = setTimeout(() => run.setSpeed(1), 220);
+      // the fox only runs while the page is scrolling, and pauses mid-stride when it stops
+      run.setSpeed(1.4); run.play(); clearTimeout(idle);
+      idle = setTimeout(() => run.pause(), 160);
     }
     lastY = scrollY;
     bar.classList.toggle('on', scrollY > top + 40);

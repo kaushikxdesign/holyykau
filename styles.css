@@ -1653,3 +1653,7 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 @keyframes jb-ink{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:none}}
 @keyframes jb-step{0%{opacity:0}12%{opacity:.6}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.jb-mm-words span{animation:none;opacity:1}}
+
+/* reading bar: the running fox is wide and low, so the tip box is wider; its right edge still meets the bar end at 100% */
+.rprog .rp-tip{left:calc(var(--p,0) * (100% - 44px))}
+.rprog .rp-tip .rp-run{width:50px;height:30px;margin-left:-6px;transform:translateY(-15px)}
