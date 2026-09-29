@@ -774,7 +774,7 @@ input,textarea{cursor:text}
 .art h1 span:first-child{font-size:var(--fs-title)}@media (max-width:600px){.art h1 span:first-child{font-size:var(--fs-title)}}
 /* brand mark:serif k + accent dot */
 .brand{gap:3px;align-items:baseline;height:auto;line-height:1;padding:6px 0}
-.brand .bk{font-family:"Instrument Serif",Georgia,"Times New Roman",serif;font-weight:var(--fw-regular);font-size:40px;line-height:1;letter-spacing:0;color:var(--text-primary);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.brand .bk{font-family:"Instrument Serif",Georgia,"Times New Roman",serif;font-weight:var(--fw-semibold);font-size:40px;line-height:1;letter-spacing:0;color:var(--text-primary);transition:transform .5s cubic-bezier(.22,1,.36,1)}
 .brand .bd{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px rgba(var(--rgb-accent),var(--o70));transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s}
 .brand:hover{opacity:1}
 .brand:hover .bk{transform:rotate(-6deg)}
