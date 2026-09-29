@@ -1599,3 +1599,5 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .art h1 em{color:var(--text-primary);-webkit-text-fill-color:var(--text-primary)}
 /* Mischief managed: wand and label in primary text */
 .lab .jb-spell,.jb-spell{color:var(--text-primary)}
+/* pegboard holes fit a whole number of rows and columns, so the bottom and right edges match the top and left (no sliced holes) */
+.jumble{background-repeat:round}
