@@ -1676,3 +1676,8 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .slot x-cell{display:block;height:var(--cell);line-height:var(--cell);white-space:pre}
 .slot x-col.on x-win{display:block}
 .slot x-col.on x-size{visibility:hidden}
+
+/* toolkit pills link out to each tool's site */
+.tools>li{display:flex}
+a.tool{color:inherit;cursor:pointer}
+a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
