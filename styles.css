@@ -1640,7 +1640,7 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 
 /* Made in Madras badge at 50%, turning ultra slowly (one turn every 3 minutes) */
 .badge{opacity:.5}
-.badge>svg{animation:spin 180s linear infinite}
+.badge>svg{animation:spin 60s linear infinite}
 @media (prefers-reduced-motion:reduce){.badge>svg{animation:none}}
 /* after the spell: "Mischief managed" inks in, faint gold footprints walk away, the words fade */
 .jb-mm{position:absolute;z-index:61;pointer-events:none;transform:translateY(-50%);color:var(--gold)}
