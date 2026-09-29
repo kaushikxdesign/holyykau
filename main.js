@@ -487,11 +487,11 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     c.addEventListener('click', () => { if (!dragged) open(c); dragged = false; });
     c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(c); } });
   });
-  // every print hangs slightly crooked (0.6 to 1.8 degrees, fixed seed, directions mixed); the film tilts least
+  // every print hangs crooked (1.5 to 4.5 degrees, fixed seed, directions mixed); the film tilts least
   const tiltSeed = (n) => { const x = Math.sin(n * 7919 + 104729) * 43758.5453; return x - Math.floor(x); };
   const tiltOf = new Map();
   cards.forEach((c, k) => {
-    const mag = (0.6 + tiltSeed(k + 11) * 1.2) * (c.classList.contains('jf-film') ? 0.6 : 1);
+    const mag = (1.5 + tiltSeed(k + 11) * 3) * (c.classList.contains('jf-film') ? 0.45 : 1);
     const deg = Math.round(mag * (tiltSeed(k + 3) < 0.5 ? -1 : 1) * 10) / 10;
     tiltOf.set(c, deg); c.style.setProperty('--tilt', deg + 'deg');
   });
@@ -539,7 +539,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   const layout = () => {
     // the board runs edge to edge; prints sit in a centred band clear of the faded edges
     const BW = board.clientWidth, W = Math.min(BW * 0.8, 1480), x0 = (BW - W) / 2, padY = 88;
-    const gap = 22, pcols = W >= 1240 ? 5 : 4, frame = 9 * 2, capH = 34 - 9, split = splitFor(pcols);
+    const gap = 14, pcols = W >= 1240 ? 5 : 4, frame = 9 * 2, capH = 34 - 9, split = splitFor(pcols);
     // print height for a given width: the image plus its paper frame and caption strip
     const hOf = (c, w) => Math.round((w - frame) * ratio(c) + frame + capH);
     const plan = (leftW) => {
@@ -575,6 +575,14 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
         pos.set(c, { left: Math.round(P.rightX + i * (P.colW + gap)), top: Math.round(y), tilt: tiltOf.get(c) || 0, z: 2 });
         y += h + gap;
       });
+    });
+    // jumble: nudge every print off its slot by a fixed-seed offset, so neighbours just kiss or overlap a little
+    cards.forEach((c, k) => {
+      const p = pos.get(c), film = c.classList.contains('jf-film');
+      const dx = (tiltSeed(k + 23) - 0.5) * (film ? 16 : 24), dy = (tiltSeed(k + 37) - 0.5) * (film ? 16 : 30);
+      p.left = Math.round(Math.min(Math.max(p.left + dx, 8), BW - c.offsetWidth - 8));
+      p.top = Math.round(Math.max(p.top + dy, 24));
+      p.z = 2 + Math.floor(tiltSeed(k + 51) * 8);
     });
     board.style.height = Math.round(padY * 2 + T) + 'px';
     home = cards.map((c) => pos.get(c));
