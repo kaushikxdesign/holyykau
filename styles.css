@@ -824,7 +824,7 @@ input,textarea{cursor:text}
 .dims li span{font-family:var(--mono);font-size:var(--fs-mono);font-weight:var(--fw-regular);color:var(--text-brand)}
 @media (max-width:600px){.twocol{grid-template-columns:1fr}}
 /* hero photo tile:smaller, tucked against the name */
-.art h1 .me{width:.5em;height:.5em;min-width:36px;min-height:36px;border-radius:.14em;border-width:1px;margin-left:.16em;vertical-align:baseline;transform:rotate(4deg)}
+.art h1 .me{width:.5em;height:.5em;min-width:36px;min-height:36px;border-radius:.14em;border:0;margin-left:.16em;vertical-align:baseline;transform:rotate(4deg)}
 .art h1 .me:hover{transform:scale(1.6) rotate(-3deg)}
 
 /* ===================== v5: case study layout from the PDFs ===================== */
