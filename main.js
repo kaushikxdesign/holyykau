@@ -586,7 +586,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   addEventListener('resize', () => { if (!touched) { layout(); place(false); } });
   const spell = document.createElement('button');
   spell.type = 'button'; spell.className = 'jb-spell'; spell.hidden = true;
-  spell.innerHTML = '<span aria-hidden="true">🪄</span> I solemnly swear that I am up to no good';
+  spell.innerHTML = '<span aria-hidden="true">🪄</span> i solemnly swear that i am up to no good';
   spell.title = 'Put every print back where it was';
   (board.previousElementSibling || board).appendChild(spell);
   let z = 30;
@@ -634,8 +634,8 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     };
     requestAnimationFrame(tick);
   };
-  // after the snap, the map closes: "Mischief managed" inks in where the button was, a trail of faint
-  // footprints walks off along the header, and the words fade away behind them
+  // after the snap, the map closes: "mischief managed" inks in where the button was, a trail of faint
+  // footprints walks off toward the right edge of the screen, and the words fade away behind them
   const mischief = (r) => {
     const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const box = document.createElement('div');
@@ -643,26 +643,27 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     Object.assign(box.style, { left: (r.right + scrollX) + 'px', top: (r.top + scrollY + r.height / 2) + 'px' });
     const words = document.createElement('span');
     words.className = 'jb-mm-words';
-    [...'Mischief managed'].forEach((ch, i) => { const s = document.createElement('span'); s.textContent = ch; s.style.animationDelay = (i * 45) + 'ms'; words.appendChild(s); });
+    [...'mischief managed'].forEach((ch, i) => { const s = document.createElement('span'); s.textContent = ch; s.style.animationDelay = (i * 45) + 'ms'; words.appendChild(s); });
     box.appendChild(words);
     document.body.appendChild(box);
     if (calm) { setTimeout(() => box.remove(), 1800); return; }
-    // footprints: alternating left and right prints, walking left and a little upward, each fading as the next lands
-    const ww = words.getBoundingClientRect().width;
+    // footprints: alternating left and right prints, walking right and a little upward to the screen edge,
+    // each fading as the next lands
     setTimeout(() => {
-      let x = -ww - 10, y = 2, ang = Math.PI + 0.12;
-      for (let n = 0; n < 10; n++) {
+      let x = 12, y = 2, ang = -0.1;
+      const steps = Math.max(6, Math.min(16, Math.floor((innerWidth - r.right - 16) / 15)));
+      for (let n = 0; n < steps; n++) {
         const side = n % 2 ? 1 : -1, px = x + Math.cos(ang + Math.PI / 2) * 4 * side, py = y + Math.sin(ang + Math.PI / 2) * 4 * side;
         const f = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         f.setAttribute('viewBox', '0 0 7 13'); f.setAttribute('class', 'jb-foot');
         f.innerHTML = '<ellipse cx="3.5" cy="4" rx="3" ry="4"/><ellipse cx="3.5" cy="10.6" rx="2.2" ry="2.3"/>';
         Object.assign(f.style, { left: px + 'px', top: py + 'px', transform: `translate(-50%,-50%) rotate(${ang * 180 / Math.PI - 90}deg)`, animationDelay: (n * 170) + 'ms' });
         box.appendChild(f);
-        x += Math.cos(ang) * 15; y += Math.sin(ang) * 15; ang += 0.035;
+        x += Math.cos(ang) * 15; y += Math.sin(ang) * 15; ang -= 0.02;
       }
     }, 900);
     setTimeout(() => box.classList.add('out'), 1500);
-    setTimeout(() => box.remove(), 4400);
+    setTimeout(() => box.remove(), 5200);
   };
   spell.addEventListener('click', () => {
     const r = spell.getBoundingClientRect();
