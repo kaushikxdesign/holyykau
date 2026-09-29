@@ -650,20 +650,20 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     // footprints: alternating left and right prints, walking right and a little upward to the screen edge,
     // each fading as the next lands
     setTimeout(() => {
-      let x = 12, y = 2, ang = -0.1;
-      const steps = Math.max(6, Math.min(16, Math.floor((innerWidth - r.right - 16) / 15)));
+      let x = 16, y = 2, ang = -0.1;
+      const steps = Math.max(5, Math.min(12, Math.floor((innerWidth - r.right - 20) / 21)));
       for (let n = 0; n < steps; n++) {
-        const side = n % 2 ? 1 : -1, px = x + Math.cos(ang + Math.PI / 2) * 4 * side, py = y + Math.sin(ang + Math.PI / 2) * 4 * side;
+        const side = n % 2 ? 1 : -1, px = x + Math.cos(ang + Math.PI / 2) * 5.5 * side, py = y + Math.sin(ang + Math.PI / 2) * 5.5 * side;
         const f = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         f.setAttribute('viewBox', '0 0 7 13'); f.setAttribute('class', 'jb-foot');
         f.innerHTML = '<ellipse cx="3.5" cy="4" rx="3" ry="4"/><ellipse cx="3.5" cy="10.6" rx="2.2" ry="2.3"/>';
-        Object.assign(f.style, { left: px + 'px', top: py + 'px', transform: `translate(-50%,-50%) rotate(${ang * 180 / Math.PI - 90}deg)`, animationDelay: (n * 170) + 'ms' });
+        Object.assign(f.style, { left: px + 'px', top: py + 'px', transform: `translate(-50%,-50%) rotate(${ang * 180 / Math.PI - 90}deg)`, animationDelay: (n * 300) + 'ms' });
         box.appendChild(f);
-        x += Math.cos(ang) * 15; y += Math.sin(ang) * 15; ang -= 0.02;
+        x += Math.cos(ang) * 21; y += Math.sin(ang) * 21; ang -= 0.02;
       }
     }, 900);
-    setTimeout(() => box.classList.add('out'), 1500);
-    setTimeout(() => box.remove(), 5200);
+    setTimeout(() => box.classList.add('out'), 2100);
+    setTimeout(() => box.remove(), 900 + 12 * 300 + 2000);  // outlasts the longest trail
   };
   spell.addEventListener('click', () => {
     const r = spell.getBoundingClientRect();
