@@ -536,25 +536,39 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   })();
   const layout = () => {
     const BW = board.clientWidth, W = Math.min(BW - 2 * Math.max(40, BW * 0.045), 1760), x0 = (BW - W) / 2;
-    const gap = 12, rowGap = 26, padY = 48, pos = new Map();
+    const gapMin = 28, rowGap = 22, padY = 30, pos = new Map();
+    // size budget: the heading and the whole board fit one screen below the top bar
+    const lab = board.previousElementSibling, nav = document.querySelector('header.nav');
+    const labH = lab ? lab.getBoundingClientRect().height + parseFloat(getComputedStyle(lab).marginBottom || 0) : 90;
+    const budget = Math.max(400, innerHeight - (nav ? nav.offsetHeight : 72) - labH - 30);
+    const ihFit = (budget - padY * 2 - rowGap * 2) / 3 - frame - capH;
+    // prints share one image height: 88% of what would fill the width, or less if the screen is short,
+    // so the leftover space between prints shows the pegboard
+    const units = (row) => row.reduce((t, c) => t + (c === film ? 1.15 : 1) / ratio(c), 0);
+    const ihJust = Math.min(...rows.map((row) => (W - gapMin * (row.length - 1) - frame * row.length) / units(row)));
+    const ih = Math.max(80, Math.min(ihJust * 0.88, ihFit));
+    const rowH = ih + frame + capH;
     let y = padY;
     rows.forEach((row, r) => {
-      // justify: image height so the row's widths plus gaps fill W exactly
-      const units = row.reduce((t, c) => t + (c === film ? 1.15 : 1) / ratio(c), 0);
-      const ih = (W - gap * (row.length - 1) - frame * row.length) / units;
-      const dims = row.map((c) => { const s = c === film ? 1.15 : 1, iw = ih * s / ratio(c); return { c, w: iw + frame, h: iw * ratio(c) + frame + capH }; });
-      const rowH = ih + frame + capH;
-      const shiftY = (tiltSeed(r + 71) - 0.5) * 36, shiftX = (tiltSeed(r + 83) - 0.5) * 32;
-      let x = x0 + shiftX;
-      dims.forEach(({ c, w, h }) => {
+      // never narrower than the caption needs: a narrow print keeps its height and crops a little wider instead
+      const minW = (c) => (c === film ? 250 : shots.includes(c) ? 170 : 140);
+      const dims = row.map((c) => {
+        const s = c === film ? 1.15 : 1, iw = ih * s / ratio(c), imgH = iw * ratio(c);
+        const w = Math.max(iw + frame, minW(c));
+        return { c, w, h: imgH + frame + capH, crop: w > iw + frame ? (w - frame) + ' / ' + imgH : null };
+      });
+      const free = W - dims.reduce((t, d) => t + d.w, 0), space = free / row.length;
+      const shiftY = (tiltSeed(r + 71) - 0.5) * 18, shiftX = (tiltSeed(r + 83) - 0.5) * Math.min(space, 40);
+      let x = x0 + space / 2 + shiftX;
+      dims.forEach(({ c, w, h, crop }) => {
         const k = cards.indexOf(c);
-        const dx = (tiltSeed(k + 23) - 0.5) * 16, dy = (tiltSeed(k + 37) - 0.5) * 26;
+        const dx = (tiltSeed(k + 23) - 0.5) * Math.min(space * 0.6, 36), dy = (tiltSeed(k + 37) - 0.5) * 16;
         c.style.width = Math.round(w) + 'px';
-        const box = c.querySelector('.jf-img'); if (box) box.style.aspectRatio = box.dataset.ar;
+        const box = c.querySelector('.jf-img'); if (box) box.style.aspectRatio = crop || box.dataset.ar;
         const left = Math.round(Math.min(Math.max(x + dx, 8), BW - w - 8));
         const top = Math.round(Math.max(y + (rowH - h) / 2 + shiftY + dy, 12));
         pos.set(c, { left, top, tilt: tiltOf.get(c) || 0, z: 2 + Math.floor(tiltSeed(k + 51) * 8), slot: { left: Math.round(x), top: Math.round(y + (rowH - h) / 2) } });
-        x += w + gap;
+        x += w + space;
       });
       y += rowH + rowGap;
     });
