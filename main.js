@@ -586,8 +586,8 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   addEventListener('resize', () => { if (!touched) { layout(); place(false); } });
   const spell = document.createElement('button');
   spell.type = 'button'; spell.className = 'jb-spell'; spell.hidden = true;
-  spell.innerHTML = '<span aria-hidden="true">🪄</span> Mischief managed';
-  spell.title = 'Mischief managed: put every print back where it was';
+  spell.innerHTML = '<span aria-hidden="true">🪄</span> I solemnly swear that I am up to no good';
+  spell.title = 'Put every print back where it was';
   (board.previousElementSibling || board).appendChild(spell);
   let z = 30;
   // the button crumbles away like a snap: it breaks into pixels left to right, and they drift off turning gold
@@ -602,10 +602,12 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     document.body.appendChild(cv);
     const g = cv.getContext('2d', { willReadFrequently: true }); g.scale(dpr, dpr);
     const icon = btn.querySelector('span'), ir = icon.getBoundingClientRect();
+    const label = btn.lastChild, lr = document.createRange(); lr.selectNodeContents(label);
+    const tr = lr.getBoundingClientRect();
     g.textBaseline = 'middle'; g.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; g.fillStyle = cs.color;
     const cy = mY + r.height / 2;
     g.fillText('🪄', mX + (ir.left - r.left), cy);
-    g.fillText('Mischief managed', mX + (ir.right - r.left) + parseFloat(cs.columnGap || cs.gap || 6), cy);
+    g.fillText(label.textContent, mX + (tr.left - r.left), cy);
     const img = g.getImageData(0, 0, cv.width, cv.height).data, step = 1.5, parts = [];
     for (let y = 0; y < ch; y += step) for (let x = 0; x < cw; x += step) {
       const i = (Math.floor(y * dpr) * cv.width + Math.floor(x * dpr)) * 4;
@@ -632,7 +634,41 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     };
     requestAnimationFrame(tick);
   };
-  spell.addEventListener('click', () => { layout(); place(true); snap(spell); touched = false; });
+  // after the snap, the map closes: "Mischief managed" inks in where the button was, a trail of faint
+  // footprints walks off along the header, and the words fade away behind them
+  const mischief = (r) => {
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const box = document.createElement('div');
+    box.className = 'jb-mm'; box.setAttribute('role', 'status');
+    Object.assign(box.style, { left: (r.right + scrollX) + 'px', top: (r.top + scrollY + r.height / 2) + 'px' });
+    const words = document.createElement('span');
+    words.className = 'jb-mm-words';
+    [...'Mischief managed'].forEach((ch, i) => { const s = document.createElement('span'); s.textContent = ch; s.style.animationDelay = (i * 45) + 'ms'; words.appendChild(s); });
+    box.appendChild(words);
+    document.body.appendChild(box);
+    if (calm) { setTimeout(() => box.remove(), 1800); return; }
+    // footprints: alternating left and right prints, walking left and a little upward, each fading as the next lands
+    const ww = words.getBoundingClientRect().width;
+    setTimeout(() => {
+      let x = -ww - 10, y = 2, ang = Math.PI + 0.12;
+      for (let n = 0; n < 10; n++) {
+        const side = n % 2 ? 1 : -1, px = x + Math.cos(ang + Math.PI / 2) * 4 * side, py = y + Math.sin(ang + Math.PI / 2) * 4 * side;
+        const f = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        f.setAttribute('viewBox', '0 0 7 13'); f.setAttribute('class', 'jb-foot');
+        f.innerHTML = '<ellipse cx="3.5" cy="4" rx="3" ry="4"/><ellipse cx="3.5" cy="10.6" rx="2.2" ry="2.3"/>';
+        Object.assign(f.style, { left: px + 'px', top: py + 'px', transform: `translate(-50%,-50%) rotate(${ang * 180 / Math.PI - 90}deg)`, animationDelay: (n * 170) + 'ms' });
+        box.appendChild(f);
+        x += Math.cos(ang) * 15; y += Math.sin(ang) * 15; ang += 0.035;
+      }
+    }, 900);
+    setTimeout(() => box.classList.add('out'), 1500);
+    setTimeout(() => box.remove(), 4400);
+  };
+  spell.addEventListener('click', () => {
+    const r = spell.getBoundingClientRect();
+    layout(); place(true); snap(spell); touched = false;
+    setTimeout(() => mischief(r), 650);
+  });
   cards.forEach((card) => {
     let sx, sy, ox, oy, moved = false, id = null;
     card.setAttribute('draggable', 'false');

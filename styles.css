@@ -1622,3 +1622,15 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
   mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 84%,transparent 100%),linear-gradient(90deg,transparent 0%,#000 12%,#000 88%,transparent 100%);
   mask-composite:intersect}
 @media (max-width:900px){#trying .jumble{padding:56px 16px!important}}
+
+/* Made in Madras badge at 75% */
+.badge{opacity:.75}
+/* after the spell: "Mischief managed" inks in, faint gold footprints walk away, the words fade */
+.jb-mm{position:absolute;z-index:61;pointer-events:none;transform:translateY(-50%);color:var(--gold)}
+.jb-mm-words{position:absolute;right:0;top:0;transform:translateY(-50%);white-space:nowrap;font-family:"Caveat",cursive;font-weight:500;font-size:19px;line-height:1;letter-spacing:.01em}
+.jb-mm-words span{opacity:0;animation:jb-ink .5s ease-out forwards}
+.jb-mm.out .jb-mm-words{transition:opacity .9s ease,filter .9s ease;opacity:0;filter:blur(1.5px)}
+.jb-foot{position:absolute;width:6px;height:11px;fill:var(--gold);opacity:0;animation:jb-step 1.2s ease-out forwards}
+@keyframes jb-ink{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:none}}
+@keyframes jb-step{0%{opacity:0}12%{opacity:.6}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.jb-mm-words span{animation:none;opacity:1}}
