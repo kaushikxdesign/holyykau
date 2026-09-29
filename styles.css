@@ -1665,3 +1665,14 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 /* ✦ as an inline SVG: none of the three brand fonts has the glyph, so it no longer borrows a system font */
 .i-star{display:inline-block;width:.72em;height:.72em;vertical-align:-.06em;fill:currentColor;flex:none}
 .marq b .i-star{fill:rgba(var(--rgb-white),var(--o30))}
+
+/* hero name slot: "Kaushik" rolls to "h0lyykau" (the domain) and back once, one reel per letter */
+.art h1 .slot{white-space:nowrap}
+.slot x-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.slot x-col{--cell:1.16em;position:relative;display:inline-block;white-space:pre}
+.slot x-win{position:absolute;left:-.04em;right:-.04em;top:calc((1lh - var(--cell)) / 2);height:var(--cell);overflow:hidden;display:none;
+  -webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+.slot x-strip{display:block;padding-left:.04em;will-change:transform}
+.slot x-cell{display:block;height:var(--cell);line-height:var(--cell);white-space:pre}
+.slot x-col.on x-win{display:block}
+.slot x-col.on x-size{visibility:hidden}

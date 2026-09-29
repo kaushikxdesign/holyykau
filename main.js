@@ -740,3 +740,59 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     about.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   });
 })();
+
+// Hero name slot: once per visit, after the intro, each letter of "Kaushik" spins like a slot reel and lands on
+// "h0lyykau" (the domain), holds, then spins back. Left to right, each reel stops a beat after the one before.
+(() => {
+  const slot = document.querySelector('.art h1 .slot');
+  if (!slot || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const A = slot.textContent.trim(), B = slot.dataset.alt, N = Math.max(A.length, B.length);
+  const ZW = '​', ch = (s, i) => s[i] || ZW, POOL = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  slot.textContent = '';
+  const sr = document.createElement('x-sr'); sr.textContent = A; slot.append(sr);
+  const box = document.createElement('x-reels'); box.setAttribute('aria-hidden', 'true'); slot.append(box);
+  const cols = [...Array(N)].map((_, i) => {
+    const col = document.createElement('x-col'), size = document.createElement('x-size'), win = document.createElement('x-win'), strip = document.createElement('x-strip');
+    size.textContent = ch(A, i); win.append(strip); col.append(size, win); box.append(col);
+    return { col, size, strip };
+  });
+  const width = (c) => { const m = document.createElement('x-size'); m.textContent = c; m.style.position = 'absolute'; m.style.visibility = 'hidden'; box.append(m); const w = m.getBoundingClientRect().width; m.remove(); return w; };
+
+  const spin = (from, to) => new Promise((done) => {
+    let left = N;
+    cols.forEach(({ col, size, strip }, i) => {
+      const a = ch(from, i), b = ch(to, i), turns = 7 + i * 2;
+      const cells = [a, ...Array.from({ length: turns }, () => POOL[Math.floor(Math.random() * POOL.length)]), b];
+      strip.innerHTML = cells.map((c) => '<x-cell>' + c + '</x-cell>').join('');
+      col.style.transition = 'none'; col.style.width = width(a) + 'px';
+      col.classList.add('on');
+      void col.offsetWidth;
+      // fast spin that eases out, overshoots by a fixed nudge (not a share of the distance), then settles
+      const dur = 1000 + i * 140, end = `calc(${-(cells.length - 1)} * var(--cell))`;
+      strip.animate([
+        { transform: 'translateY(0)', easing: 'cubic-bezier(.5,0,.15,1)' },
+        { transform: `translateY(calc(${end} - .1em))`, offset: .86, easing: 'cubic-bezier(.3,0,.3,1)' },
+        { transform: `translateY(${end})` },
+      ], { duration: dur, fill: 'forwards' });
+      col.style.transition = `width ${dur * .5}ms cubic-bezier(.4,0,.2,1) ${dur * .4}ms`;
+      col.style.width = width(b) + 'px';
+      setTimeout(() => { size.textContent = b; col.classList.remove('on'); col.style.width = ''; strip.getAnimations().forEach((x) => x.cancel()); strip.innerHTML = ''; if (!--left) done(); }, dur + 30);
+    });
+  });
+
+  let started = false;
+  const go = async () => {
+    if (started) return; started = true;
+    await document.fonts.ready;
+    await spin(A, B);
+    await new Promise((r) => setTimeout(r, 1600));
+    await spin(B, A);
+  };
+  // start once the hero has finished drawing in (the loop around "better." is the last thing to land) and is on screen
+  const loop = document.querySelector('.art h1 em svg.loop .lp');
+  let drawn = false, seen = false;
+  const tryGo = () => { if (drawn && seen) setTimeout(go, 350); };
+  if (loop) loop.addEventListener('animationend', () => { drawn = true; tryGo(); }, { once: true });
+  setTimeout(() => { drawn = true; tryGo(); }, 7500);  // fallback if the loop never animates
+  new IntersectionObserver(([e], io) => { if (e.isIntersecting) { seen = true; io.disconnect(); tryGo(); } }, { threshold: .6 }).observe(slot);
+})();
