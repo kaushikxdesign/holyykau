@@ -487,11 +487,12 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     c.addEventListener('click', () => { if (!dragged) open(c); dragged = false; });
     c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(c); } });
   });
-  // a few prints (4, chosen by a fixed seed) hang slightly crooked; the rest sit straight
+  // every print hangs slightly crooked (0.6 to 1.8 degrees, fixed seed, directions mixed); the film tilts least
   const tiltSeed = (n) => { const x = Math.sin(n * 7919 + 104729) * 43758.5453; return x - Math.floor(x); };
   const tiltOf = new Map();
-  cards.map((c, k) => ({ c, k, r: tiltSeed(k + 3) })).sort((a, b) => a.r - b.r).slice(0, 4).forEach(({ c, k, r }, n) => {
-    const deg = Math.round((1.2 + tiltSeed(k + 11) * 1.4) * (n % 2 ? 1 : -1) * 10) / 10;
+  cards.forEach((c, k) => {
+    const mag = (0.6 + tiltSeed(k + 11) * 1.2) * (c.classList.contains('jf-film') ? 0.6 : 1);
+    const deg = Math.round(mag * (tiltSeed(k + 3) < 0.5 ? -1 : 1) * 10) / 10;
     tiltOf.set(c, deg); c.style.setProperty('--tilt', deg + 'deg');
   });
   if (!matchMedia('(pointer:fine) and (min-width:901px)').matches) return;
