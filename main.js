@@ -816,3 +816,252 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   addEventListener('pointerdown', () => b.classList.add('down')); addEventListener('pointerup', () => b.classList.remove('down'));
   addEventListener('scroll', () => { if (on && !document.elementFromPoint(tx, ty)?.closest('.pc')) { on = false; b.classList.remove('on'); const g = document.querySelector('.gcur'); if (g) g.classList.remove('off'); } }, { passive: true });
 })();
+
+// What I'm currently listening to: a turntable and a crate of five records (the list lives in data.js as
+// window.TRACKS). Drag a record (or tap it) onto the deck and it swaps in: the arm lifts, the old record goes
+// back to its sleeve, the new one drops, the arm swings on and Spotify's 30-second preview of the song plays.
+// 33/45 and the pitch fader change the speed like a real deck (the pitch of the music follows), Stop winds
+// the record down like a tape stop, and a little vinyl crackle sits underneath.
+(() => {
+  const root = document.getElementById('listening');
+  const TRACKS = window.TRACKS || [];
+  if (!root || !TRACKS.length) return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const asset = (p) => (window.__A && window.__A[p]) || p;
+  const cover = (i) => `<img src="${asset(TRACKS[i].cover)}" alt="" draggable="false">`;
+  const fmt = (s) => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+  const $ = (s) => root.querySelector(s);
+  const deck = $('.deck'), tt = $('.tt'), platter = $('.tt-platter'), rec = $('.tt-rec'), spin = $('.tt-spin'), label = $('.tt-label'), arm = $('.tt-arm');
+  const startBtn = $('.tt-start'), np = $('.np'), npTxt = $('.np-txt'), npTitle = $('.np-title'), npArtist = $('.np-artist'), npMeta = $('.np-meta');
+  const npT = $('.np-t'), npD = $('.np-d'), npBar = $('.np-track i'), npLink = $('.np-link'), npNote = $('.np-note'), crate = $('.crate');
+
+  crate.innerHTML = TRACKS.map((t, i) => `<li><button class="vr" type="button" data-i="${i}" aria-label="Play ${t.title} by ${t.artist}">
+    <span class="vr-art"><span class="vr-disc"><span class="vr-label">${cover(i)}</span></span><span class="vr-sleeve">${cover(i)}</span></span>
+    <span class="vr-txt"><span class="vr-title">${t.title}</span><span class="vr-artist">${t.artist}</span></span>
+    <span class="vr-meta mono">${fmt(t.dur)}</span></button></li>`).join('');
+  const rows = [...crate.querySelectorAll('.vr')];
+
+  // ---- sound ----
+  // the music: Spotify's official 30-second preview, played straight from Spotify. With preservesPitch off,
+  // changing the speed changes the pitch too, like a real record.
+  const au = new Audio(); au.preload = 'none';
+  au.preservesPitch = au.mozPreservesPitch = au.webkitPreservesPitch = false;
+  let soundOn = true, unlocked = false, broken = false, inView = false, fading = 0;
+  // the crackle and the needle drop: a tiny Web Audio synth
+  const fx = (() => {
+    let ctx = null, crk, noise;
+    const init = () => {
+      if (ctx) return;
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      ctx = new AC();
+      noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+      const nd = noise.getChannelData(0); for (let k = 0; k < nd.length; k++) nd[k] = Math.random() * 2 - 1;
+      const cb = ctx.createBuffer(1, ctx.sampleRate * 4, ctx.sampleRate), cd = cb.getChannelData(0);
+      for (let k = 0; k < cd.length; k++) { cd[k] = (Math.random() * 2 - 1) * .01; if (Math.random() < .0003) { const a = (Math.random() * .5 + .2) * (Math.random() < .5 ? -1 : 1); for (let j = 0; j < 40 && k + j < cd.length; j++) cd[k + j] += a * Math.exp(-j / 6); } }
+      const src = ctx.createBufferSource(); src.buffer = cb; src.loop = true;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 900;
+      crk = ctx.createGain(); crk.gain.value = 0; src.connect(hp); hp.connect(crk); crk.connect(ctx.destination); src.start();
+    };
+    return {
+      unlock() { init(); if (ctx && ctx.state === 'suspended') ctx.resume(); },
+      crackle(v) { if (ctx) crk.gain.setTargetAtTime(v ? .5 : 0, ctx.currentTime, .15); },
+      needle() {
+        if (!ctx) return;
+        const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(), t = ctx.currentTime;
+        s.buffer = noise; f.type = 'lowpass'; f.frequency.value = 380; s.connect(f); f.connect(g); g.connect(ctx.destination);
+        g.gain.setValueAtTime(.35, t); g.gain.exponentialRampToValueAtTime(.001, t + .12); s.start(t); s.stop(t + .15);
+      },
+    };
+  })();
+
+  // ---- deck state ----
+  let cur = -1, on = false, rpm = 33.33, pitch = 0, angle = 0, vel = 0, elapsed = 0, last = 0, raf = 0, busy = false;
+  const speed = () => rpm / 33.33 * (1 + pitch / 100);
+  const clip = () => (au.duration && isFinite(au.duration) ? au.duration : 30);
+  const live = () => soundOn && unlocked && !broken;
+  const ARM_REST = 0;
+  // each deck design sets its arm sweep; CSS (--arm-in / --arm-out) can override it per screen size
+  const sweep = (k, fb) => parseFloat(getComputedStyle(tt).getPropertyValue('--arm-' + k)) || +tt.dataset['arm' + (k === 'in' ? 'In' : 'Out')] || fb;
+  const setArm = () => { const a = sweep('in', 24.5), b = sweep('out', 36); arm.style.transform = `rotate(${on && cur >= 0 ? a + (b - a) * Math.min(1, elapsed / clip()) : ARM_REST}deg)`; };
+  const paint = () => {
+    tt.classList.toggle('on', on); np.classList.toggle('playing', on && cur >= 0);
+    startBtn.setAttribute('aria-pressed', String(on)); startBtn.firstElementChild.textContent = on ? 'Stop' : 'Start';
+    rows.forEach((r, i) => { r.classList.toggle('on', i === cur); r.setAttribute('aria-pressed', String(i === cur)); });
+    platter.classList.toggle('empty', cur < 0);
+    npT.textContent = fmt(elapsed); npD.textContent = fmt(clip()); npBar.style.width = Math.min(100, elapsed / clip() * 100) + '%';
+  };
+  // the audio follows the deck: plays while the deck is on, the sound is on and the section is on screen
+  const syncAudio = (tape) => {
+    const want = on && cur >= 0 && live() && inView;
+    cancelAnimationFrame(fading); fading = 0;
+    if (want) {
+      au.playbackRate = speed(); au.volume = 1;
+      if (au.paused) { if (Math.abs(au.currentTime - elapsed) > .3) au.currentTime = elapsed; au.play().catch(() => {}); }
+      fx.crackle(true);
+    } else {
+      fx.crackle(false);
+      if (au.paused) return;
+      if (!tape || reduce) { au.pause(); return; }
+      // tape stop: the record slows and drops in pitch as it winds down
+      const r0 = au.playbackRate, t0 = performance.now();
+      const step = (now) => {
+        const k = Math.max(0, Math.min(1, (now - t0) / 700));
+        au.playbackRate = Math.max(.25, r0 * (1 - .7 * k)); au.volume = 1 - k;
+        if (k < 1) fading = requestAnimationFrame(step); else { au.pause(); au.playbackRate = speed(); au.volume = 1; fading = 0; }
+      };
+      fading = requestAnimationFrame(step);
+    }
+  };
+  const tick = (now) => {
+    const dt = last ? Math.min(64, now - last) : 16; last = now;
+    const target = on && cur >= 0 ? rpm * (1 + pitch / 100) * 360 / 60000 : 0;
+    vel += (target - vel) * Math.min(1, dt / (target > vel ? 420 : 700));  // spin up quicker than it winds down
+    if (!reduce) { angle = (angle + vel * dt) % 360; spin.style.transform = `rotate(${angle}deg)`; }
+    if (on && cur >= 0) {
+      const before = Math.floor(elapsed);
+      elapsed = !au.paused && !fading ? au.currentTime : elapsed + dt / 1000 * speed();
+      if (elapsed >= clip() - .05) { elapsed = 0; au.currentTime = 0; setOn(false); }  // end of the side: the arm returns
+      else if (Math.floor(elapsed) !== before) { paint(); setArm(); }
+    }
+    if (on || Math.abs(vel) > .0005) raf = requestAnimationFrame(tick); else { raf = 0; last = 0; }
+  };
+  const run = () => { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } };
+  function setOn(v, tape = true) { on = v && cur >= 0; paint(); setArm(); run(); syncAudio(tape); }
+
+  const showTrack = (i) => {
+    const t = TRACKS[i];
+    npTitle.textContent = t.title; npArtist.textContent = t.artist; npMeta.textContent = t.meta;
+    npLink.href = 'https://open.spotify.com/track/' + t.id;
+    npTxt.classList.remove('swap'); void npTxt.offsetWidth; npTxt.classList.add('swap');
+    au.preload = unlocked ? 'auto' : 'none'; au.src = t.preview;  // nothing downloads until the visitor interacts
+  };
+  const wait = (ms) => new Promise((r) => setTimeout(r, reduce ? 0 : ms));
+
+  // swap in record i: lift the arm, send the old record back, drop the new one, swing the arm on
+  const load = async (i, fromGhost) => {
+    if (busy || i === cur) { if (i === cur && !on) setOn(true); if (fromGhost) fromGhost.remove(); return; }
+    busy = true;
+    if (cur >= 0) { setOn(false, false); await wait(380); rec.classList.add('off'); await wait(320); }
+    if (fromGhost) await flyTo(fromGhost);
+    cur = i; elapsed = 0; angle = Math.random() * 360;
+    label.innerHTML = cover(i);
+    rec.classList.remove('off', 'in'); void rec.offsetWidth; rec.classList.add('in');
+    showTrack(i); paint();
+    await wait(380);
+    busy = false;
+    if (live()) fx.needle();
+    setOn(true);
+  };
+
+  // ---- the record in your hand ----
+  const ghostFor = (row, x, y) => {
+    const d = row.querySelector('.vr-disc').getBoundingClientRect();
+    const g = document.createElement('div'); g.className = 'ghost';
+    g.innerHTML = `<div class="ghost-disc"></div><div class="ghost-label">${cover(+row.dataset.i)}</div>`;
+    g.style.width = g.style.height = d.width + 'px';
+    document.body.append(g);
+    g._off = { x: x - d.left, y: y - d.top }; g._size = d.width;
+    return g;
+  };
+  const place = (g, x, y, rot, scale) => { g.style.transform = `translate(${x - g._off.x}px,${y - g._off.y}px) rotate(${rot}deg) scale(${scale})`; };
+  const flyTo = (g) => new Promise((res) => {
+    const r = rec.getBoundingClientRect(), s = r.width / g._size;
+    const m = /translate\(([-\d.]+)px,([-\d.]+)px\)/.exec(g.style.transform) || [0, 0, 0];
+    g.style.transformOrigin = '0 0';
+    const a = g.animate([{ transform: `translate(${m[1]}px,${m[2]}px) scale(1.1)` }, { transform: `translate(${r.left}px,${r.top}px) scale(${s})` }],
+      { duration: reduce ? 0 : 420, easing: 'cubic-bezier(.3,.7,.2,1)', fill: 'forwards' });
+    a.onfinish = () => { res(); requestAnimationFrame(() => g.remove()); };
+  });
+  const overDeck = (x, y) => { const r = platter.getBoundingClientRect(); return Math.hypot(x - (r.left + r.width / 2), y - (r.top + r.height / 2)) < r.width * .62; };
+
+  rows.forEach((row) => {
+    let sx = 0, sy = 0, g = null, pid = null, moved = false, lx = 0;
+    row.addEventListener('pointerdown', (e) => { if (e.button !== 0) return; sx = e.clientX; sy = e.clientY; lx = sx; moved = false; pid = e.pointerId; });
+    row.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== pid) return;
+      if (!g && Math.hypot(e.clientX - sx, e.clientY - sy) > 6) {
+        if (e.pointerType === 'touch' && Math.abs(e.clientY - sy) > Math.abs(e.clientX - sx)) { pid = null; return; }  // vertical swipe on touch = scroll
+        moved = true; row.setPointerCapture(pid);
+        g = ghostFor(row, sx, sy); row.classList.add('lifted'); deck.classList.add('dragging');
+        document.documentElement.style.cursor = 'grabbing';
+      }
+      if (g) {
+        const tilt = Math.max(-18, Math.min(18, (e.clientX - lx) * 1.5)); lx = e.clientX;
+        const over = overDeck(e.clientX, e.clientY);
+        place(g, e.clientX, e.clientY, tilt, over ? 1.9 : 1.1);  // grows over the deck, like it's about to drop on
+        deck.classList.toggle('over', over);
+      }
+    });
+    const end = (e) => {
+      if (e.pointerId !== pid) return; pid = null;
+      document.documentElement.style.cursor = '';
+      if (!g) return;
+      const hit = overDeck(e.clientX, e.clientY), gg = g; g = null;
+      deck.classList.remove('dragging', 'over');
+      if (hit) { row.classList.remove('lifted'); load(+row.dataset.i, gg); return; }
+      // missed the deck: the record slides back into its sleeve
+      const d = row.querySelector('.vr-sleeve').getBoundingClientRect();
+      gg.animate([{ transform: gg.style.transform }, { transform: `translate(${d.left}px,${d.top}px) scale(1)` }], { duration: reduce ? 0 : 380, easing: 'cubic-bezier(.3,.7,.2,1)', fill: 'forwards' })
+        .onfinish = () => { gg.remove(); row.classList.remove('lifted'); };
+    };
+    row.addEventListener('pointerup', end); row.addEventListener('pointercancel', end);
+    row.addEventListener('click', (e) => { if (moved) { e.preventDefault(); moved = false; return; } load(+row.dataset.i); });
+  });
+
+  startBtn.addEventListener('click', () => { if (cur < 0) load(0); else { if (!on && live()) fx.needle(); setOn(!on); } });
+  root.querySelectorAll('.tt-rpm button').forEach((b) => b.addEventListener('click', () => {
+    rpm = b.dataset.rpm === '45' ? 45 : 33.33; if (!fading) au.playbackRate = speed();
+    root.querySelectorAll('.tt-rpm button').forEach((x) => x.classList.toggle('on', x === b));
+  }));
+
+  // pitch fader: ±8%, up is faster, snaps to 0 near the middle; drag, arrow keys, or double-click to reset
+  const fader = $('.tt-pitch'), knob = fader.firstElementChild, pv = $('.tt-pv');
+  const setPitch = (v) => {
+    pitch = Math.max(-8, Math.min(8, Math.round(v * 10) / 10)); if (Math.abs(pitch) < .4) pitch = 0;
+    knob.style.top = `calc(${(1 - (pitch + 8) / 16) * 100}% - 5px)`; fader.style.setProperty('--pv', pitch);
+    const txt = (pitch > 0 ? '+' : pitch < 0 ? '−' : '±') + Math.abs(pitch).toFixed(pitch % 1 ? 1 : 0) + '%';
+    pv.textContent = txt; pv.classList.toggle('moved', pitch !== 0);
+    fader.setAttribute('aria-valuenow', String(pitch)); fader.setAttribute('aria-valuetext', txt);
+    if (!fading) au.playbackRate = speed();
+  };
+  const fromY = (y) => { const r = fader.getBoundingClientRect(); return 8 - Math.max(0, Math.min(1, (y - r.top) / r.height)) * 16; };
+  // a fader jumps to where you press; a knob turns with a relative drag (up = faster)
+  const isKnob = fader.classList.contains('knob'); let y0 = 0, p0 = 0;
+  fader.addEventListener('pointerdown', (e) => { fader.setPointerCapture(e.pointerId); fader.classList.add('drag'); y0 = e.clientY; p0 = pitch; if (!isKnob) setPitch(fromY(e.clientY)); });
+  fader.addEventListener('pointermove', (e) => { if (fader.hasPointerCapture(e.pointerId)) setPitch(isKnob ? p0 + (y0 - e.clientY) / 8 : fromY(e.clientY)); });
+  fader.addEventListener('pointerup', () => fader.classList.remove('drag'));
+  fader.addEventListener('dblclick', () => setPitch(0));
+  fader.addEventListener('keydown', (e) => {
+    const k = { ArrowUp: .5, ArrowRight: .5, ArrowDown: -.5, ArrowLeft: -.5 }[e.key];
+    if (k) { e.preventDefault(); setPitch(pitch + k); } else if (e.key === 'Home' || e.key === '0') setPitch(0);
+  });
+
+  // ---- sound on/off. Browsers only allow sound after a click or tap, so the first press anywhere in the
+  // section unlocks it (the audio element is primed inside that same press, which iOS needs) ----
+  const sndBtn = $('.snd');
+  const paintSnd = () => {
+    sndBtn.setAttribute('aria-pressed', String(live())); sndBtn.lastElementChild.textContent = live() ? 'Sound on' : 'Sound off';
+    np.classList.toggle('no-audio', broken);
+  };
+  const unlock = () => {
+    if (unlocked) return;
+    unlocked = true; fx.unlock();
+    if (!on) { const m = au.muted; au.muted = true; au.play().then(() => { au.pause(); au.muted = m; }).catch(() => { au.muted = m; }); }
+  };
+  root.addEventListener('pointerdown', (e) => { if (e.target.closest('.snd') || !soundOn) return; const was = unlocked; unlock(); if (!was) setTimeout(() => { paintSnd(); syncAudio(false); }, 30); }, true);
+  root.addEventListener('keydown', () => { if (!soundOn) return; const was = unlocked; unlock(); if (!was) setTimeout(() => { paintSnd(); syncAudio(false); }, 30); }, true);
+  sndBtn.addEventListener('click', () => {
+    if (live()) soundOn = false; else { soundOn = true; unlock(); }
+    paintSnd(); syncAudio(false);
+  });
+  // if the preview can't load (no network, or a page that blocks outside audio), the deck carries on silently
+  au.addEventListener('error', () => { if (!au.src) return; broken = true; paintSnd(); fx.crackle(false); });
+  au.addEventListener('playing', () => { if (broken) { broken = false; paintSnd(); } });
+  new IntersectionObserver(([e]) => { inView = e.intersectionRatio > .15; syncAudio(false); }, { threshold: [0, .15, .3] }).observe(deck);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { inView = false; syncAudio(false); } });
+  paintSnd();
+
+  // first record sits on the deck; the arm swings on the first time the section comes into view
+  cur = 0; label.innerHTML = cover(0); showTrack(0); paint(); setArm();
+  new IntersectionObserver(([e], io) => { if (e.isIntersecting) { io.disconnect(); setTimeout(() => { if (!on) setOn(true); }, 500); } }, { threshold: .45 }).observe(deck);
+})();
