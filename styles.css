@@ -1889,8 +1889,8 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .vr.on .vr-title{color:var(--text-brand)}
 .vr.on .vr-sleeve{filter:brightness(.8)}
 .crate-tip{padding:0}
-/* bento: turntable and now spinning split 65:35 at the same height */
-#listening .deck{--ttw:clamp(400px,calc((100vh - var(--cv) - 308px) * 1.25),800px);grid-template-columns:minmax(0,13fr) minmax(0,7fr);gap:24px;align-items:stretch}
+/* bento: turntable and now spinning split 65:35 at the same height; on shorter screens the whole row shrinks (centred) so it fits one screen */
+#listening .deck{--ttw:clamp(400px,calc((100vh - var(--cv) - 340px) * 1.25),800px);grid-template-columns:minmax(0,13fr) minmax(0,7fr);width:min(100%,calc(var(--ttw) * 20 / 13 + 24px));margin-inline:auto;gap:24px;align-items:stretch}
 .tt-stage{display:block}
 #listening .tt{width:100%;max-width:none}
 #listening .side{position:relative;display:flex;flex-direction:column;gap:0;min-width:0}
