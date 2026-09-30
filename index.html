@@ -73,10 +73,10 @@
   <div class="shelf rv">
     <ul class="crate"></ul>
   </div>
-  <div class="deck rv" aria-label="Turntable. Drag a record onto the deck, or tap one on the wall.">
+  <div class="deck rv" aria-label="Turntable with a display. Drag a record onto the deck, or tap one on the wall.">
     <div class="tt-stage"><div class="tt" data-arm-in="29" data-arm-out="39">
       <div class="tt-grain" aria-hidden="true"></div>
-      <span class="tt-hinge l" aria-hidden="true"></span><span class="tt-hinge r" aria-hidden="true"></span>
+      <span class="tt-hinge l" aria-hidden="true"></span><span class="tt-hinge r" aria-hidden="true"></span><div class="tt-core">
       <span class="tt-badge" aria-hidden="true"><b>SL-01</b> direct drive</span>
       <div class="tt-platter" data-drop>
         <div class="tt-rim"></div>
@@ -131,15 +131,27 @@
         <div class="tt-pitch" role="slider" tabindex="0" aria-label="Pitch" aria-valuemin="-8" aria-valuemax="8" aria-valuenow="0" aria-valuetext="0%"><i></i></div>
         <span class="tt-pv mono" aria-hidden="true">±0%</span>
       </div>
-    </div></div>
-    <div class="side">
-      <div class="np" aria-live="polite">
-        <div class="np-top"><span class="mono np-eye">Now spinning</span><span class="np-r"><button class="snd mono" type="button" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h2.5L8 3v10L4.5 10H2z"/><path class="w" d="M10.5 5.5a3.5 3.5 0 0 1 0 5M12 3.5a6 6 0 0 1 0 9"/></svg><span>Sound off</span></button></span></div>
-        <div class="np-main"><div class="np-cover" aria-hidden="true"></div><div class="np-txt"><h3 class="np-title"></h3><p class="np-artist"></p><p class="np-meta mono"></p></div></div>
-        <div class="np-bar"><span class="mono np-t">0:00</span><div class="np-track"><i></i></div><span class="mono np-d">0:00</span></div>
-        <div class="np-foot"><span class="np-note mono">30-sec preview</span><a class="np-link mono" target="_blank" rel="noopener">Full song on Spotify ↗</a></div>
-      </div>
-    </div>
+    </div><div class="tt-side">
+          <div class="np lcd" aria-live="polite">
+            <div class="lcd-glass">
+              <div class="lcd-top"><span class="lcd-ind lcd-play" aria-hidden="true">PLAY</span><span class="lcd-ind lcd-rpm" aria-hidden="true">33⅓</span><span class="np-note">Preview</span></div>
+              <div class="lcd-marq"><div class="np-txt"><h3 class="np-title"></h3><p class="np-artist"></p></div></div>
+              <p class="np-meta"></p>
+              <div class="lcd-time"><span class="lcd-ghost" aria-hidden="true">8:88</span><span class="np-t">0:00</span><span class="lcd-slash">/</span><span class="np-d">0:00</span></div>
+              <div class="np-bar"><div class="np-track"><i></i></div></div>
+            </div>
+            <div class="lcd-keys">
+              <button type="button" data-np="prev" aria-label="Previous record"><svg viewBox="0 0 16 12"><path d="M0 0h2v12H0zM9 0v12L2 6zM16 0v12L9 6z"/></svg></button>
+              <button type="button" data-np="toggle" aria-label="Play or pause"><svg viewBox="0 0 20 12"><path d="M0 0v12l8-6z"/><path d="M11 0h3v12h-3zM16 0h3v12h-3z"/></svg></button>
+              <button type="button" data-np="next" aria-label="Next record"><svg viewBox="0 0 16 12"><path d="M0 0v12l7-6zM7 0v12l7-6zM14 0h2v12h-2z"/></svg></button>
+              <button class="snd mono" type="button" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h2.5L8 3v10L4.5 10H2z"/><path class="w" d="M10.5 5.5a3.5 3.5 0 0 1 0 5M12 3.5a6 6 0 0 1 0 9"/></svg><span>Sound off</span></button>
+              <a class="np-link mono" target="_blank" rel="noopener">Spotify ↗</a>
+            </div>
+          </div>
+          <div class="tt-grille" aria-hidden="true"></div>
+          <div class="tt-vol" aria-hidden="true"><span class="tt-vol-k"></span><span class="tt-vol-l">Off · Volume · Max</span></div>
+        </div></div></div>
+    
   </div>
 </section>
 <section id="words">
