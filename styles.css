@@ -1864,3 +1864,7 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 /* arm sweep per screen size (read by the deck script) */
 #listening .tt{--arm-in:29;--arm-out:39}
 @media (max-width:600px){#listening .tt{--arm-in:36.5;--arm-out:46}}
+
+/* Freshworks: the logo on its own, no tile behind it */
+.jr .co-logo.co-fw,.co-logo.co-fw{background:none;border:0;border-radius:0;box-shadow:none;overflow:visible}
+.co-fw svg{width:100%;height:100%}
