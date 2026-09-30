@@ -1988,3 +1988,7 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .jr-award svg{filter:none;animation:awMedal 4.2s cubic-bezier(.4,0,.2,1) 1.2s infinite}
 @keyframes awMedal{0%,100%{filter:brightness(1)}6%{filter:brightness(1.7)}18%{filter:brightness(1)}}
 @media (prefers-reduced-motion:reduce){.jr-award svg{animation:none}}
+
+/* toolkit pills: no tilt, just the slight bump on hover */
+@media (hover:hover) and (pointer:fine){.tool{transform:none}.tool:hover{transform:translateY(-2px)}}
+.tool{transition:border-color .25s,transform .35s cubic-bezier(.22,1,.36,1)}

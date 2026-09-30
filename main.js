@@ -1104,7 +1104,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
 (() => {
   if (!matchMedia('(hover: hover) and (pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   // [selector, max angle, lift px]
-  const CFG = [['.pc', 5, -4], ['.portrait', 5, 0], ['.tool', 10, -2], ['#listening .np', 5, 0], ['.tk-c', 5, 0], ['.jr-award', 12, -1]];
+  const CFG = [['.pc', 3, -4], ['.portrait', 3, 0], ['#listening .np', 3, 0], ['.tk-c', 3, 0], ['.jr-award', 3, -1]];
   const SEL = CFG.map((c) => c[0]).join(',');
   const TILT = { k: 500, c: 20 }, POP = { k: 400, c: 12 };  // stiffness / damping, from the reference
   const live = new Map();  // element -> spring state
