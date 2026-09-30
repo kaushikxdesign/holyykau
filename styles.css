@@ -607,7 +607,7 @@ a:hover{text-decoration:none}
 .finale .giant{mix-blend-mode:normal;margin:0 0 -1px}
 .finale .giant text{fill:var(--surface-raised)}
 @media (max-width:600px){.finale .fimg{min-height:560px}.finale .fband{padding-top:24px}}
-.co-fw{background:var(--white)}.co-fw svg{width:76%;height:76%}
+.co-fw{background:#000}.co-fw svg{width:62%;height:62%}
 
 /* chip:red pin; Tamil scales to fit the Madras width */
 .hi .pin{color:var(--text-brand)}
