@@ -2009,3 +2009,23 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 #listening .tt-led{position:static;flex:none}
 @media (min-width:901px){#listening .tt-ctrl{bottom:max(8px,calc(16.875cqh - 58px))}}
 @media (max-width:600px){#listening .tt-rpm{right:calc(6% + 48px + 14px);bottom:7%;gap:8px}}
+
+/* the tonearm can be picked up: the tube and headshell take the pointer, the rest of its box doesn't */
+#listening .tt-arm{pointer-events:none;touch-action:none}
+#listening .tt-arm path,#listening .tt-arm g,#listening .tt-arm circle,#listening .tt-arm rect{pointer-events:visiblePainted;cursor:grab}
+#listening .tt-arm.lifted{filter:drop-shadow(-12px 22px 10px rgba(0,0,0,.45))}
+/* the arm's path spans the whole grooved area: outer edge (start of the preview) to just outside the label (end) */
+#listening .tt{--arm-out:44}
+@media (max-width:600px){#listening .tt{--arm-out:50}}
+/* speed keys side by side (33 left of 45), lights above them, bottom level with the pitch fader */
+#listening .tt-rpm{flex-direction:row;gap:8px}
+#listening .tt-rpm button::before{left:50%;top:-11px;margin:0 0 0 -2.5px}
+/* pitch readout (light + value) centred right under the fader's rail */
+#listening .tt-pv{right:11.5px;bottom:-22px;transform:translateX(50%)}
+/* the fader sits 16px higher so the readout has room under it */
+#listening .tt-pitchbox{bottom:calc(6% + 16px)}
+@media (max-width:600px){#listening .tt-pitchbox{bottom:calc(7% + 16px)}}
+/* 33/45 share the STOP key's bottom line (STOP sits on the same inset at every size) */
+#listening .tt-rpm{bottom:5.5%}
+@media (min-width:901px){#listening .tt-rpm{bottom:max(8px,calc(16.875cqh - 58px))}}
+@media (max-width:600px){#listening .tt-rpm{bottom:4.5%}}

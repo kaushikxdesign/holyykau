@@ -920,7 +920,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     if (on && cur >= 0) {
       const before = Math.floor(elapsed);
       elapsed = !au.paused && !fading ? au.currentTime : elapsed + dt / 1000 * speed();
-      if (elapsed >= clip() - .05) { elapsed = 0; au.currentTime = 0; setOn(false); }  // end of the side: the arm returns
+      if (elapsed >= clip() - .05) { elapsed = 0; au.currentTime = 0; paint(); setArm(); }  // end of the preview: back to the lead-in, play again
       else if (Math.floor(elapsed) !== before) { paint(); setArm(); }
     }
     if (on || Math.abs(vel) > .0005) raf = requestAnimationFrame(tick); else { raf = 0; last = 0; }
@@ -1091,6 +1091,53 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   new IntersectionObserver(([e]) => { inView = e.intersectionRatio > .15; syncAudio(false); }, { threshold: [0, .15, .3] }).observe(deck);
   document.addEventListener('visibilitychange', () => { if (document.hidden) { inView = false; syncAudio(false); } });
   paintSnd();
+
+  // ---- the tonearm: drag it onto the record to drop the needle there (the song cues to that point), or off the
+  // record to park it and stop ----
+  {
+    const base = $('.tt-armbase');
+    // the arm's pivot on screen, and the stylus direction at rest (from the drawing: pivot 60,78 → stylus 39,334)
+    const pivot = () => { const r = base.getBoundingClientRect(); return { x: r.left + r.width * .5, y: r.top + r.height * 0.2167 }; };
+    const REST_DIR = Math.atan2(256, -21);
+    let drag = null;
+    const angleAt = (e) => { const c = pivot(); return (Math.atan2(e.clientY - c.y, e.clientX - c.x) - REST_DIR) * 180 / Math.PI; };
+    // a click does nothing: the arm is only picked up once the pointer has moved a few pixels
+    arm.addEventListener('pointerdown', (e) => {
+      if (busy || cur < 0 || e.button !== 0) return;
+      e.preventDefault(); arm.setPointerCapture(e.pointerId);
+      drag = { id: e.pointerId, x: e.clientX, y: e.clientY, live: false };
+    });
+    arm.addEventListener('pointermove', (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      if (!drag.live) {
+        if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 4) return;
+        // pick it up exactly where it is (mid-sweep or at rest), then stop the record
+        const now = new DOMMatrix(getComputedStyle(arm).transform), a0 = Math.atan2(now.b, now.a) * 180 / Math.PI;
+        arm.style.transition = 'none'; arm.style.transform = `rotate(${a0}deg)`;
+        if (on) { setOn(false, false); arm.style.transform = `rotate(${a0}deg)`; }  // setOn parks the arm; keep it in hand
+        drag.live = true; drag.off = a0 - angleAt({ clientX: drag.x, clientY: drag.y }); drag.a = a0;
+        arm.classList.add('lifted'); document.documentElement.style.cursor = 'grabbing';
+      }
+      drag.a = Math.max(0, Math.min(sweep('out', 36) + 3, angleAt(e) + drag.off));
+      arm.style.transform = `rotate(${drag.a}deg)`;
+    });
+    const drop = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      if (!drag.live) { drag = null; return; }  // just a click: leave everything as it is
+      const a = drag.a, lo = sweep('in', 24.5), hi = sweep('out', 36); drag = null;
+      arm.classList.remove('lifted'); document.documentElement.style.cursor = '';
+      requestAnimationFrame(() => {
+        arm.style.transition = '';
+        if (a >= lo - 3) {  // over the record: cue to that point and play
+          elapsed = Math.max(0, Math.min(.9, (a - lo) / (hi - lo))) * clip();  // always leave a few seconds to play
+          if (au.src && isFinite(au.duration)) au.currentTime = elapsed;
+          if (live()) fx.needle();
+          setOn(true);
+        } else setArm();    // off the record: back to the rest
+      });
+    };
+    arm.addEventListener('pointerup', drop); arm.addEventListener('pointercancel', drop);
+  }
 
   // first record sits on the deck; the arm swings on the first time the section comes into view
   cur = 0; label.innerHTML = cover(0); showTrack(0); paint(); setArm();
