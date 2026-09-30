@@ -1972,3 +1972,19 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 /* journey rows: tight company-name line, 8px name→role, 3px role→dates */
 .jr-co b{line-height:1.15}
 .jr-co{margin-bottom:5px}
+
+/* the playing record on the wall: title in its cover's tint, with the level meter beside it (moved off the card) */
+.vr.on .vr-title{color:var(--tint,var(--text-brand))}
+.vr-eq{display:none;height:10px;margin-left:7px;vertical-align:baseline;gap:2px}
+.vr.on .vr-eq{display:inline-flex}
+.vr-eq i{width:2px;background:var(--tint,var(--text-primary))}
+/* the hint in the heading row is plain text: no hover (it was catching the header-link hover) */
+.lab .crate-tip:hover{color:var(--text-tertiary)}
+/* journey: award marker 12px from the company name (row gap 10px + 2px) */
+.jr-award{margin-left:2px}
+@media (max-width:600px){.jr-award{margin-left:0}}
+/* award: one glow for the whole tag (medal and text), and the shine sweep lights the medal as it starts */
+.jr-award{filter:drop-shadow(0 0 5px rgba(232,182,74,.45))}
+.jr-award svg{filter:none;animation:awMedal 4.2s cubic-bezier(.4,0,.2,1) 1.2s infinite}
+@keyframes awMedal{0%,100%{filter:brightness(1)}6%{filter:brightness(1.7)}18%{filter:brightness(1)}}
+@media (prefers-reduced-motion:reduce){.jr-award svg{animation:none}}

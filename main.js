@@ -835,9 +835,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   const startBtn = $('.tt-start'), np = $('.np'), npTxt = $('.np-txt'), npTitle = $('.np-title'), npArtist = $('.np-artist'), npMeta = $('.np-meta');
   const npT = $('.np-t'), npD = $('.np-d'), npBar = $('.np-track i'), npLink = $('.np-link'), npNote = $('.np-note'), crate = $('.crate'), npCover = $('.np-cover');
 
-  crate.innerHTML = TRACKS.map((t, i) => `<li><button class="vr" type="button" data-i="${i}" aria-label="Play ${t.title} by ${t.artist}">
+  crate.innerHTML = TRACKS.map((t, i) => `<li><button class="vr" type="button" data-i="${i}" aria-label="Play ${t.title} by ${t.artist}"${t.tint ? ` style="--tint:${t.tint}"` : ''}>
     <span class="vr-art"><span class="vr-disc"><span class="vr-label">${cover(i)}</span></span><span class="vr-sleeve">${cover(i)}</span></span>
-    <span class="vr-txt"><span class="vr-title">${t.title}</span><span class="vr-artist">${t.artist}</span></span>
+    <span class="vr-txt"><span class="vr-title">${t.title}<span class="eq vr-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span><span class="vr-artist">${t.artist}</span></span>
     <span class="vr-meta mono">${fmt(t.dur)}</span></button></li>`).join('');
   const rows = [...crate.querySelectorAll('.vr')];
 
@@ -884,7 +884,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   const sweep = (k, fb) => parseFloat(getComputedStyle(tt).getPropertyValue('--arm-' + k)) || +tt.dataset['arm' + (k === 'in' ? 'In' : 'Out')] || fb;
   const setArm = () => { const a = sweep('in', 24.5), b = sweep('out', 36); arm.style.transform = `rotate(${on && cur >= 0 ? a + (b - a) * Math.min(1, elapsed / clip()) : ARM_REST}deg)`; };
   const paint = () => {
-    tt.classList.toggle('on', on); np.classList.toggle('playing', on && cur >= 0);
+    tt.classList.toggle('on', on); np.classList.toggle('playing', on && cur >= 0); root.classList.toggle('playing', on && cur >= 0);
     startBtn.setAttribute('aria-pressed', String(on)); startBtn.firstElementChild.textContent = on ? 'Stop' : 'Start';
     rows.forEach((r, i) => { r.classList.toggle('on', i === cur); r.setAttribute('aria-pressed', String(i === cur)); });
     platter.classList.toggle('empty', cur < 0);
