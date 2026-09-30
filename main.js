@@ -1254,3 +1254,77 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: .25 }).observe(el);
   });
 })();
+
+// Case study lightbox: every product screenshot on a case study opens large. Arrows, arrow keys or a swipe move
+// through that page's screenshots in reading order; Esc, the close button or a click on the backdrop closes it.
+(() => {
+  const key = (img) => img.dataset.asset || img.getAttribute('src') || '';
+  const isShot = (img) => /screens\//.test(key(img)) && !img.closest('a');
+  const ico = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+  let lb, im, cap, num, set = [], at = 0, back = null;
+  const build = () => {
+    lb = document.createElement('div');
+    lb.className = 'clb'; lb.tabIndex = -1; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Screenshot viewer');
+    lb.innerHTML = `<div class="clb-top"><span class="clb-n" aria-live="polite"></span><span class="clb-r"><kbd class="clb-esc" aria-hidden="true">Esc</kbd><button type="button" class="clb-x" aria-label="Close (Esc)">${ico('M6 6l12 12M18 6L6 18')}</button></span></div>
+      <div class="clb-stage"><button type="button" class="clb-prev" aria-label="Previous screenshot">${ico('M15 6l-6 6 6 6')}</button><img class="clb-img" alt=""><button type="button" class="clb-next" aria-label="Next screenshot">${ico('M9 6l6 6-6 6')}</button></div>
+      <p class="clb-cap"></p>`;
+    document.body.append(lb);
+    im = lb.querySelector('.clb-img'); cap = lb.querySelector('.clb-cap'); num = lb.querySelector('.clb-n');
+    lb.querySelector('.clb-x').addEventListener('click', close);
+    lb.querySelector('.clb-prev').addEventListener('click', () => go(-1));
+    lb.querySelector('.clb-next').addEventListener('click', () => go(1));
+    lb.addEventListener('click', (e) => { if (e.target === lb || e.target.classList.contains('clb-stage')) close(); });
+    let x0 = null;
+    lb.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 48) go(dx < 0 ? 1 : -1); });
+  };
+  const label = (img) => {
+    const fig = img.closest('figure'), fc = fig && fig.querySelector('figcaption');
+    const t = fc ? [...fc.childNodes].filter((n) => !(n.nodeType === 1 && n.tagName === 'SPAN')).map((n) => n.textContent).join('').trim() : '';
+    return t || img.alt.replace(/^[^:]+:\s*/, '');
+  };
+  const show = (i, anim) => {
+    at = (i + set.length) % set.length;
+    const s = set[at], pad = (n) => String(n).padStart(2, '0');
+    const put = () => { im.src = s.img.currentSrc || s.img.src; im.alt = s.alt; cap.textContent = s.cap; im.classList.remove('swap'); };
+    num.innerHTML = `<b>${pad(at + 1)}</b> / ${pad(set.length)}`;
+    if (anim) { im.classList.add('swap'); setTimeout(put, 160); } else put();
+  };
+  const go = (d) => set.length > 1 && show(at + d, true);
+  const open = (img) => {
+    if (!lb) build();
+    const root = img.closest('section') || img.closest('main') || document;  // only this section's screenshots
+    const seen = new Map();
+    root.querySelectorAll('img').forEach((el) => {
+      if (!isShot(el)) return;
+      const k = key(el), ok = el.alt && !el.closest('[aria-hidden="true"]');
+      if (!seen.has(k)) seen.set(k, { img: el, alt: el.alt, cap: label(el) });
+      else if (ok && !seen.get(k).cap) Object.assign(seen.get(k), { alt: el.alt, cap: label(el) });
+    });
+    set = [...seen.values()];
+    back = document.activeElement;
+    lb.classList.toggle('one', set.length < 2);
+    show(Math.max(0, set.findIndex((s) => key(s.img) === key(img))), false);
+    lb.classList.add('on'); document.documentElement.style.overflow = 'hidden';
+    lb.focus({ preventScroll: true });
+  };
+  function close() {
+    if (!lb || !lb.classList.contains('on')) return;
+    lb.classList.remove('on'); document.documentElement.style.overflow = '';
+    if (back && back.focus) back.focus({ preventScroll: true });
+  }
+  document.addEventListener('click', (e) => {
+    const img = e.target.closest && e.target.closest('.cs img');
+    if (!img || !isShot(img)) return;
+    e.preventDefault(); open(img);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!lb || !lb.classList.contains('on')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowRight') go(1);
+    else if (e.key === 'ArrowLeft') go(-1);
+    else if (e.key === 'Tab') { const f = [...lb.querySelectorAll('button')].filter((b) => getComputedStyle(b).display !== 'none'); const i = f.indexOf(document.activeElement);
+      e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus(); }
+  });
+  addEventListener('hashchange', close);
+})();

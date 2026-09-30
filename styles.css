@@ -2138,3 +2138,35 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .cv-qc.s6 .cv-tn{background:rgba(74,222,128,.12);border-color:#4ade80}
 .cv-qc.s6 .cv-pill.tone{opacity:0;transform:scale(.8)}
 .cv-qc.s6 .cv-pop{opacity:0;transform:translateY(12px)}
+
+/* ---- case study lightbox: product screenshots, full size, browsable ---- */
+.cs .x-shot img,.cs .wl-img img,.cs [data-zoom]{cursor:zoom-in}
+.clb{position:fixed;inset:0;z-index:400;display:grid;grid-template-rows:auto 1fr auto;padding:16px 24px 24px;
+  background:rgba(var(--rgb-bg),.86);-webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);
+  opacity:0;visibility:hidden;transition:opacity .3s cubic-bezier(.22,1,.36,1),visibility 0s .3s}
+.clb.on{opacity:1;visibility:visible;transition:opacity .3s cubic-bezier(.22,1,.36,1)}
+.clb-top{display:flex;align-items:center;justify-content:space-between;gap:16px;height:48px}
+.clb-n{font:var(--fw-regular) var(--fs-mono)/1 var(--mono);letter-spacing:.06em;color:var(--text-tertiary)}
+.clb-n b{font-weight:inherit;color:var(--text-primary)}
+.clb-stage{position:relative;display:grid;place-items:center;min-height:0;padding:0 64px;touch-action:pan-y}
+.clb-img{max-width:min(100%,1600px);max-height:calc(100vh - 152px);max-height:calc(100dvh - 152px);width:auto;height:auto;border-radius:12px;display:block;
+  box-shadow:0 0 0 1px var(--stroke-strong),0 32px 64px -24px rgba(var(--rgb-black),var(--o90));
+  transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .25s;user-select:none;-webkit-user-drag:none}
+.clb-img.swap{opacity:0;transform:scale(.98)}
+.clb-cap{min-height:24px;margin-top:16px;text-align:center;font-size:var(--fs-body-sm);color:var(--text-secondary)}
+.clb button{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;border:1px solid var(--stroke-strong);cursor:pointer;
+  background:rgba(var(--rgb-bg),var(--o50));color:var(--text-primary);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .2s,transform .2s}
+.clb button:hover{background:var(--surface-raised)}
+.clb button:active{transform:scale(.96)}
+.clb button:focus-visible{outline:2px solid var(--accent-soft);outline-offset:2px}
+.clb button svg{width:20px;height:20px}
+.clb-prev,.clb-next{position:absolute;top:50%;margin-top:-22px;z-index:1}
+.clb-prev{left:0}.clb-next{right:0}
+.clb.one .clb-prev,.clb.one .clb-next{display:none}
+.clb-r{display:flex;align-items:center;gap:8px}
+.clb-esc{display:grid;place-items:center;height:24px;padding:0 8px;border-radius:6px;border:1px solid var(--stroke-strong);border-bottom-width:2px;
+  font:var(--fw-medium) var(--fs-mono-sm)/1 var(--mono);letter-spacing:.06em;color:var(--text-secondary);background:rgba(var(--rgb-white),var(--o4))}
+@media (hover:none),(max-width:600px){.clb-esc{display:none}}
+.clb:focus{outline:none}
+@media (max-width:600px){.clb{padding:8px 16px 16px}.clb-stage{padding:0}.clb .clb-prev,.clb .clb-next{display:none}.clb-img{border-radius:8px;max-height:calc(100dvh - 136px)}}
+@media (prefers-reduced-motion:reduce){.clb,.clb.on,.clb-img{transition:none}}
