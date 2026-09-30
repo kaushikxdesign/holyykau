@@ -1198,3 +1198,59 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   addEventListener('blur', release);
   addEventListener('scroll', () => { if (hover && hover.matches('.tk-c') && !hover.closest('.tk.open')) release(); }, { passive: true });
 })();
+
+// Project covers: live product screens scaled to the card, each playing its flow on a loop while on screen.
+(() => {
+  const covers = [...document.querySelectorAll('.cv')];
+  if (!covers.length) return;
+  const fit = (el) => el.style.setProperty('--cvs', el.clientWidth / 1600);
+  const ro = new ResizeObserver((es) => es.forEach((e) => fit(e.target)));
+  covers.forEach((el) => { fit(el); ro.observe(el); });
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   // keep the finished frame
+
+  // the Quality Coach reply types in word by word
+  document.querySelectorAll('.cv-qc .cv-txt').forEach((t) => {
+    let n = 0;
+    const walk = (node) => [...node.childNodes].forEach((c) => {
+      if (c.nodeType === 3) {
+        const f = document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach((w) => { if (!w) return; if (/^\s+$/.test(w)) f.append(w); else { const s = document.createElement('span'); s.className = 'cv-w'; s.style.setProperty('--i', n++); s.textContent = w; f.append(s); } });
+        c.replaceWith(f);
+      } else if (!(c.classList && c.classList.contains('new'))) walk(c);
+    });
+    walk(t);
+  });
+  const ring = (el, from, to, ms) => {
+    const r = el.querySelector('.cv-ring'), b = r && r.querySelector('b'); if (!r) return;
+    const t0 = performance.now();
+    const step = (now) => { const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3), v = Math.round(from + (to - from) * e);
+      r.style.setProperty('--p', v); b.textContent = v; if (k < 1 && el._run) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  };
+  const PLANS = {
+    qa: { total: 9000, steps: [[250, 's1'], [1300, 's2'], [2100, 's3'], [3100, 's4'], [3700, 's5'], [4300, 's6']] },
+    qc: { total: 11500, steps: [[300, 's1'], [2600, 's2'], [3200, 's3', (el) => ring(el, 0, 82, 900)], [4300, 's4'], [5900, 's5'],
+      [6300, 's6', (el) => { ring(el, 82, 94, 700); el.querySelector('.cv-score strong').textContent = 'Great · 2 suggestions'; }]] },
+  };
+  const S = ['s1', 's2', 's3', 's4', 's5', 's6'];
+  covers.forEach((el) => {
+    const plan = PLANS[el.classList.contains('cv-qa') ? 'qa' : 'qc'];
+    let timers = [];
+    const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+    const reset = () => {
+      el.classList.add('rs'); el.classList.remove(...S);
+      const r = el.querySelector('.cv-ring'); if (r) { r.style.setProperty('--p', 0); r.querySelector('b').textContent = 0; }
+      const st = el.querySelector('.cv-score strong'); if (st) st.textContent = 'Good · 3 suggestions';
+      void el.offsetWidth; el.classList.remove('rs');
+    };
+    const cycle = () => {
+      reset(); el.classList.remove('out');
+      plan.steps.forEach(([t, c, fn]) => later(t, () => { el.classList.add(c); if (fn) fn(el); }));
+      later(plan.total - 700, () => el.classList.add('out'));
+      later(plan.total, cycle);
+    };
+    const start = () => { if (el._run) return; el._run = true; el.classList.add('anim'); cycle(); };
+    const stop = () => { el._run = false; timers.forEach(clearTimeout); timers = []; el.classList.remove('anim', 'out', ...S); };
+    new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: .25 }).observe(el);
+  });
+})();
