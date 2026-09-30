@@ -833,7 +833,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   const $ = (s) => root.querySelector(s);
   const deck = $('.deck'), tt = $('.tt'), platter = $('.tt-platter'), rec = $('.tt-rec'), spin = $('.tt-spin'), label = $('.tt-label'), arm = $('.tt-arm');
   const startBtn = $('.tt-start'), np = $('.np'), npTxt = $('.np-txt'), npTitle = $('.np-title'), npArtist = $('.np-artist'), npMeta = $('.np-meta');
-  const npT = $('.np-t'), npD = $('.np-d'), npBar = $('.np-track i'), npLink = $('.np-link'), npNote = $('.np-note'), crate = $('.crate');
+  const npT = $('.np-t'), npD = $('.np-d'), npBar = $('.np-track i'), npLink = $('.np-link'), npNote = $('.np-note'), crate = $('.crate'), npCover = $('.np-cover');
 
   crate.innerHTML = TRACKS.map((t, i) => `<li><button class="vr" type="button" data-i="${i}" aria-label="Play ${t.title} by ${t.artist}">
     <span class="vr-art"><span class="vr-disc"><span class="vr-label">${cover(i)}</span></span><span class="vr-sleeve">${cover(i)}</span></span>
@@ -932,6 +932,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     const t = TRACKS[i];
     npTitle.textContent = t.title; npArtist.textContent = t.artist; npMeta.textContent = t.meta;
     npLink.href = 'https://open.spotify.com/track/' + t.id;
+    if (npCover) npCover.innerHTML = cover(i);
+    np.style.setProperty('--np-art', `url("${asset(t.cover)}")`);
+    if (t.tint) np.style.setProperty('--np-tint', t.tint);
     npTxt.classList.remove('swap'); void npTxt.offsetWidth; npTxt.classList.add('swap');
     au.preload = unlocked ? 'auto' : 'none'; au.src = t.preview;  // nothing downloads until the visitor interacts
   };
@@ -942,8 +945,9 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     if (busy || i === cur) { if (i === cur && !on) setOn(true); if (fromGhost) fromGhost.remove(); return; }
     busy = true;
     if (cur >= 0) { setOn(false, false); await wait(380); rec.classList.add('off'); await wait(320); }
-    if (fromGhost) await flyTo(fromGhost);
-    cur = i; elapsed = 0; angle = Math.random() * 360;
+    if (fromGhost) await (fromGhost._fly ? fromGhost._fly() : flyTo(fromGhost));
+    cur = i; elapsed = 0; angle = fromGhost && fromGhost._angle != null ? fromGhost._angle : Math.random() * 360;
+    spin.style.transform = `rotate(${angle}deg)`;
     label.innerHTML = cover(i);
     rec.classList.remove('off', 'in'); void rec.offsetWidth; rec.classList.add('in');
     showTrack(i); paint();
@@ -972,6 +976,33 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
       { duration: reduce ? 0 : 420, easing: 'cubic-bezier(.3,.7,.2,1)', fill: 'forwards' });
     a.onfinish = () => { res(); requestAnimationFrame(() => g.remove()); };
   });
+  // a tap: the record slides out of the side of its sleeve, arcs over and drops onto the platter
+  const pick = (row) => {
+    const i = +row.dataset.i;
+    if (reduce || busy || i === cur) { load(i); return; }
+    const disc = row.querySelector('.vr-disc'), d = disc.getBoundingClientRect(), size = disc.offsetWidth;
+    const m = new DOMMatrix(getComputedStyle(disc).transform), a0 = Math.atan2(m.b, m.a) * 180 / Math.PI;
+    const cx = d.left + d.width / 2, cy = d.top + d.height / 2, upX = cx + size * .6;
+    const g = document.createElement('div'); g.className = 'ghost';
+    g.innerHTML = `<div class="ghost-disc"></div><div class="ghost-label">${cover(i)}</div>`;
+    g.style.width = g.style.height = size + 'px'; document.body.append(g); row.classList.add('lifted');
+    const T = (x, y, a, k) => `translate(${x - size / 2}px,${y - size / 2}px) rotate(${a}deg) scale(${k})`;
+    const lift = g.animate([{ transform: T(cx, cy, a0, 1) }, { transform: T(upX, cy, a0 + 50, 1.08) }],
+      { duration: 340, easing: 'cubic-bezier(.3,.7,.2,1)', fill: 'forwards' }).finished;
+    g._fly = async () => {
+      await lift;
+      const r = rec.getBoundingClientRect(), ex = r.left + r.width / 2, ey = r.top + r.height / 2, k = rec.offsetWidth / size;
+      const a1 = a0 + 50 + 330;
+      await g.animate([
+        { transform: T(upX, cy, a0 + 50, 1.08), easing: 'cubic-bezier(.25,.6,.45,1)' },
+        { transform: T(upX + (ex - upX) * .55, Math.min(cy, ey) - 40, a0 + 220, (1.08 + k) / 2 * 1.12), offset: .42, easing: 'cubic-bezier(.55,0,.85,.55)' },
+        { transform: T(ex, ey, a1, k * 1.07) },
+      ], { duration: 720, fill: 'forwards' }).finished;
+      g._angle = ((a1 % 360) + 360) % 360;
+      requestAnimationFrame(() => g.remove());
+    };
+    load(i, g).then(() => row.classList.remove('lifted'));
+  };
   const overDeck = (x, y) => { const r = platter.getBoundingClientRect(); return Math.hypot(x - (r.left + r.width / 2), y - (r.top + r.height / 2)) < r.width * .62; };
 
   rows.forEach((row) => {
@@ -1005,7 +1036,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
         .onfinish = () => { gg.remove(); row.classList.remove('lifted'); };
     };
     row.addEventListener('pointerup', end); row.addEventListener('pointercancel', end);
-    row.addEventListener('click', (e) => { if (moved) { e.preventDefault(); moved = false; return; } load(+row.dataset.i); });
+    row.addEventListener('click', (e) => { if (moved) { e.preventDefault(); moved = false; return; } pick(row); });
   });
 
   startBtn.addEventListener('click', () => { if (cur < 0) load(0); else { if (!on && live()) fx.needle(); setOn(!on); } });
@@ -1064,4 +1095,59 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   // first record sits on the deck; the arm swings on the first time the section comes into view
   cur = 0; label.innerHTML = cover(0); showTrack(0); paint(); setArm();
   new IntersectionObserver(([e], io) => { if (e.isIntersecting) { io.disconnect(); setTimeout(() => { if (!on) setOn(true); }, 500); } }, { threshold: .45 }).observe(deck);
+})();
+
+// Tilt on hover: cards lean toward the pointer (the corner under it pressing away), grow to 1.02 and lift a little.
+// Angle, scale and lift each ride a spring, stepped every frame, so the motion keeps its momentum and settles with
+// a slight overshoot. The pointer is tracked against the element's resting outline (measured when the hover
+// starts), not its tilted shape, so the tilt keeps working right up to the edges.
+(() => {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // [selector, max angle, lift px]
+  const CFG = [['.pc', 5, -4], ['.portrait', 5, 0], ['.tool', 10, -2], ['#listening .np', 5, 0], ['.tk-c', 5, 0], ['.jr-award', 12, -1]];
+  const SEL = CFG.map((c) => c[0]).join(',');
+  const TILT = { k: 500, c: 20 }, POP = { k: 400, c: 12 };  // stiffness / damping, from the reference
+  const live = new Map();  // element -> spring state
+  let hover = null, box = null, raf = 0, last = 0;
+  const state = (el) => {
+    let s = live.get(el);
+    if (!s) { const c = CFG.find((c) => el.matches(c[0])); s = { max: c[1], lift: c[2], x: 0, y: 0, s: 1, l: 0, vx: 0, vy: 0, vs: 0, vl: 0, tx: 0, ty: 0, ts: 1, tl: 0 }; live.set(el, s); el.classList.add('tilt'); }
+    return s;
+  };
+  const step = (s, key, vkey, target, sp, dt) => { const a = sp.k * (target - s[key]) - sp.c * s[vkey]; s[vkey] += a * dt; s[key] += s[vkey] * dt; };
+  const tick = (now) => {
+    const dt = Math.min(.05, last ? (now - last) / 1000 : 1 / 60); last = now;
+    live.forEach((s, el) => {
+      for (let t = 0; t < dt; t += 1 / 240) {  // small substeps keep the stiff spring stable
+        const h = Math.min(1 / 240, dt - t);
+        step(s, 'x', 'vx', s.tx, TILT, h); step(s, 'y', 'vy', s.ty, TILT, h); step(s, 's', 'vs', s.ts, POP, h); step(s, 'l', 'vl', s.tl, POP, h);
+      }
+      const rest = el !== hover && Math.abs(s.x) + Math.abs(s.y) + Math.abs(s.s - 1) * 50 + Math.abs(s.l) < .03 && Math.abs(s.vx) + Math.abs(s.vy) + Math.abs(s.vs) + Math.abs(s.vl) < .05;
+      if (rest) { ['--tilt-x', '--tilt-y', '--tilt-s', '--tilt-l'].forEach((p) => el.style.removeProperty(p)); el.classList.remove('tilt'); live.delete(el); return; }
+      el.style.setProperty('--tilt-x', s.x.toFixed(3) + 'deg'); el.style.setProperty('--tilt-y', s.y.toFixed(3) + 'deg');
+      el.style.setProperty('--tilt-s', s.s.toFixed(4)); el.style.setProperty('--tilt-l', s.l.toFixed(2) + 'px');
+    });
+    raf = live.size ? requestAnimationFrame(tick) : 0; if (!raf) last = 0;
+  };
+  const run = () => { if (!raf) raf = requestAnimationFrame(tick); };
+  const release = () => { if (!hover) return; hover.classList.remove('tilt-hot'); const s = live.get(hover); if (s) { s.tx = 0; s.ty = 0; s.ts = 1; s.tl = 0; } hover = null; box = null; run(); };
+  const inside = (x, y) => x >= box.left - 2 && x <= box.right + 2 && y >= box.top - scrollY - 2 && y <= box.bottom - scrollY + 2;
+  addEventListener('pointermove', (e) => {
+    if (hover && !inside(e.clientX, e.clientY)) release();
+    if (!hover) {
+      const t = e.target.closest && e.target.closest(SEL);
+      if (!t || (t.matches('.tk-c') && !t.closest('.tk.open'))) return;
+      const r = t.getBoundingClientRect(), s0 = live.get(t);
+      // if it is still springing back, take out the current scale/lift so the outline is the resting one
+      const k = s0 ? s0.s : 1, dy = s0 ? s0.l : 0, cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2 - dy, w = r.width / k / 2, hh = r.height / k / 2;
+      hover = t; t.classList.add('tilt-hot'); box = { left: cx - w, right: cx + w, top: cy - hh + scrollY, bottom: cy + hh + scrollY };  // page coords, so scrolling keeps it valid
+    }
+    const s = state(hover);
+    const x = Math.max(-1, Math.min(1, (e.clientX - box.left) / (box.right - box.left) * 2 - 1)), y = Math.max(-1, Math.min(1, (e.clientY + scrollY - box.top) / (box.bottom - box.top) * 2 - 1));
+    s.tx = -y * s.max; s.ty = x * s.max; s.ts = 1.02; s.tl = s.lift;
+    run();
+  }, { passive: true });
+  document.addEventListener('pointerleave', release);
+  addEventListener('blur', release);
+  addEventListener('scroll', () => { if (hover && hover.matches('.tk-c') && !hover.closest('.tk.open')) release(); }, { passive: true });
 })();
