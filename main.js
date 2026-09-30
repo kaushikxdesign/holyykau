@@ -1151,19 +1151,3 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   addEventListener('blur', release);
   addEventListener('scroll', () => { if (hover && hover.matches('.tk-c') && !hover.closest('.tk.open')) release(); }, { passive: true });
 })();
-
-// Device keys drive the real deck: prev/next record, start/stop, sound.
-(() => {
-  const root = document.getElementById('listening'); if (!root) return;
-  const rows = () => [...root.querySelectorAll('.crate .vr')];
-  const cur = () => rows().findIndex((r) => r.classList.contains('on'));
-  const start = root.querySelector('.tt-start');
-  const go = (d) => { const r = rows(), i = Math.max(0, cur()); r[(i + d + r.length) % r.length]?.click(); };
-  root.querySelectorAll('[data-np]').forEach((b) => b.addEventListener('click', () => {
-    const a = b.dataset.np;
-    if (a === 'prev') go(-1); else if (a === 'next') go(1); else if (a === 'toggle') start.click();
-  }));
-  // the sleeve / display re-seats when the record changes
-  const t = root.querySelector('.np-title'), sw = root.querySelector('.st-sleeve,.lcd-glass');
-  if (t && sw) new MutationObserver(() => { sw.classList.remove('swap'); void sw.offsetWidth; sw.classList.add('swap'); }).observe(t, { childList: true, characterData: true, subtree: true });
-})();
