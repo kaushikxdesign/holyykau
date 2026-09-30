@@ -2000,3 +2000,12 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
   #listening .tt-platter{width:71.25cqh;left:7.5cqh}
   #listening .tt-armbase,#listening .tt-arm{right:auto;left:88.9cqh}
 }
+
+/* desktop: 33/45 stacked beside the pitch fader (the speed group); Start/Stop alone at bottom left, 24px under the
+   record, with its light beside it */
+#listening .tt-rpm{position:absolute;right:calc(6% + 48px + 20px);bottom:6%;flex-direction:column;gap:10px}
+#listening .tt-rpm button::before{left:-13px;top:50%;margin:-2.5px 0 0}
+#listening .tt-ctrl{align-items:center;gap:10px}
+#listening .tt-led{position:static;flex:none}
+@media (min-width:901px){#listening .tt-ctrl{bottom:max(8px,calc(16.875cqh - 58px))}}
+@media (max-width:600px){#listening .tt-rpm{right:calc(6% + 48px + 14px);bottom:7%;gap:8px}}
