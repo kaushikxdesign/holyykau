@@ -2170,3 +2170,6 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .clb:focus{outline:none}
 @media (max-width:600px){.clb{padding:8px 16px 16px}.clb-stage{padding:0}.clb .clb-prev,.clb .clb-next{display:none}.clb-img{border-radius:8px;max-height:calc(100dvh - 136px)}}
 @media (prefers-reduced-motion:reduce){.clb,.clb.on,.clb-img{transition:none}}
+
+/* Now spinning: surface fill at 30% over the blurred cover, so the colour glow is quieter */
+.np::after{background:linear-gradient(180deg,rgba(var(--rgb-white),.035),rgba(var(--rgb-white),.012)),rgba(var(--rgb-bg),var(--o30))}
