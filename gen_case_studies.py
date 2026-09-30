@@ -15,7 +15,7 @@ def page(c):
 <div class="wrap"><div class="cs-hero"><a class="back rv" href="../index.html">← Home</a>
 <div class="rv" style="margin-top:36px"><span class="mono">{c['kicker']}</span></div>
 <h1 class="rv">{title}</h1><p class="lede rv">{c['lede']}</p>
-<div class="meta rv">{meta}</div><div class="cs-cover rv"><img src="../assets/{c['slug']}.jpg" alt="{title}: {c['coveralt']}"></div></div></div>
+<div class="meta rv">{meta}</div></div></div>
 {looks(c)}
 <div class="wrap"><div class="read">{body}</div>
 {nextcta(c)}
