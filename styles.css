@@ -1681,3 +1681,15 @@ p b,p strong,li b,li strong,dd b,blockquote b{font-family:inherit}
 .tools>li{display:flex}
 a.tool{color:inherit;cursor:pointer}
 a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
+
+/* project cards: no arrow button; over a card the cursor turns into a "View project" button (fine pointers only) */
+.pc h3{padding-right:0}
+.btn.primary.vcur{position:fixed;left:0;top:0;z-index:10001;pointer-events:none;white-space:nowrap;opacity:0;
+  transform:translate3d(var(--x,-200px),var(--y,-200px),0) translate(-50%,-50%) scale(.6);transition:opacity .2s,transform .35s cubic-bezier(.2,.9,.25,1.2)}
+.btn.primary.vcur.on{opacity:1;transform:translate3d(var(--x,-200px),var(--y,-200px),0) translate(-50%,-50%) scale(1)}
+.btn.primary.vcur.down{transform:translate3d(var(--x,-200px),var(--y,-200px),0) translate(-50%,-50%) scale(.94)}
+.gcur.off{opacity:0!important}
+/* compact size of the primary button: same look, 36px tall instead of 44px */
+.btn.primary.sm,.btn.primary.sm:hover{height:36px;padding:0 12px;gap:6px;border-radius:12px;font-size:var(--fs-body-sm);font-weight:var(--fw-medium)}
+.btn.primary.sm svg{width:12px;height:12px;flex:none}
+@media (prefers-reduced-motion:reduce){.btn.primary.vcur{transition:opacity .15s}}

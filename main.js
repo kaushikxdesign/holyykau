@@ -796,3 +796,23 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   setTimeout(() => { drawn = true; tryGo(); }, 7500);  // fallback if the loop never animates
   new IntersectionObserver(([e], io) => { if (e.isIntersecting) { seen = true; io.disconnect(); tryGo(); } }, { threshold: .6 }).observe(slot);
 })();
+
+// Project cards: over a card, the glass cursor hands over to a "View project" button that follows the pointer.
+(() => {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const b = document.createElement('span'); b.className = 'btn primary sm vcur'; b.setAttribute('aria-hidden', 'true');
+  b.innerHTML = 'View project<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></svg>';
+  document.body.appendChild(b);
+  let x = -200, y = -200, tx = x, ty = y, raf = 0, on = false;
+  const move = () => { x += (tx - x) * .35; y += (ty - y) * .35; b.style.setProperty('--x', x + 'px'); b.style.setProperty('--y', y + 'px'); raf = on && Math.abs(tx - x) + Math.abs(ty - y) > .1 ? requestAnimationFrame(move) : 0; };
+  addEventListener('pointermove', (e) => {
+    const over = !!e.target.closest('.pc');
+    tx = e.clientX; ty = e.clientY;
+    if (over && !on) { x = tx; y = ty; }  // appear right at the pointer, then follow
+    on = over; b.classList.toggle('on', over);
+    const g = document.querySelector('.gcur'); if (g) g.classList.toggle('off', over);
+    if (over && !raf) raf = requestAnimationFrame(move);
+  }, { passive: true });
+  addEventListener('pointerdown', () => b.classList.add('down')); addEventListener('pointerup', () => b.classList.remove('down'));
+  addEventListener('scroll', () => { if (on && !document.elementFromPoint(tx, ty)?.closest('.pc')) { on = false; b.classList.remove('on'); const g = document.querySelector('.gcur'); if (g) g.classList.remove('off'); } }, { passive: true });
+})();
