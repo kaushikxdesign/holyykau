@@ -2180,3 +2180,6 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 /* award tag: glow back; gold end to end at rest, the bright band only passes through during the shine */
 .jr-award{filter:drop-shadow(0 0 5px rgba(232,182,74,.45))}
 .jr-award .t{background-image:linear-gradient(100deg,#e8b64a 0%,#f0c25a 30%,#f7d98a 42%,#fff1c2 50%,#f7d98a 58%,#f0c25a 70%,#e8b64a 100%);background-size:300% 100%}
+
+/* About: the whole body copy in secondary text, highlights and bold included */
+#about .about p,#about .about p b,#about .about p .hl{color:var(--text-secondary)}
