@@ -2203,3 +2203,6 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .clb .clb-x:hover{color:var(--text-primary)}
 .clb-x .t{display:none}
 @media (hover:none),(max-width:600px){.clb-x .k{display:none}.clb-x .t{display:inline}}
+
+/* softer brand glow on card hover: halo 25%, ring 16% (was 50% / 30%) */
+:root{--glow-brand:0 30px 120px -30px rgba(var(--rgb-accent),.25),0 0 90px -20px rgba(var(--rgb-accent),var(--o16))}
