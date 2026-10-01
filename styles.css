@@ -738,7 +738,7 @@ input,textarea{cursor:text}
 .jr-body ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .jr-body li{position:relative;padding-left:18px;font-size:var(--fs-body);line-height:1.6;color:var(--text-secondary)}
 .jr-body li::before{content:"";position:absolute;left:0;top:.68em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
-.jr-body li b{color:var(--text-primary);font-weight:var(--fw-medium)}
+.jr-body li b{color:var(--text-primary);font-weight:var(--fw-regular)}
 .jr-body a{color:var(--text-brand);text-decoration:none}.jr-body a:hover{color:var(--accent-soft);text-decoration:none}
 @media (max-width:600px){.jr-row summary{padding:18px;gap:14px}.jr .co-logo{width:44px;height:44px;border-radius:12px}.jr-co b{font-size:var(--fs-h3)}.jr-body{padding:0 18px 20px}}
 
@@ -1245,9 +1245,9 @@ h1,h2,h3,h4,b,strong,.btn,.brand,.marq div,.giant text,.pc h3,.pc-stats b,.jr-co
 /* journey "Now designing": plain mono line with the hero's green dot, no pill */
 .jr-now{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:var(--fs-mono);font-weight:var(--fw-regular);letter-spacing:-.4px;text-transform:uppercase;line-height:1;color:var(--text-secondary);vertical-align:middle;margin-left:4px;padding:0!important;border:0!important;background:none!important;border-radius:0!important;white-space:nowrap}
 .jr-now::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--live);box-shadow:0 0 10px rgba(var(--rgb-live),var(--o90));flex:none}
-/* journey bullets:grey like the marquee ✦; links white and heavier instead of blue */
+/* journey bullets:grey like the marquee ✦; links white, light blue on hover, regular weight, no underline */
 .jr-body li::before{background:var(--fg-4)}
-.jr-body a{color:var(--text-primary);font-weight:var(--fw-semibold)}.jr-body a:hover{color:var(--text-primary);text-decoration:underline;text-decoration-color:rgba(var(--rgb-white),var(--o40));text-underline-offset:3px}
+.jr-body a{color:var(--text-primary);font-weight:var(--fw-regular);text-decoration:none;transition:color .2s}.jr-body a:hover{color:var(--accent-soft);text-decoration:none}
 /* case study meta row:divided columns, role sized to its content */
 .csx .meta{grid-template-columns:1.25fr 1fr 1fr;gap:32px;padding:26px 0 28px;margin-top:44px}
 .csx .meta>div{padding:0;border:0}
