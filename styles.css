@@ -2176,3 +2176,6 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 
 /* award tag: no glow (it blurred the text), back to all caps */
 .jr-award{filter:none;text-transform:uppercase;letter-spacing:.04em}
+
+/* project card stats: no separator line above them */
+.pc-stats{border-top:0}
