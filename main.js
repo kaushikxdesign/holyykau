@@ -895,6 +895,16 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     } else {
       fx.crackle(false);
       if (au.paused) return;
+      // scrolled out of the section: a plain volume fade, no pitch drop
+      if (tape === 'fade' && !reduce) {
+        const v0 = au.volume, t0 = performance.now();
+        const step = (now) => {
+          const k = Math.max(0, Math.min(1, (now - t0) / 900));
+          au.volume = v0 * (1 - k);
+          if (k < 1) fading = requestAnimationFrame(step); else { au.pause(); au.volume = 1; fading = 0; }
+        };
+        fading = requestAnimationFrame(step); return;
+      }
       if (!tape || reduce) { au.pause(); return; }
       // tape stop: the record slows and drops in pitch as it winds down
       const r0 = au.playbackRate, t0 = performance.now();
@@ -1061,8 +1071,8 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     if (k) { e.preventDefault(); setPitch(pitch + k); } else if (e.key === 'Home' || e.key === '0') setPitch(0);
   });
 
-  // ---- sound on/off. Browsers only allow sound after a click or tap, so the first press anywhere in the
-  // section unlocks it (the audio element is primed inside that same press, which iOS needs) ----
+  // ---- sound on/off. Browsers only allow sound after a click or tap, so the first press anywhere on the
+  // page unlocks it (the audio element is primed inside that same press, which iOS needs) ----
   const sndBtn = $('.snd');
   const paintSnd = () => {
     sndBtn.setAttribute('aria-pressed', String(live())); sndBtn.lastElementChild.textContent = live() ? 'Sound on' : 'Sound off';
@@ -1073,8 +1083,10 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
     unlocked = true; fx.unlock();
     if (!on) { const m = au.muted; au.muted = true; au.play().then(() => { au.pause(); au.muted = m; }).catch(() => { au.muted = m; }); }
   };
-  root.addEventListener('pointerdown', (e) => { if (e.target.closest('.snd') || !soundOn) return; const was = unlocked; unlock(); if (!was) setTimeout(() => { paintSnd(); syncAudio(false); }, 30); }, true);
-  root.addEventListener('keydown', () => { if (!soundOn) return; const was = unlocked; unlock(); if (!was) setTimeout(() => { paintSnd(); syncAudio(false); }, 30); }, true);
+  // any press anywhere on the page primes the audio (silently), so the music can start on its own the first
+  // time the visitor scrolls into this section; nothing plays until the deck is on screen
+  const prime = (e) => { if (!soundOn || (e && e.target.closest && e.target.closest('.snd'))) return; const was = unlocked; unlock(); if (!was) setTimeout(() => { paintSnd(); syncAudio(false); }, 30); };
+  for (const ev of ['pointerdown', 'keydown', 'touchend']) document.addEventListener(ev, prime, { capture: true, passive: true });
   sndBtn.addEventListener('click', () => {
     if (live()) soundOn = false; else { soundOn = true; unlock(); }
     paintSnd(); syncAudio(false);
@@ -1082,7 +1094,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   // if the preview can't load (no network, or a page that blocks outside audio), the deck carries on silently
   au.addEventListener('error', () => { if (!au.src) return; broken = true; paintSnd(); fx.crackle(false); });
   au.addEventListener('playing', () => { if (broken) { broken = false; paintSnd(); } });
-  new IntersectionObserver(([e]) => { inView = e.intersectionRatio > .15; syncAudio(false); }, { threshold: [0, .15, .3] }).observe(deck);
+  new IntersectionObserver(([e]) => { const was = inView; inView = e.intersectionRatio > .15; if (inView !== was) syncAudio(inView ? false : 'fade'); }, { threshold: [0, .15, .3] }).observe(deck);
   document.addEventListener('visibilitychange', () => { if (document.hidden) { inView = false; syncAudio(false); } });
   paintSnd();
 
