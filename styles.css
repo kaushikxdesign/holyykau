@@ -445,7 +445,7 @@ a:hover{text-decoration:none}
 /* frosted top bar:blurs whatever scrolls behind it, full window width */
 .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;background:none;isolation:isolate}
 .nav::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;
-  background:rgba(var(--rgb-bg),var(--o50));-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);
+  background:rgba(var(--rgb-bg),var(--o70));-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);
   border-bottom:1px solid var(--stroke)}
 .nav .in{height:72px}
 /* footer photo:silhouettes sit right, keep the text readable */
