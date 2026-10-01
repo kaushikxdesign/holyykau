@@ -74,7 +74,7 @@ def blk(b):
 
 QA=dict(slug='qa',name='Quick Automations',title=('Quick','Automations.'),endk='Freshdesk Omni · 2025',
 desc="Real-time automation for conversational support in Freshdesk Omni.",kicker='Freshdesk Omni · 0→1',
-lede="An instant automation framework built for conversational support inside Freshdesk, executing workflows in as little as <b>30 seconds</b> across WhatsApp, Web Chat, Facebook DM and Instagram DM.",
+lede="An instant automation framework built for conversational support inside Freshdesk, executing workflows in as little as <b>30 seconds</b> across WhatsApp, Web Chat, and social DMs.",
 meta=[("Type","0→1 Product Experience"),("Role","Lead Designer"),("Product","Freshdesk Omni")],coveralt="the Quick Automations rule list with the delay rule configuration",
 caps=["Rules list","New rule, pick a channel","Rule created, set its action","Save the action","Enable the rule"],
 sections=[

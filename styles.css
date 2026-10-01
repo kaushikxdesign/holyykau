@@ -2188,3 +2188,12 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .jr-award svg{color:#e8b64a}
 .jr-award svg circle{fill:rgba(232,182,74,.24)}
 @keyframes awMedal{0%,100%{filter:brightness(1)}6%{filter:brightness(1.25)}18%{filter:brightness(1)}}
+
+/* project cards: a quiet sub-category line above the title instead of metrics */
+.pc-sub{display:block;font-family:var(--mono);font-size:var(--fs-body-sm);letter-spacing:0;color:var(--text-secondary);line-height:1.4}
+.pc-sub + h3{margin-top:0}
+.pc p .pc-met{font-weight:var(--fw-regular);color:var(--text-primary)}
+.pc-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pc-pill{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--stroke-strong);background:var(--surface);
+  font-family:var(--mono);font-size:var(--fs-body-sm);color:var(--text-primary);white-space:nowrap}
+.pc-pill b{font-family:var(--mono);font-weight:var(--fw-medium);color:var(--text-primary)}
