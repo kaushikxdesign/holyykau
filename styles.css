@@ -2173,3 +2173,6 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 
 /* Now spinning: surface fill at 30% over the blurred cover, so the colour glow is quieter */
 .np::after{background:linear-gradient(180deg,rgba(var(--rgb-white),.035),rgba(var(--rgb-white),.012)),rgba(var(--rgb-bg),var(--o30))}
+
+/* award tag: no glow (it blurred the text), back to all caps */
+.jr-award{filter:none;text-transform:uppercase;letter-spacing:.04em}
