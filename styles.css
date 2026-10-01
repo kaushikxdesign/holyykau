@@ -2183,3 +2183,8 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 
 /* About: the whole body copy in secondary text, highlights and bold included */
 #about .about p,#about .about p b,#about .about p .hl{color:var(--text-secondary)}
+
+/* award medal: same gold as the text (it was a paler #f3cf73), and a gentler flash so it never washes out */
+.jr-award svg{color:#e8b64a}
+.jr-award svg circle{fill:rgba(232,182,74,.24)}
+@keyframes awMedal{0%,100%{filter:brightness(1)}6%{filter:brightness(1.25)}18%{filter:brightness(1)}}
