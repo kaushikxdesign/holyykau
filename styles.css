@@ -2214,3 +2214,34 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .tl-roll{display:flex;flex-direction:column;gap:4px;transition:transform .45s cubic-bezier(.65,0,.35,1)}
 .tool:hover .tl-roll,.tool:focus-visible .tl-roll{transform:translateY(-32px)}
 @media (prefers-reduced-motion:reduce){.tl-roll{transition:none}.tool:hover .tl-roll,.tool:focus-visible .tl-roll{transform:none}}
+
+/* ---- About: light paper sticker board (same 4:5 frame as the old photo) ---- */
+.portrait.cl{container-type:inline-size;overflow:hidden;background-color:#f1eee7;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .26 0 0 0 0 .2 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(120% 90% at 50% 10%,#f7f5f0,#e9e5dc)}
+.portrait.cl img.cl-me{position:absolute;inset:auto;left:50%;bottom:-3%;top:auto;width:auto;height:82%;object-fit:contain;z-index:2;
+  transform:translateX(-50%) rotate(-1.5deg);filter:drop-shadow(0 16px 22px rgba(40,30,10,.28));transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.cl:hover img.cl-me{transform:translateX(-50%) rotate(0deg) scale(1.015)}
+.cl-s{position:absolute;left:var(--x);top:var(--y);width:var(--w);z-index:3;transform:rotate(var(--r));
+  animation:clFloat 5.5s ease-in-out var(--d) infinite;transition:scale .35s cubic-bezier(.3,.7,.3,1.4),rotate .35s cubic-bezier(.3,.7,.3,1.4)}
+.cl-s:hover{scale:1.12;rotate:calc(var(--r) * -.6);z-index:6}
+@keyframes clFloat{0%,100%{translate:0 0}50%{translate:0 -5px}}
+.portrait.cl .cl-s img{position:static;inset:auto;display:block;width:100%;height:auto;object-fit:contain}
+/* die-cut stickers already carry their white edge; add the paper shadow */
+.cl-cut img{filter:drop-shadow(0 8px 10px rgba(40,30,10,.3))}
+/* full-bleed photo underneath: the subject stays vivid, the rest is faded toward the paper */
+.portrait.cl img.cl-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+/* (old cut-out rule kept harmless) */
+.portrait.cl img.cl-paper{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.portrait.cl img.cl-me{height:82%;filter:drop-shadow(0 14px 20px rgba(40,30,10,.22))}
+/* handwritten quote in the open space at the top */
+.cl-q{position:absolute;left:30%;top:5%;width:auto;z-index:4;margin:0;padding:0;border:0;transform:rotate(-2deg);
+  font:500 3.1cqw/1.45 var(--mono);text-transform:lowercase;letter-spacing:-.01em;color:#2a2622}
+.cl-q em{display:block;font-style:normal;white-space:nowrap}
+.cl-q span{display:block;font-size:4.6cqw;line-height:.6;margin-bottom:.6cqw;color:#2a2622}
+/* record sleeve: a square print with a white border */
+.cl-print{padding:1.4cqw;background:#fff;border-radius:3px;box-shadow:0 12px 20px -8px rgba(40,30,10,.45)}
+/* film still as a polaroid */
+.cl-polaroid{padding:1.6cqw 1.6cqw 6cqw;background:#fbfaf7;border-radius:2px;box-shadow:0 14px 22px -8px rgba(40,30,10,.5)}
+.cl-polaroid::after{content:"motorcycle diaries";position:absolute;left:0;right:0;bottom:1.6cqw;text-align:center;font:500 2.6cqw/1 var(--mono);color:#5c5246;letter-spacing:-.02em}
+@media (prefers-reduced-motion:reduce){.cl-s{animation:none}}
