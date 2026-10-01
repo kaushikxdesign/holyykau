@@ -2197,3 +2197,9 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .pc-pill{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--stroke-strong);background:var(--surface);
   font-family:var(--mono);font-size:var(--fs-body-sm);color:var(--text-primary);white-space:nowrap}
 .pc-pill b{font-family:var(--mono);font-weight:var(--fw-medium);color:var(--text-primary)}
+
+/* lightbox close: a text button, "Esc to close" (just "Close" on touch screens) */
+.clb .clb-x{width:auto;height:36px;padding:0 14px;border-radius:10px;font:var(--fw-medium) var(--fs-mono)/1 var(--mono);letter-spacing:.04em;color:var(--text-secondary)}
+.clb .clb-x:hover{color:var(--text-primary)}
+.clb-x .t{display:none}
+@media (hover:none),(max-width:600px){.clb-x .k{display:none}.clb-x .t{display:inline}}

@@ -1265,7 +1265,7 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   const build = () => {
     lb = document.createElement('div');
     lb.className = 'clb'; lb.tabIndex = -1; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Screenshot viewer');
-    lb.innerHTML = `<div class="clb-top"><span class="clb-n" aria-live="polite"></span><span class="clb-r"><kbd class="clb-esc" aria-hidden="true">Esc</kbd><button type="button" class="clb-x" aria-label="Close (Esc)">${ico('M6 6l12 12M18 6L6 18')}</button></span></div>
+    lb.innerHTML = `<div class="clb-top"><span class="clb-n" aria-live="polite"></span><button type="button" class="clb-x" aria-label="Close (Esc)"><span class="k">Esc to close</span><span class="t">Close</span></button></div>
       <div class="clb-stage"><button type="button" class="clb-prev" aria-label="Previous screenshot">${ico('M15 6l-6 6 6 6')}</button><img class="clb-img" alt=""><button type="button" class="clb-next" aria-label="Next screenshot">${ico('M9 6l6 6-6 6')}</button></div>
       <p class="clb-cap"></p>`;
     document.body.append(lb);
