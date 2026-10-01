@@ -93,7 +93,7 @@ dict(n='11',label="What's next",h='A product is never finished.',blocks=[('p',"Q
 ])
 
 QC=dict(slug='qc',name='Quality Coach',title=('Quality','Coach.'),endk='Freddy AI · 2024',
-desc="Real-time AI coaching inside the Freshdesk Omni reply composer.",kicker='Freshdesk Omni · AI-first CX',
+desc="Real-time AI coaching inside the Customer Service Suite reply composer.",kicker='Customer Service Suite · AI-first CX',
 lede="An AI-powered real-time coaching system built inside Freshdesk Omni, helping support agents improve <b>grammar, tone and clarity</b> while they're actively replying to customers.",
 meta=[("Type","AI-first CX experience"),("Role","Lead Designer"),("Product","Customer Service Suite")],coveralt="the reply composer with an inline grammar suggestion",
 caps=["Issues flagged as the agent types","Abusive words, reworded","Grammar fix","All suggestion types","Impact report"],
