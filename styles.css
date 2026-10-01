@@ -2216,7 +2216,7 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.tl-roll{transition:none}.tool:hover .tl-roll,.tool:focus-visible .tl-roll{transform:none}}
 
 /* ---- About: light paper sticker board (same 4:5 frame as the old photo) ---- */
-.portrait.cl{container-type:inline-size;overflow:hidden;background-color:#f1eee7;
+.portrait.cl{container-type:inline-size;overflow:hidden;border-radius:24px;background-color:#f1eee7;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .26 0 0 0 0 .2 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
     radial-gradient(120% 90% at 50% 10%,#f7f5f0,#e9e5dc)}
 .portrait.cl img.cl-me{position:absolute;inset:auto;left:50%;bottom:-3%;top:auto;width:auto;height:82%;object-fit:contain;z-index:2;
