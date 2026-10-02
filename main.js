@@ -724,15 +724,43 @@ document.querySelectorAll('canvas.led').forEach((c) => { try {
   });
 })();
 
-// Hero photo tile: scroll to About ourselves (a plain #about jump can be swallowed by the page's host)
+// Section jumps (nav links, hero photo): frame the section's content between the sticky nav and the dock.
+// If it fits, it's centred in that space; if it only just fits, it fills the screen; if it's taller, its heading sits just under the nav.
+window.scrollToSection = (sec, instant) => {
+  const kids = [...sec.children].filter((c) => c.getBoundingClientRect().height > 0);
+  if (!kids.length) return;
+  const nav = document.querySelector('.nav'), navH = nav ? nav.getBoundingClientRect().height : 0;
+  const GAP = 24, DOCK = 96;  // breathing room under the nav; space kept clear for the floating dock
+  const top = kids[0].getBoundingClientRect().top + scrollY;
+  const h = kids[kids.length - 1].getBoundingClientRect().bottom + scrollY - top;
+  const room = innerHeight - navH - DOCK - GAP * 2;
+  // fits with room for the dock: centre it; fits only tightly: show all of it just under the nav; too tall: heading under the nav
+  const y = h <= room ? top - navH - GAP - (room - h) / 2
+    : h <= innerHeight - navH - 8 ? top - navH - Math.max(4, (innerHeight - navH - h) / 2)
+    : top - navH - GAP;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  scrollTo({ top: Math.max(0, y), behavior: instant || reduce ? 'auto' : 'smooth' });
+  // lazy images above can shift the page mid-scroll: settle once more when the scroll ends
+  if (!instant) { clearTimeout(window.__secFix); window.__secFix = setTimeout(() => {
+    const k0 = kids[0].getBoundingClientRect().top + scrollY;
+    if (Math.abs(k0 - top) > 2) scrollToSection(sec, true);
+  }, 900); }
+};
 (() => {
-  const link = document.querySelector('.me-link'), about = document.getElementById('about');
-  if (!link || !about) return;
-  link.addEventListener('click', (e) => {
+  // in-page links to sections (Projects, About, Gallery of trying, the hero photo)
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href*="#"]'); if (!a) return;
+    const u = new URL(a.getAttribute('href'), location.href);
+    if (u.pathname !== location.pathname) return;
+    const sec = u.hash && document.getElementById(decodeURIComponent(u.hash.slice(1)));
+    if (!sec || sec.tagName !== 'SECTION' || sec.closest('[hidden]')) return;
     e.preventDefault();
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    about.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    if (location.hash !== u.hash) history.pushState(null, '', u.hash);
+    scrollToSection(sec);
   });
+  // arriving with a hash (another page linked here): frame it once layout has settled
+  const h = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (h && h.tagName === 'SECTION') addEventListener('load', () => setTimeout(() => scrollToSection(h, true), 60));
 })();
 
 // Hero name slot: once per visit, after the intro, each letter of "Kaushik" spins like a slot reel and lands on

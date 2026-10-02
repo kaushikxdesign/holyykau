@@ -85,7 +85,7 @@ router = r'''
     document.querySelectorAll('.links a').forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + name));
     dispatchEvent(new Event('resize'));
     if (name !== 'home' || !h || h === 'top') scrollTo(0, 0);
-    else { const el = document.getElementById(h); if (el) el.scrollIntoView(); }
+    else { const el = document.getElementById(h); if (el) (window.scrollToSection && el.tagName === 'SECTION' ? scrollToSection(el) : el.scrollIntoView()); }
   };
   addEventListener('hashchange', show); show();
 })();
