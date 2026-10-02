@@ -2013,3 +2013,18 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 /* film still as a polaroid */
 
 @media (prefers-reduced-motion:reduce){.cl-s{animation:none}}
+
+/* case-study key insight: a pull quote. Eyebrow on top, the line in display type, a brand bar on the left,
+   a soft brand wash and an oversized closing mark behind */
+.csx .x-pull{position:relative;isolation:isolate;overflow:hidden;margin:48px 0;padding:30px 36px 34px 40px;border-radius:var(--r-xl);border:1px solid var(--stroke);
+  background:linear-gradient(100deg,rgba(var(--rgb-accent),var(--o8)),transparent 60%),var(--surface);transition:border-color .4s}
+.csx .x-pull::before{content:"";position:absolute;left:0;top:28px;bottom:28px;width:3px;border-radius:0 var(--r-pill) var(--r-pill) 0;background:linear-gradient(180deg,var(--accent-soft),var(--accent-deep))}
+.csx .x-pull::after{content:"\201D";position:absolute;z-index:-1;right:26px;top:8px;font-family:var(--display);font-weight:var(--fw-semibold);font-size:200px;line-height:var(--lh-none);color:rgba(var(--rgb-accent),var(--o12));pointer-events:none}
+.csx .x-pull:hover{border-color:var(--stroke-brand)}
+.csx .x-pull figcaption{display:flex;align-items:center;gap:8px;margin:0 0 18px;font-family:var(--mono);font-size:var(--fs-mono);letter-spacing:var(--ls-mono);text-transform:uppercase;color:var(--text-secondary)}
+.csx .x-pull figcaption .i-star{width:12px;height:12px;fill:var(--text-brand)}
+.csx .x-pull figcaption span{color:var(--text-tertiary)}
+.csx .x-pull figcaption span::before{content:"·";margin-right:8px}
+.csx .x-pull blockquote{margin:0;padding:0;border:0;max-width:none;font-family:var(--display);font-weight:var(--fw-semibold);font-size:var(--fs-h3);line-height:var(--lh-snug);letter-spacing:var(--ls-tight);color:var(--text-primary);text-wrap:pretty}
+.csx .x-pull blockquote em{font-style:normal;color:var(--text-brand)}
+@media (max-width:600px){.csx .x-pull{padding:24px 22px 26px 26px}.csx .x-pull::before{top:22px;bottom:22px}.csx .x-pull::after{font-size:150px;right:12px;top:6px}}
