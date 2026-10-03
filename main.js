@@ -1379,7 +1379,7 @@ window.scrollToSection = (sec, instant) => {
     arr:    { label: 'Yeh Jo Des Hai Tera, A. R. Rahman', src: A('assets/sounds/arr.mp3'), color: ['#c8986c', '#412817'], at: [0.16, 0.07] },
     a7:     { label: 'the shutter', src: A('assets/sounds/a7.mp3'), color: ['#5a595d', '#181819'], at: [1.00, 0.00] },
     gojo:   { label: 'Gojo: “Yowai mo”', src: A('assets/sounds/gojo.mp3'), color: ['#584983', '#312b44'], at: [1.00, -0.03] },
-    fed:    { label: 'Roger Federer on perfection', src: A('assets/sounds/fed.mp3'), color: ['#d6b776', '#987427'], at: [0.82, 0.06] },
+    fed:    { label: 'Roger Federer at Dartmouth, 2024', src: A('assets/sounds/fed.mp3'), color: ['#d6b776', '#987427'], at: [0.82, 0.06] },
     xm:     { label: 'what I’m listening to', deck: true, color: ['#626161', '#242321'] },
   };
   const au = new Audio(); au.preload = 'none';
