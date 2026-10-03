@@ -2042,3 +2042,5 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .cl-dot{position:absolute;z-index:7;pointer-events:none;opacity:0;scale:.4;transition:opacity .25s,scale .35s cubic-bezier(.3,.7,.3,1.4);width:22px;height:22px;border-radius:var(--r-round);
   background:var(--snd-c,var(--accent)) radial-gradient(circle,var(--white) 0 3px,transparent 3.5px);box-shadow:0 0 0 0 color-mix(in srgb,var(--snd-c,var(--accent)) 50%,transparent);animation:clPing 1.2s ease-out infinite}
 .cl-dot.on{opacity:1;scale:1}
+.cl-tag{position:absolute;z-index:7;pointer-events:none;opacity:0;translate:0 4px;transition:opacity .25s,translate .35s cubic-bezier(.3,.7,.3,1.4);max-width:calc(100% - 32px);padding:5px 9px;border-radius:var(--r-pill);background:rgba(var(--rgb-black),var(--o70));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--white);font-family:var(--mono);font-size:var(--fs-mono-sm);letter-spacing:var(--ls-mono);text-transform:uppercase;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl-tag.on{opacity:1;translate:0 0}

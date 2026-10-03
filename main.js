@@ -1371,16 +1371,16 @@ window.scrollToSection = (sec, instant) => {
   const board = document.querySelector('.portrait.cl'); if (!board) return;
   const A = (p) => (window.__A && window.__A[p]) || p;
   const SOUNDS = {
-    lana:   { label: 'Brooklyn Baby, Lana Del Rey', src: A('assets/sounds/lana.mp3'), color: ['#be1f20', '#7e0b0d'], at: [0.89, 0.06] },
-    md:     { label: 'De Usuahia a la Quiaca, Gustavo Santaolalla', src: A('assets/sounds/md.mp3'), color: ['#7c5841', '#2c2015'], at: [0.12, 0.82] },
-    vinyl:  { label: 'Mystery of Love, Sufjan Stevens', src: A('assets/sounds/vinyl.mp3'), color: ['#f7db02', '#d9a400'], at: [0.07, 0.13] },
-    singer: { label: 'a Singer 911 starting up', src: A('assets/sounds/singer.mp3'), color: ['#37412b', '#242d1c'], at: [0.95, 0.12] },
-    mufc:   { label: 'Glory Glory Man United', src: A('assets/sounds/mufc.mp3'), color: ['#921719', '#720708'], at: [1.11, -0.11] },
-    arr:    { label: 'Yeh Jo Des Hai Tera, A. R. Rahman', src: A('assets/sounds/arr.mp3'), color: ['#c8986c', '#412817'], at: [0.16, 0.07] },
-    a7:     { label: 'the shutter', src: A('assets/sounds/a7.mp3'), color: ['#5a595d', '#181819'], at: [1.00, 0.00] },
-    gojo:   { label: 'Gojo: “Yowai mo”', src: A('assets/sounds/gojo.mp3'), color: ['#584983', '#312b44'], at: [1.00, -0.03] },
-    fed:    { label: 'Roger Federer at Dartmouth, 2024', src: A('assets/sounds/fed.mp3'), color: ['#d6b776', '#987427'], at: [0.82, 0.06] },
-    xm:     { label: 'what I’m listening to', deck: true, color: ['#626161', '#242321'] },
+    lana:   { tag: 'Lana Del Rey', label: 'Brooklyn Baby, Lana Del Rey', src: A('assets/sounds/lana.mp3'), color: ['#be1f20', '#7e0b0d'], at: [0.89, 0.06] },
+    md:     { tag: 'The Motorcycle Diaries', label: 'De Usuahia a la Quiaca, Gustavo Santaolalla', src: A('assets/sounds/md.mp3'), color: ['#7c5841', '#2c2015'], at: [0.12, 0.82] },
+    vinyl:  { tag: 'Call Me by Your Name', label: 'Mystery of Love, Sufjan Stevens', src: A('assets/sounds/vinyl.mp3'), color: ['#f7db02', '#d9a400'], at: [0.07, 0.13], tagAt: [0.32, 0.9] },
+    singer: { tag: 'Porsche Singer DLS', label: 'a Singer 911 starting up', src: A('assets/sounds/singer.mp3'), color: ['#37412b', '#242d1c'], at: [0.95, 0.12], tagAt: [0.5, 0.42] },
+    mufc:   { tag: 'Glory Glory Manchester United', label: 'Glory Glory Man United', src: A('assets/sounds/mufc.mp3'), color: ['#921719', '#720708'], at: [1.11, -0.11], tagAt: [0.5, -0.17] },
+    arr:    { tag: 'A. R. Rahman', label: 'Yeh Jo Des Hai Tera, A. R. Rahman', src: A('assets/sounds/arr.mp3'), color: ['#c8986c', '#412817'], at: [0.16, 0.07] },
+    a7:     { tag: 'Sony a7 III', label: 'the shutter', src: A('assets/sounds/a7.mp3'), color: ['#5a595d', '#181819'], at: [1.00, 0.00] },
+    gojo:   { tag: 'Gojo Satoru', label: 'Gojo: “Yowai mo”', src: A('assets/sounds/gojo.mp3'), color: ['#584983', '#312b44'], at: [1.00, -0.03], tagAt: [0.5, -0.1] },
+    fed:    { tag: 'Roger Federer', label: 'Roger Federer at Dartmouth, 2024', src: A('assets/sounds/fed.mp3'), color: ['#d6b776', '#987427'], at: [0.82, 0.06], tagAt: [0.5, 0.88] },
+    xm:     { tag: 'Listen to some music', label: 'what I’m listening to', deck: true, color: ['#626161', '#242321'] },
   };
   const au = new Audio(); au.preload = 'none';
   let ctx = null, playing = null, fade = 0;
@@ -1415,25 +1415,40 @@ window.scrollToSection = (sec, instant) => {
   };
   // the now-playing dot lives on the board (so the board edge never clips it), at the playing sticker's top-right corner
   const dot = document.createElement('span'); dot.className = 'cl-dot'; dot.setAttribute('aria-hidden', 'true'); board.appendChild(dot);
+  // hovering a sticker shows a Geist Mono tag naming it, at the same spot as its dot
+  const tag = document.createElement('span'); tag.className = 'cl-tag'; tag.setAttribute('aria-hidden', 'true'); board.appendChild(tag);
+  let hovered = null;
+  const S = 22, G = 16;
   // laid out in the board's own (untransformed) coordinates, so the board's hover tilt and the sticker's
   // rotation and bob can't push it off the edge
-  const place = () => {
-    if (!playing) return;
-    const S = 22, G = 16, IN = 14, W = board.clientWidth, H = board.clientHeight;
-    const w = playing.offsetWidth, h = playing.offsetHeight, at = SOUNDS[playing.dataset.snd].at;
+  const spot = (el, at = SOUNDS[el.dataset.snd].at) => {
+    const IN = 14, W = board.clientWidth, H = board.clientHeight;
+    const w = el.offsetWidth, h = el.offsetHeight;
     // a chosen spot on the sticker (fractions of its box), turned with the sticker's tilt; default: top-right corner
     let px = at ? at[0] * w : w - IN - S / 2, py = at ? at[1] * h : IN + S / 2;
-    const a = (parseFloat(playing.style.getPropertyValue('--r')) || 0) * Math.PI / 180, dx = px - w / 2, dy = py - h / 2;
+    const a = (parseFloat(el.style.getPropertyValue('--r')) || 0) * Math.PI / 180, dx = px - w / 2, dy = py - h / 2;
     px = w / 2 + dx * Math.cos(a) - dy * Math.sin(a); py = h / 2 + dx * Math.sin(a) + dy * Math.cos(a);
-    const x = Math.max(G, Math.min(W - S - G, playing.offsetLeft + px - S / 2));
-    const y = Math.max(G, Math.min(H - S - G, playing.offsetTop + py - S / 2));
-    dot.style.left = x + 'px'; dot.style.top = y + 'px';
+    return [Math.max(G, Math.min(W - S - G, el.offsetLeft + px - S / 2)), Math.max(G, Math.min(H - S - G, el.offsetTop + py - S / 2))];
+  };
+  const place = () => {
+    if (playing) { const [x, y] = spot(playing); dot.style.left = x + 'px'; dot.style.top = y + 'px'; }
+    if (!hovered) return;
+    // beside the dot when this sticker is playing, otherwise starting where the dot would sit;
+    // flips to the left when it would run off the board
+    // a sticker can name its own spot for the tag (tagAt), centred there, when its dot spot would cover a neighbour
+    const W = board.clientWidth, H = board.clientHeight, ta = SOUNDS[hovered.dataset.snd].tagAt, [x, y] = spot(hovered, ta || undefined), tw = tag.offsetWidth, th = tag.offsetHeight;
+    const l = ta ? x + S / 2 - tw / 2 : hovered === playing ? x + S + 6 : x, r = ta ? l + tw : hovered === playing ? x - 6 : x + S;
+    tag.style.left = Math.max(G, Math.min(W - G - tw, l + tw <= W - G ? l : r - tw)) + 'px';
+    tag.style.top = Math.max(G, Math.min(H - th - G, y + S / 2 - th / 2)) + 'px';
   };
   const paint = () => {
     board.querySelectorAll('.cl-s').forEach((el) => el.classList.toggle('snd-on', el === playing));
-    if (playing) { dot.style.setProperty('--snd-c', playing.style.getPropertyValue('--snd-c')); place(); }
-    dot.classList.toggle('on', !!playing);
+    if (playing) dot.style.setProperty('--snd-c', playing.style.getPropertyValue('--snd-c'));
+    if (hovered) tag.textContent = SOUNDS[hovered.dataset.snd].tag;
+    place();
+    dot.classList.toggle('on', !!playing); tag.classList.toggle('on', !!hovered);
   };
+  const hover = (el) => { if (hovered === el) return; hovered = el; paint(); };
   const stop = (soft) => {
     cancelAnimationFrame(fade);
     if (!soft || au.paused) { au.pause(); au.volume = 1; playing = null; paint(); return; }
@@ -1459,7 +1474,12 @@ window.scrollToSection = (sec, instant) => {
     // the playing dot takes the sticker's colour, sampled from the photo
     if (SOUNDS[key].color) el.style.setProperty('--snd-c', SOUNDS[key].color[0]);
     el.setAttribute('aria-label', (el.title || key) + ': play ' + SOUNDS[key].label);
+    el.removeAttribute('title');
     el.addEventListener('click', () => play(el));
+    el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hover(el); });
+    el.addEventListener('pointerleave', () => { if (hovered === el) hover(null); });
+    el.addEventListener('focus', () => { if (el.matches(':focus-visible')) hover(el); });
+    el.addEventListener('blur', () => { if (hovered === el) hover(null); });
     el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(el); } });
   });
   // the board scrolls away: the sound fades out
