@@ -1173,6 +1173,9 @@ window.scrollToSection = (sec, instant) => {
     arm.addEventListener('pointerup', drop); arm.addEventListener('pointercancel', drop);
   }
 
+  // other parts of the page can ask the deck to play (the headphones sticker on the About board)
+  addEventListener('deck:play', () => { soundOn = true; unlock(); paintSnd(); if (cur < 0) load(0); else if (!on) setOn(true); else syncAudio(false); });
+
   // first record sits on the deck; the arm swings on the first time the section comes into view
   cur = 0; label.innerHTML = cover(0); showTrack(0); paint(); setArm();
   new IntersectionObserver(([e], io) => { if (e.isIntersecting) { io.disconnect(); setTimeout(() => { if (!on) setOn(true); }, 500); } }, { threshold: .45 }).observe(deck);
@@ -1361,4 +1364,105 @@ window.scrollToSection = (sec, instant) => {
       e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus(); }
   });
   addEventListener('hashchange', close);
+})();
+
+// About board: tap a sticker to hear it (short clips in assets/sounds). The headphones take you to the deck.
+(() => {
+  const board = document.querySelector('.portrait.cl'); if (!board) return;
+  const A = (p) => (window.__A && window.__A[p]) || p;
+  const SOUNDS = {
+    lana:   { label: 'Brooklyn Baby, Lana Del Rey', src: A('assets/sounds/lana.mp3'), color: ['#be1f20', '#7e0b0d'], at: [0.89, 0.06] },
+    md:     { label: 'De Usuahia a la Quiaca, Gustavo Santaolalla', src: A('assets/sounds/md.mp3'), color: ['#7c5841', '#2c2015'], at: [0.12, 0.82] },
+    vinyl:  { label: 'Mystery of Love, Sufjan Stevens', src: A('assets/sounds/vinyl.mp3'), color: ['#f7db02', '#d9a400'], at: [0.07, 0.13] },
+    singer: { label: 'a Singer 911 starting up', src: A('assets/sounds/singer.mp3'), color: ['#37412b', '#242d1c'], at: [0.95, 0.12] },
+    mufc:   { label: 'Glory Glory Man United', src: A('assets/sounds/mufc.mp3'), color: ['#921719', '#720708'], at: [1.11, -0.11] },
+    arr:    { label: 'Yeh Jo Des Hai Tera, A. R. Rahman', src: A('assets/sounds/arr.mp3'), color: ['#c8986c', '#412817'], at: [0.16, 0.07] },
+    a7:     { label: 'the shutter', src: A('assets/sounds/a7.mp3'), color: ['#5a595d', '#181819'], at: [1.00, 0.00] },
+    gojo:   { label: 'Gojo: “Yowai mo”', src: A('assets/sounds/gojo.mp3'), color: ['#584983', '#312b44'], at: [1.00, -0.03] },
+    fed:    { label: 'Roger Federer on perfection', src: A('assets/sounds/fed.mp3'), color: ['#d6b776', '#987427'], at: [0.82, 0.06] },
+    xm:     { label: 'what I’m listening to', deck: true, color: ['#626161', '#242321'] },
+  };
+  const au = new Audio(); au.preload = 'none';
+  let ctx = null, playing = null, fade = 0;
+  const ac = () => { if (!ctx) { const AC = window.AudioContext || window.webkitAudioContext; ctx = AC && new AC(); } if (ctx && ctx.state === 'suspended') ctx.resume(); return ctx; };
+  const noise = (c, secs) => { const b = c.createBuffer(1, c.sampleRate * secs, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; };
+  const synth = {
+    // mirror slap, shutter curtain, mirror return: three filtered noise ticks
+    shutter(c) {
+      const t = c.currentTime, buf = noise(c, .1);
+      [[0, 3200, .9], [.045, 5200, .55], [.11, 2600, .7]].forEach(([dt, f, v]) => {
+        const s = c.createBufferSource(), bp = c.createBiquadFilter(), g = c.createGain();
+        s.buffer = buf; bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = 1.2;
+        g.gain.setValueAtTime(v, t + dt); g.gain.exponentialRampToValueAtTime(.001, t + dt + .05);
+        s.connect(bp); bp.connect(g); g.connect(c.destination); s.start(t + dt); s.stop(t + dt + .06);
+      });
+      return .25;
+    },
+    // starter whirr, the catch, a blip of revs, then settling to a lumpy idle
+    engine(c) {
+      const t = c.currentTime, out = c.createGain(); out.gain.value = .5; out.connect(c.destination);
+      const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; lp.connect(out);
+      const st = c.createOscillator(), sg = c.createGain(); st.type = 'square'; st.frequency.setValueAtTime(18, t); st.frequency.linearRampToValueAtTime(26, t + .7);
+      sg.gain.setValueAtTime(.18, t); sg.gain.linearRampToValueAtTime(0, t + .75); st.connect(sg); sg.connect(lp); st.start(t); st.stop(t + .8);
+      const eng = c.createOscillator(), eg = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+      eng.type = 'sawtooth'; const f = eng.frequency;
+      f.setValueAtTime(30, t + .7); f.exponentialRampToValueAtTime(140, t + 1.1); f.exponentialRampToValueAtTime(48, t + 1.9); f.setValueAtTime(48, t + 3.4);
+      lfo.frequency.value = 11; lg.gain.value = 6; lfo.connect(lg); lg.connect(f);
+      eg.gain.setValueAtTime(0, t + .7); eg.gain.linearRampToValueAtTime(.6, t + .85); eg.gain.setValueAtTime(.45, t + 2.8); eg.gain.exponentialRampToValueAtTime(.001, t + 3.6);
+      eng.connect(eg); eg.connect(lp); eng.start(t + .7); lfo.start(t + .7); eng.stop(t + 3.7); lfo.stop(t + 3.7);
+      return 3.7;
+    },
+  };
+  // the now-playing dot lives on the board (so the board edge never clips it), at the playing sticker's top-right corner
+  const dot = document.createElement('span'); dot.className = 'cl-dot'; dot.setAttribute('aria-hidden', 'true'); board.appendChild(dot);
+  // laid out in the board's own (untransformed) coordinates, so the board's hover tilt and the sticker's
+  // rotation and bob can't push it off the edge
+  const place = () => {
+    if (!playing) return;
+    const S = 22, G = 16, IN = 14, W = board.clientWidth, H = board.clientHeight;
+    const w = playing.offsetWidth, h = playing.offsetHeight, at = SOUNDS[playing.dataset.snd].at;
+    // a chosen spot on the sticker (fractions of its box), turned with the sticker's tilt; default: top-right corner
+    let px = at ? at[0] * w : w - IN - S / 2, py = at ? at[1] * h : IN + S / 2;
+    const a = (parseFloat(playing.style.getPropertyValue('--r')) || 0) * Math.PI / 180, dx = px - w / 2, dy = py - h / 2;
+    px = w / 2 + dx * Math.cos(a) - dy * Math.sin(a); py = h / 2 + dx * Math.sin(a) + dy * Math.cos(a);
+    const x = Math.max(G, Math.min(W - S - G, playing.offsetLeft + px - S / 2));
+    const y = Math.max(G, Math.min(H - S - G, playing.offsetTop + py - S / 2));
+    dot.style.left = x + 'px'; dot.style.top = y + 'px';
+  };
+  const paint = () => {
+    board.querySelectorAll('.cl-s').forEach((el) => el.classList.toggle('snd-on', el === playing));
+    if (playing) { dot.style.setProperty('--snd-c', playing.style.getPropertyValue('--snd-c')); place(); }
+    dot.classList.toggle('on', !!playing);
+  };
+  const stop = (soft) => {
+    cancelAnimationFrame(fade);
+    if (!soft || au.paused) { au.pause(); au.volume = 1; playing = null; paint(); return; }
+    const v0 = au.volume, t0 = performance.now();
+    const step = (now) => { const k = Math.min(1, (now - t0) / 700); au.volume = v0 * (1 - k); if (k < 1) fade = requestAnimationFrame(step); else stop(); };
+    fade = requestAnimationFrame(step);
+  };
+  const play = (el) => {
+    const s = SOUNDS[el.dataset.snd];
+    if (playing === el) { stop(true); return; }
+    stop();
+    if (s.deck) { const sec = document.getElementById('listening'); if (sec) (window.scrollToSection ? scrollToSection(sec) : sec.scrollIntoView({ behavior: 'smooth' })); dispatchEvent(new Event('deck:play')); return; }
+    playing = el; paint();
+    if (s.synth) { const c = ac(); const d = c ? synth[s.synth](c) : 0; setTimeout(() => { if (playing === el) { playing = null; paint(); } }, d * 1000); return; }
+    au.src = s.src; au.currentTime = 0; au.volume = 1;
+    au.play().catch(() => { if (playing === el) { playing = null; paint(); } });
+  };
+  au.addEventListener('ended', () => { playing = null; paint(); });
+  board.querySelectorAll('.cl-s').forEach((el) => {
+    const img = el.querySelector('img'), m = img && (img.getAttribute('data-asset') || img.getAttribute('src') || '').match(/about\/(\w+)\./);
+    const key = m && m[1]; if (!key || !SOUNDS[key]) return;
+    el.dataset.snd = key; el.setAttribute('role', 'button'); el.tabIndex = 0;
+    // the playing dot takes the sticker's colour, sampled from the photo
+    if (SOUNDS[key].color) el.style.setProperty('--snd-c', SOUNDS[key].color[0]);
+    el.setAttribute('aria-label', (el.title || key) + ': play ' + SOUNDS[key].label);
+    el.addEventListener('click', () => play(el));
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(el); } });
+  });
+  // the board scrolls away: the sound fades out
+  new IntersectionObserver(([e]) => { if (!e.isIntersecting && playing) stop(true); }, { threshold: 0 }).observe(board);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
 })();

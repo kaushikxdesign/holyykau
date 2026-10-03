@@ -2028,3 +2028,17 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .csx .x-pull blockquote{margin:0;padding:0;border:0;max-width:none;font-family:var(--display);font-weight:var(--fw-semibold);font-size:var(--fs-h3);line-height:var(--lh-snug);letter-spacing:var(--ls-tight);color:var(--text-primary);text-wrap:pretty}
 .csx .x-pull blockquote em{font-style:normal;color:var(--text-brand)}
 @media (max-width:600px){.csx .x-pull{padding:24px 22px 26px 26px}.csx .x-pull::before{top:22px;bottom:22px}.csx .x-pull::after{font-size:150px;right:12px;top:6px}}
+
+/* About board: stickers that play a sound */
+.cl-s[data-snd]{cursor:pointer}
+.cl-s[data-snd]:focus-visible{outline:2px solid var(--accent-soft);outline-offset:4px;border-radius:var(--r-sm)}
+.cl-s.snd-on{animation:clPlay .9s ease-in-out infinite;z-index:6}
+
+@keyframes clPlay{0%,100%{translate:0 0;scale:1.06}50%{translate:0 -4px;scale:1.1}}
+@keyframes clPing{to{box-shadow:0 0 0 12px color-mix(in srgb,var(--snd-c,var(--accent)) 0%,transparent)}}
+@media (prefers-reduced-motion:reduce){.cl-s.snd-on{animation:none;scale:1.06}.cl-dot{animation:none}}
+
+/* now-playing dot: on the playing sticker's top-right corner, in that sticker's colour */
+.cl-dot{position:absolute;z-index:7;pointer-events:none;opacity:0;scale:.4;transition:opacity .25s,scale .35s cubic-bezier(.3,.7,.3,1.4);width:22px;height:22px;border-radius:var(--r-round);
+  background:var(--snd-c,var(--accent)) radial-gradient(circle,var(--white) 0 3px,transparent 3.5px);box-shadow:0 0 0 0 color-mix(in srgb,var(--snd-c,var(--accent)) 50%,transparent);animation:clPing 1.2s ease-out infinite}
+.cl-dot.on{opacity:1;scale:1}

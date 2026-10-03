@@ -12,7 +12,7 @@ rd = lambda p: open(os.path.join(ROOT, p), encoding='utf-8').read()
 
 def data_uri(path):
     ext = path.rsplit('.', 1)[1].lower()
-    mime = {'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png', 'webp': 'image/webp'}[ext]
+    mime = {'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png', 'webp': 'image/webp', 'mp3': 'audio/mpeg'}[ext]
     return f"data:{mime};base64," + base64.b64encode(open(os.path.join(ROOT, path), 'rb').read()).decode()
 
 def between(html, start_pat, end_pat):
@@ -47,7 +47,7 @@ for a, b in [('../index.html#', '#'), ('index.html#', '#'), ('"../index.html"', 
     body = body.replace(a, b)
 # images -> embedded once. <img> sources and data.js paths resolve through one
 # lookup table so a photo used in several places is only stored a single time.
-paths = sorted(set(re.findall(r'(?:\.\./)?(assets/[\w\-/]+\.(?:jpg|jpeg|png|webp))', body + rd('data.js'))))
+paths = sorted(set(re.findall(r'(?:\.\./)?(assets/[\w\-/]+\.(?:jpg|jpeg|png|webp|mp3))', body + rd('data.js') + rd('main.js'))))
 assets = {p: data_uri(p) for p in paths}
 body = re.sub(r'src="(?:\.\./)?(assets/[\w\-/]+\.(?:jpg|jpeg|png|webp))"', lambda m: f'data-asset="{m.group(1)}"', body)
 for p in paths:  # CSS url() backgrounds are inlined directly
