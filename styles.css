@@ -2044,3 +2044,34 @@ a.tool:focus-visible{outline:2px solid var(--stroke-brand);outline-offset:3px}
 .cl-dot.on{opacity:1;scale:1}
 .cl-tag{position:absolute;z-index:7;pointer-events:none;opacity:0;translate:0 4px;transition:opacity .25s,translate .35s cubic-bezier(.3,.7,.3,1.4);max-width:calc(100% - 32px);padding:5px 9px;border-radius:var(--r-pill);background:rgba(var(--rgb-black),var(--o70));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--white);font-family:var(--mono);font-size:var(--fs-mono-sm);letter-spacing:var(--ls-mono);text-transform:uppercase;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cl-tag.on{opacity:1;translate:0 0}
+
+/* About: hovering the sticker board shows a mono caption above it, in the heading row */
+.cl-wrap{position:relative;display:flex;flex-direction:column}
+/* touch screens (and narrow ones): no hover, so the caption is always there, above the board, its arrow pointing down at it */
+/* 12px mono like the site's other labels; the arrow follows the last word and drops down, tip 4px off the board */
+.cl-cap{order:-1;position:relative;display:block;margin:0 0 1px;padding:0;font-family:var(--mono);font-size:var(--fs-mono);letter-spacing:var(--ls-mono);line-height:var(--lh-relaxed);color:var(--text-secondary)}
+.cl-end{white-space:nowrap}
+/* stacked under the bio: pull the caption up so it sits 32px below the last paragraph (18px margin + 48px column gap otherwise) */
+@media (max-width:900px){.cl-cap{margin-top:-35px}}
+.cl-cap svg{display:inline-block;vertical-align:top;width:31px;height:28px;margin:4px 0 0 6px;color:var(--text-secondary)}
+@media (hover:hover) and (min-width:901px){
+  /* slides in from the right, just above the board's top-right corner; a hand-drawn loop arrow curls down, its tip 4px off the board */
+  .cl-cap{display:flex;align-items:flex-start;justify-content:flex-start;gap:6px;position:absolute;right:4px;bottom:calc(100% + 3px);z-index:8;margin:0;padding:0;pointer-events:none;font-family:var(--mono);font-size:var(--fs-mono);letter-spacing:var(--ls-mono);line-height:var(--lh-relaxed);color:var(--text-secondary);white-space:nowrap;opacity:0;translate:24px 0;transition:opacity .3s,translate .5s cubic-bezier(.22,1,.36,1)}
+  .cl-cap span{padding:2px 0 0}
+  .cl-cap svg{display:block;width:44px;height:40px;margin:0;flex:none;color:var(--text-secondary)}
+  .cl-cap .cl-end{white-space:normal;word-spacing:normal}
+  .cl-cap path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .5s ease .15s}
+  .cl-cap path + path{transition-delay:.6s;transition-duration:.2s}
+  .portrait.cl:hover + .cl-cap,.portrait.cl:focus-within + .cl-cap{opacity:1;translate:0 0}
+  .portrait.cl:hover + .cl-cap path,.portrait.cl:focus-within + .cl-cap path{stroke-dashoffset:0}
+}
+/* wide screens have room beside the board: the caption sits to its right, one word per line, its arrow curling left into the board */
+@media (hover:hover) and (min-width:1440px){
+  .cl-cap{flex-direction:column;align-items:flex-start;gap:4px;white-space:normal;left:calc(100% + 25px);right:auto;bottom:auto;top:28px;width:max-content}
+  .cl-cap span{width:min-content;word-spacing:100vw}
+  .cl-cap svg{rotate:90deg;margin:4px 0 0 -18px}
+}
+@media (hover:hover) and (min-width:901px) and (prefers-reduced-motion:reduce){.cl-cap{translate:0 0;transition:opacity .3s}.cl-cap path{transition:none;stroke-dashoffset:0}}
+/* touch screens: one staggered wiggle the first time the board comes into view */
+@keyframes clWiggle{0%,100%{rotate:0deg}25%{rotate:-6deg}55%{rotate:5deg}80%{rotate:-2deg}}
+.cl-wiggle .cl-s[data-snd] img{animation:clWiggle .6s ease-in-out calc(var(--wi,0) * 90ms) both}

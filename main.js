@@ -1417,7 +1417,9 @@ window.scrollToSection = (sec, instant) => {
   const dot = document.createElement('span'); dot.className = 'cl-dot'; dot.setAttribute('aria-hidden', 'true'); board.appendChild(dot);
   // hovering a sticker shows a Geist Mono tag naming it, at the same spot as its dot
   const tag = document.createElement('span'); tag.className = 'cl-tag'; tag.setAttribute('aria-hidden', 'true'); board.appendChild(tag);
-  let hovered = null;
+  // touch has no hover: a tapped sticker shows its tag for as long as its clip plays
+  let hovered = null, tapped = false;
+  const labelled = () => hovered || (tapped && playing) || null;
   const S = 22, G = 16;
   // laid out in the board's own (untransformed) coordinates, so the board's hover tilt and the sticker's
   // rotation and bob can't push it off the edge
@@ -1432,21 +1434,21 @@ window.scrollToSection = (sec, instant) => {
   };
   const place = () => {
     if (playing) { const [x, y] = spot(playing); dot.style.left = x + 'px'; dot.style.top = y + 'px'; }
-    if (!hovered) return;
+    const named = labelled(); if (!named) return;
     // beside the dot when this sticker is playing, otherwise starting where the dot would sit;
     // flips to the left when it would run off the board
     // a sticker can name its own spot for the tag (tagAt), centred there, when its dot spot would cover a neighbour
-    const W = board.clientWidth, H = board.clientHeight, ta = SOUNDS[hovered.dataset.snd].tagAt, [x, y] = spot(hovered, ta || undefined), tw = tag.offsetWidth, th = tag.offsetHeight;
-    const l = ta ? x + S / 2 - tw / 2 : hovered === playing ? x + S + 6 : x, r = ta ? l + tw : hovered === playing ? x - 6 : x + S;
+    const W = board.clientWidth, H = board.clientHeight, ta = SOUNDS[named.dataset.snd].tagAt, [x, y] = spot(named, ta || undefined), tw = tag.offsetWidth, th = tag.offsetHeight;
+    const l = ta ? x + S / 2 - tw / 2 : named === playing ? x + S + 6 : x, r = ta ? l + tw : named === playing ? x - 6 : x + S;
     tag.style.left = Math.max(G, Math.min(W - G - tw, l + tw <= W - G ? l : r - tw)) + 'px';
     tag.style.top = Math.max(G, Math.min(H - th - G, y + S / 2 - th / 2)) + 'px';
   };
   const paint = () => {
     board.querySelectorAll('.cl-s').forEach((el) => el.classList.toggle('snd-on', el === playing));
     if (playing) dot.style.setProperty('--snd-c', playing.style.getPropertyValue('--snd-c'));
-    if (hovered) tag.textContent = SOUNDS[hovered.dataset.snd].tag;
+    const named = labelled(); if (named) tag.textContent = SOUNDS[named.dataset.snd].tag;
     place();
-    dot.classList.toggle('on', !!playing); tag.classList.toggle('on', !!hovered);
+    dot.classList.toggle('on', !!playing); tag.classList.toggle('on', !!named);
   };
   const hover = (el) => { if (hovered === el) return; hovered = el; paint(); };
   const stop = (soft) => {
@@ -1475,6 +1477,7 @@ window.scrollToSection = (sec, instant) => {
     if (SOUNDS[key].color) el.style.setProperty('--snd-c', SOUNDS[key].color[0]);
     el.setAttribute('aria-label', (el.title || key) + ': play ' + SOUNDS[key].label);
     el.removeAttribute('title');
+    el.addEventListener('pointerdown', (e) => { tapped = e.pointerType !== 'mouse'; });
     el.addEventListener('click', () => play(el));
     el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hover(el); });
     el.addEventListener('pointerleave', () => { if (hovered === el) hover(null); });
@@ -1482,6 +1485,15 @@ window.scrollToSection = (sec, instant) => {
     el.addEventListener('blur', () => { if (hovered === el) hover(null); });
     el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(el); } });
   });
+  // on touch screens, the first time the board comes into view every sticker gives one little wiggle, so it reads as tappable
+  if (matchMedia('(hover: none)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    board.querySelectorAll('.cl-s[data-snd]').forEach((el, i) => el.style.setProperty('--wi', i));
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; io.disconnect();
+      board.classList.add('cl-wiggle'); setTimeout(() => board.classList.remove('cl-wiggle'), 2000);
+    }, { threshold: 0.4 });
+    io.observe(board);
+  }
   // the board scrolls away: the sound fades out
   new IntersectionObserver(([e]) => { if (!e.isIntersecting && playing) stop(true); }, { threshold: 0 }).observe(board);
   document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
